@@ -1,11 +1,30 @@
-# Replugged plugin template
+<p>
+  <h1 align="center">replugged-plugins</h1>
+</p>
 
-See the [plugin development guide](https://guide.replugged.dev/docs/plugins/getting-started) for
-more information on using this template.
+<p align="center">
+  <a href="https://github.com/Socketlike/replugged-plugins/releases/latest">
+    <img alt="latest release" src="https://img.shields.io/github/v/release/Socketlike/replugged-plugins?label=version&sort=semver">
+  </a>
+  <a href="https://github.com/Socketlike/replugged-plugins/actions/workflows/lint.yml">
+    <img alt="lint status" src="https://img.shields.io/github/actions/workflow/status/Socketlike/replugged-plugins/lint.yml?label=lint">
+  </a>
+  <a href="https://github.com/Socketlike/replugged-plugins/actions/workflows/release.yml">
+    <img alt="build status" src="https://img.shields.io/github/actions/workflow/status/Socketlike/replugged-plugins/release.yml?label=build">
+  </a>
+  <a href="https://github.com/Socketlike/replugged-plugins/actions/workflows/nightly.yml">
+    <img alt="nightly status" src="https://img.shields.io/github/actions/workflow/status/Socketlike/replugged-plugins/nightly.yml?label=nightly&color=blueviolet">
+  </a>
+</p>
 
-# License
+<p align="center">
+  a collection of plugins I made for <a href="https://replugged.dev">Replugged</a>, a Discord client mod.
+</p>
 
-The [plugin template](https://github.com/replugged-org/plugin-template) is licensed under the
-[MIT](https://opensource.org/license/mit/) license. However, addons using this template are not
-necessarily licensed under MIT. Developers are encouraged to add a license file to their repository,
-but if none exists, the repository should be considered as unlicensed.
+## List of plugins
+
+[SpotifyModal](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/SpotifyModal),
+[NoSpotifyPause](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/NoSpotifyPause),
+[SpotifyListenAlong](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/SpotifyListenAlong),
+[Quark](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/Quark),
+[Magnificent](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/Magnificent)

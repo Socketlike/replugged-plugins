@@ -1,9 +1,9 @@
-name: Release
+name: Release (Production)
 
 on:
   push:
     tags:
-      - "v*"
+      - 'v*'
 
 jobs:
   release:
@@ -13,25 +13,26 @@ jobs:
       contents: write
 
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - uses: pnpm/action-setup@v2
+      - name: Set up PNPM
+        uses: pnpm/action-setup@master
         with:
           version: latest
 
-      - name: Install Node.js dependencies
+      - name: Install dependencies
         run: pnpm install
 
-      - name: Build TypeScript and bundle into asar
-        run: pnpm run bundle
+      - name: Bundle
+        run: pnpm run build:prod:bundle --all
 
-      - uses: ncipollo/release-action@v1
+      - uses: ncipollo/release-action@main
         with:
-          artifacts: "bundle/*"
+          artifacts: 'bundle/*'
           makeLatest: true
