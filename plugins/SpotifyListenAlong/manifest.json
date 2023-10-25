@@ -1,0 +1,20 @@
+{
+  "$schema": "https://socketlike.github.io/replugged/plugin.schema.json",
+  "id": "lib.evelyn.SpotifyListenAlong",
+  "name": "SpotifyListenAlong",
+  "description": "A Post-SWC Replugged plugin that allows you to use the \"Listen along\" feature without Spotify Premium, because Spotify Premium is not actually required",
+  "author": {
+    "name": "Evelyn",
+    "discordID": "285329659023851520",
+    "github": "Socketlike"
+  },
+  "version": "1.0.6",
+  "updater": {
+    "type": "store",
+    "id": "lib.evelyn.SpotifyListenAlong"
+  },
+  "license": "MIT",
+  "type": "replugged-plugin",
+  "renderer": "src/index.ts",
+  "source": "https://github.com/Socketlike/SpotifyListenAlong"
+}

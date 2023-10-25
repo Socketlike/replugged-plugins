@@ -1,0 +1,39 @@
+{
+  "name": "SpotifyListenAlong",
+  "version": "1.0.6",
+  "description": "A Post-SWC Replugged plugin that allows you to use the \"Listen along\" feature without Spotify Premium, because Spotify Premium is not actually required",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "scripts": {
+    "build:dev": "replugged build plugin --no-reload",
+    "build:dev:bundle": "replugged bundle plugin --no-reload",
+    "build:prod": "replugged build plugin --production --no-reload",
+    "build:prod:bundle": "replugged bundle plugin --production --no-reload",
+    "watch:dev": "replugged build plugin",
+    "watch:prod": "replugged build plugin --production",
+    "check": "tsc --noEmit",
+    "prettier:check": "prettier ./src --check",
+    "eslint:check": "eslint ./src",
+    "prettier:fix": "prettier ./src --write",
+    "eslint:fix": "eslint ./src --fix",
+    "lint": "pnpm run prettier:check && pnpm run eslint:check && pnpm run check",
+    "lint:fix": "pnpm run prettier:fix && pnpm run eslint:fix",
+    "release": "replugged release"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.17.6",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "eslint": "^8.47.0",
+    "eslint-config-dmitmel": "github:dmitmel/eslint-config-dmitmel",
+    "eslint-plugin-node": "^11.1.0",
+    "prettier": "^2.8.8",
+    "replugged": "^4.6.0",
+    "typescript": "^4.9.5"
+  }
+}

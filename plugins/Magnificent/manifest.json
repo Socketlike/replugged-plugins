@@ -1,0 +1,21 @@
+{
+  "$schema": "https://socketlike.github.io/replugged/plugin.schema.json",
+  "id": "lib.evelyn.Magnificent",
+  "name": "Magnificent",
+  "description": "A Post-SWC Replugged plugin that removes the width & height restriction on the img element's src in image popouts.",
+  "author": {
+    "name": "Evelyn",
+    "discordID": "285329659023851520",
+    "github": "Socketlike"
+  },
+  "version": "1.0.13",
+  "updater": {
+    "type": "store",
+    "id": "lib.evelyn.Magnificent"
+  },
+  "license": "MIT",
+  "type": "replugged-plugin",
+  "renderer": "src/index.ts",
+  "source": "https://github.com/Socketlike/Magnificent",
+  "image": "https://media.discordapp.net/attachments/907813363294277652/1133028405298864178/FdcFooiY.gif"
+}

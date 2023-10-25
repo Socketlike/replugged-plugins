@@ -1,0 +1,50 @@
+{
+  "name": "Quark",
+  "version": "1.0.31",
+  "description": "A Post-SWC Replugged plugin that allows you to create persistent JavaScript snippets.",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "scripts": {
+    "build:dev": "replugged build plugin --no-reload",
+    "build:dev:bundle": "replugged bundle plugin --no-reload",
+    "build:prod": "replugged build plugin --production --no-reload",
+    "build:prod:bundle": "replugged bundle plugin --production --no-reload",
+    "watch:dev": "replugged build plugin",
+    "watch:prod": "replugged build plugin --production",
+    "check": "tsc --noEmit",
+    "prettier:check": "prettier ./src --check",
+    "eslint:check": "eslint ./src",
+    "prettier:fix": "prettier ./src --write",
+    "eslint:fix": "eslint ./src --fix",
+    "lint": "pnpm run prettier:check && pnpm run eslint:check && pnpm run check",
+    "lint:fix": "pnpm run prettier:fix && pnpm run eslint:fix",
+    "release": "replugged release"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@codemirror/lang-javascript": "^6.1.9",
+    "@codemirror/language": "^6.9.0",
+    "@codemirror/state": "^6.2.1",
+    "@codemirror/view": "^6.16.0",
+    "@lezer/highlight": "^1.1.6",
+    "@mdi/js": "^7.2.96",
+    "@types/lodash": "^4.14.197",
+    "@types/node": "^18.17.6",
+    "@types/react": "^18.2.20",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "codemirror": "^6.0.1",
+    "eslint": "^8.47.0",
+    "eslint-config-dmitmel": "github:dmitmel/eslint-config-dmitmel",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-react": "^7.33.2",
+    "prettier": "^2.8.8",
+    "replugged": "^4.6.0",
+    "style-mod": "^4.0.3",
+    "typescript": "^5.1.6"
+  }
+}

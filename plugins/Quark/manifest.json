@@ -1,0 +1,18 @@
+{
+  "id": "lib.evelyn.Quark",
+  "name": "Quark",
+  "description": "A Post-SWC Replugged plugin that allows you to create persistent JavaScript snippets.",
+  "author": {
+    "name": "Evelyn",
+    "discordID": "285329659023851520",
+    "github": "Socketlike"
+  },
+  "version": "1.0.31",
+  "updater": {
+    "type": "github",
+    "id": "Socketlike/Quark"
+  },
+  "license": "MIT",
+  "type": "replugged-plugin",
+  "renderer": "src/index.ts"
+}
