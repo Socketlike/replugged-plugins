@@ -1,4 +1,4 @@
-name: Release (Production)
+name: Release
 
 on:
   push:
