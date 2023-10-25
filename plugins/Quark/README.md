@@ -3,21 +3,6 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Socketlike/Quark/releases/latest">
-    <img alt="latest release" src="https://img.shields.io/github/v/release/Socketlike/Quark?label=version&sort=semver">
-  </a>
-  <a href="https://github.com/Socketlike/Quark/actions/workflows/lint.yml">
-    <img alt="lint status" src="https://img.shields.io/github/actions/workflow/status/Socketlike/Quark/lint.yml?label=lint">
-  </a>
-  <a href="https://github.com/Socketlike/Quark/actions/workflows/release.yml">
-    <img alt="build status" src="https://img.shields.io/github/actions/workflow/status/Socketlike/Quark/release.yml?label=build">
-  </a>
-  <a href="https://github.com/Socketlike/Quark/actions/workflows/nightly.yml">
-    <img alt="nightly status" src="https://img.shields.io/github/actions/workflow/status/Socketlike/Quark/nightly.yml?label=nightly&color=blueviolet">
-  </a>
-</p>
-
-<p align="center">
   <a href="https://replugged.dev/install?identifier=Socketlike/Quark&source=github">
     <img alt="install" src="https://img.shields.io/github/v/release/Socketlike/Quark?label=Install&sort=semver&style=for-the-badge">
   </a>

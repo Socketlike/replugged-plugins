@@ -3,21 +3,6 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Socketlike/SpotifyModal/releases/latest">
-    <img alt="latest release" src="https://img.shields.io/github/v/release/Socketlike/SpotifyModal?label=version&sort=semver">
-  </a>
-  <a href="https://github.com/Socketlike/SpotifyModal/actions/workflows/lint.yml">
-    <img alt="lint status" src="https://img.shields.io/github/actions/workflow/status/Socketlike/SpotifyModal/lint.yml?label=lint">
-  </a>
-  <a href="https://github.com/Socketlike/SpotifyModal/actions/workflows/release.yml">
-    <img alt="build status" src="https://img.shields.io/github/actions/workflow/status/Socketlike/SpotifyModal/release.yml?label=build">
-  </a>
-  <a href="https://github.com/Socketlike/SpotifyModal/actions/workflows/nightly.yml">
-    <img alt="nightly status" src="https://img.shields.io/github/actions/workflow/status/Socketlike/SpotifyModal/nightly.yml?label=nightly&color=blueviolet">
-  </a>
-</p>
-
-<p align="center">
   <a href="https://replugged.dev/install?identifier=lib.evelyn.SpotifyModal">
     <img alt="install" src="https://img.shields.io/github/v/release/Socketlike/SpotifyModal?label=Install&sort=semver&style=for-the-badge">
   </a>

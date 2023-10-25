@@ -3,18 +3,6 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Socketlike/Magnificent/releases/latest">
-    <img alt="latest release" src="https://img.shields.io/github/v/release/Socketlike/Magnificent?label=version&sort=semver">
-  </a>
-  <a href="https://github.com/Socketlike/Magnificent/actions/workflows/lint.yml">
-    <img alt="lint status" src="https://img.shields.io/github/actions/workflow/status/Socketlike/Magnificent/lint.yml?label=lint">
-  </a>
-  <a href="https://github.com/Socketlike/SpotifyModal/actions/workflows/release.yml">
-    <img alt="build status" src="https://img.shields.io/github/actions/workflow/status/Socketlike/Magnificent/release.yml?label=build">
-  </a>
-</p>
-
-<p align="center">
   <a href="https://replugged.dev/install?identifier=lib.evelyn.Magnificent">
     <img alt="install" src="https://img.shields.io/github/v/release/Socketlike/Magnificent?label=Install&sort=semver&style=for-the-badge">
   </a>
