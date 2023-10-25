@@ -1,15 +1,11 @@
-/* 
-  Jesus fucking Christ this was a nightmare.
-  Thank god that Replugged source code exists.
-  I'm never doing anything remotely close to CodeMirror ever again.
-*/
+import { React } from 'replugged/common';
+import { webpack } from 'replugged';
+
 import { EditorView, basicSetup } from 'codemirror';
 import { EditorState } from '@codemirror/state';
 import { javascript } from '@codemirror/lang-javascript';
-import { common, webpack } from 'replugged';
-import github from './theme';
 
-const { React } = common;
+import github from './theme';
 
 const themeModule = await webpack.waitForModule<{
   theme: 'dark' | 'light';

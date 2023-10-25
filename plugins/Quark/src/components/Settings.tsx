@@ -1,3 +1,20 @@
+import { util } from 'replugged';
+import { React, modal, toast } from 'replugged/common';
+import {
+  Button,
+  FormItem,
+  Modal,
+  Switch,
+  SwitchItem,
+  Text,
+  TextInput,
+  Tooltip,
+} from 'replugged/components';
+
+import { mdiPencil, mdiTrashCan } from '@mdi/js';
+
+import { openEditor } from './Editor';
+
 import {
   Quark,
   add as addQuark,
@@ -5,14 +22,8 @@ import {
   has as hasQuark,
   remove as removeQuark,
   toggle as toggleQuark,
-} from '@quark';
-import { config } from '@util';
-import { mdiPencil, mdiTrashCan } from '@mdi/js';
-import { openEditor } from './Editor';
-import { common, components, util } from 'replugged';
-
-const { React, modal, toast } = common;
-const { Button, FormItem, Modal, Switch, SwitchItem, Text, TextInput, Tooltip } = components;
+} from '../quark';
+import { config } from '../util';
 
 interface ModalProps {
   transitionState: 0 | 1 | 2 | 3 | 4;

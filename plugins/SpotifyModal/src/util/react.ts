@@ -1,6 +1,6 @@
 import { React } from 'replugged/common';
 
-import { DefaultConfigKeys } from '@config';
+import { DefaultConfigKeys } from '../config';
 
 export const useGuardedRef = <T>(
   initialValue: T,

@@ -1,6 +1,6 @@
 import { React } from 'replugged/common';
 
-import { toClassNameString } from '@util';
+import { toClassNameString } from '../util';
 
 export function Icon(props: {
   className?: string;

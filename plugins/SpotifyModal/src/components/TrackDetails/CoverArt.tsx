@@ -1,7 +1,7 @@
 import { React, toast } from 'replugged/common';
 import { Tooltip } from 'replugged/components';
 
-import { config } from '@config';
+import { config } from '../../config';
 
 export default (props: SpotifyApi.TrackObjectFull | SpotifyApi.EpisodeObjectFull): JSX.Element => {
   const containerType = props.type === 'track' ? 'album' : 'show';

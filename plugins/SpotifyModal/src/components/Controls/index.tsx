@@ -1,9 +1,9 @@
 import { React, lodash as _ } from 'replugged/common';
 
-import { config } from '@config';
-import { Components, SettingUpdates } from '@types';
-import { events, toClassNameString, toggleClass } from '@util';
 import Button from './Buttons';
+import { config } from '../../config';
+import { Components, SettingUpdates } from '../../types';
+import { events, toClassNameString, toggleClass } from '../../util';
 
 export const ControlButtons = (props: Components.Props.ControlsComponent): JSX.Element => {
   const [, forceUpdate] = React.useReducer((x) => x + 1, 0);

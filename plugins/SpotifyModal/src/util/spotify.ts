@@ -8,9 +8,9 @@ import {
   SpotifyAccount,
   SpotifySocketPayloadEvents,
   SpotifyStore,
-} from '@types';
-import { events, filterObject, logger } from '@util';
-import { config } from '@config';
+} from '../types';
+import { events, filterObject, logger } from './index';
+import { config } from '../config';
 
 let persist = false;
 

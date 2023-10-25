@@ -1,8 +1,8 @@
 import { React } from 'replugged/common';
 
-import { Artist, default as Artists } from './Artists';
 import Title from './Title';
 import CoverArt from './CoverArt';
+import Artists from './Artists';
 
 export default (props: SpotifyApi.TrackObjectFull | SpotifyApi.EpisodeObjectFull): JSX.Element => {
   return (
@@ -16,4 +16,5 @@ export default (props: SpotifyApi.TrackObjectFull | SpotifyApi.EpisodeObjectFull
   );
 };
 
-export { Artists, Artist, CoverArt, Title };
+export { Artist } from './Artists';
+export { Artists, CoverArt, Title };

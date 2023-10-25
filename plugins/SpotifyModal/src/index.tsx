@@ -1,12 +1,12 @@
 import { React, fluxDispatcher, modal } from 'replugged/common';
 import { Button } from 'replugged/components';
 
-import { config } from '@config';
-import { Modal } from '@components';
-import { events } from '@util';
-import { SpotifyAccount, SpotifySocketData } from '@types';
-import * as util from '@util';
-import * as components from '@components';
+import * as util from './util';
+import * as components from './components';
+import { config } from './config';
+import { Modal } from './components';
+import { events } from './util';
+import { SpotifyAccount, SpotifySocketData } from './types';
 
 import './style.css';
 
@@ -59,7 +59,7 @@ export const stop = async (): Promise<void> => {
   if (res) window.DiscordNative.app.relaunch();
 };
 
-export { Settings } from '@components';
+export { Settings } from './components';
 
 export const _ = Object.freeze({
   components,

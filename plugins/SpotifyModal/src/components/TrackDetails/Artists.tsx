@@ -1,7 +1,7 @@
 import { React, toast } from 'replugged/common';
 
-import { config } from '@config';
-import { overflowMitigation } from '@util';
+import { config } from '../../config';
+import { overflowMitigation } from '../../util';
 
 export const Artist = (
   props: SpotifyApi.ArtistObjectSimplified & { last: boolean },

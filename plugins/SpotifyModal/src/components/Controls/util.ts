@@ -1,5 +1,5 @@
-import { events } from '@util';
-import { ControlInteractions } from '@types';
+import { events } from '../../util';
+import { ControlInteractions } from '../../types';
 
 export const emitRepeat = (
   event: React.MouseEvent,

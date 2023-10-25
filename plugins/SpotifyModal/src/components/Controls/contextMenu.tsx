@@ -2,7 +2,7 @@ import { webpack } from 'replugged';
 import { React, contextMenu } from 'replugged/common';
 import { ContextMenu } from 'replugged/components';
 
-import { Components } from '@types';
+import { Components } from '../../types';
 import Icon from './Icons';
 import {
   emitPlayPause,

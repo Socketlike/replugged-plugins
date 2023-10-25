@@ -1,8 +1,8 @@
 import { React } from 'replugged/common';
 import { Slider } from 'replugged/components';
 
-import { calculatePercentage, events, parseTime, toClassNameString, toggleClass } from '@util';
-import { ControlInteractions } from '@types';
+import { calculatePercentage, events, parseTime, toClassNameString, toggleClass } from '../util';
+import { ControlInteractions } from '../types';
 
 export default (props: {
   duration: number;

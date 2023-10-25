@@ -2,8 +2,8 @@ import { util } from 'replugged';
 import { React, lodash as _ } from 'replugged/common';
 import { Category, Divider, FormItem, SelectItem, Slider, SwitchItem } from 'replugged/components';
 
-import { events, useTrappedSettingsState } from '@util';
-import { DefaultConfig, DefaultConfigKeys, config } from '@config';
+import { events, useTrappedSettingsState } from '../util';
+import { DefaultConfig, DefaultConfigKeys, config } from '../config';
 
 const updateSetting = <T extends DefaultConfigKeys, D extends DefaultConfig[T]>(
   key: T,

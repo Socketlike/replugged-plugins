@@ -11,9 +11,10 @@ import {
   mdiSkipNext,
   mdiSkipPrevious,
 } from '@mdi/js';
-import { toClassNameString } from '@util';
-import { Icon } from '@components/Icon';
-import { Components } from '@types';
+
+import { toClassNameString } from '../../util';
+import { Icon } from '../Icon';
+import { Components } from '../../types';
 
 export default {
   Repeat: ({

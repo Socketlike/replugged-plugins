@@ -1,8 +1,9 @@
 import { React, modal } from 'replugged/common';
 import { Modal, Text, Tooltip } from 'replugged/components';
 
-import { Components } from '@types';
 import { mdiHelpCircle } from '@mdi/js';
+
+import { Components } from '../../types';
 
 const { openModal } = modal;
 

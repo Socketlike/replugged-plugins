@@ -1,8 +1,8 @@
 import { AnyFunction } from 'replugged/types';
 
-import { DebugEvent } from '@types';
-import { logger } from '@util';
-import { config } from '@config';
+import { DebugEvent } from '../types';
+import { logger } from './index';
+import { config } from '../config';
 
 export class EventEmitter extends EventTarget {
   private _events = new Map<string, Set<AnyFunction>>();

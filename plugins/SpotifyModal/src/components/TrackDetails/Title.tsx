@@ -1,7 +1,7 @@
-import { React } from 'replugged/common';
+import { React, toast } from 'replugged/common';
 
-import { config } from '@config';
-import { overflowMitigation, toClassNameString } from '@util';
+import { config } from '../../config';
+import { overflowMitigation, toClassNameString } from '../../util';
 
 export default (props: SpotifyApi.TrackObjectFull | SpotifyApi.EpisodeObjectFull): JSX.Element => {
   const elementRef = React.useRef<HTMLAnchorElement>(null);
@@ -29,7 +29,7 @@ export default (props: SpotifyApi.TrackObjectFull | SpotifyApi.EpisodeObjectFull
 
         if (typeof props.id === 'string') {
           window.DiscordNative.clipboard.copy(`https://open.spotify.com/${props.type}/${props.id}`);
-          common.toast.toast('Copied track URL to clipboard', 1);
+          toast.toast('Copied track URL to clipboard', 1);
         }
       }}>
       {props.name}

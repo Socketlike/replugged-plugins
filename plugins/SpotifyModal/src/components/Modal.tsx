@@ -1,12 +1,12 @@
 import { webpack } from 'replugged';
 import { React, lodash as _ } from 'replugged/common';
 
-import Seekbar from '@components/Seekbar';
-import TrackDetails from '@components/TrackDetails';
-import { Controls, openControlsContextMenu } from '@components/Controls';
-import { config } from '@config';
-import { SettingUpdates } from '@types';
-import { events, toClassNameString, toggleClass, useGuardedRef, useTrappedRef } from '@util';
+import Seekbar from './Seekbar';
+import TrackDetails from './TrackDetails';
+import { Controls, openControlsContextMenu } from './Controls';
+import { config } from '../config';
+import { SettingUpdates } from '../types';
+import { events, toClassNameString, toggleClass, useGuardedRef, useTrappedRef } from '../util';
 
 const containerClasses = await webpack.waitForModule<{
   container: string;

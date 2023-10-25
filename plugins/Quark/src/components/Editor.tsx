@@ -1,9 +1,10 @@
-import { add as addQuark, get as getQuark, restart as restartQuark } from '@quark';
-import { common, components, webpack } from 'replugged';
+import { webpack } from 'replugged';
+import { React, modal } from 'replugged/common';
+import { Modal, Text } from 'replugged/components';
+
 import { CodeMirror } from './CodeMirror';
 
-const { React, modal } = common;
-const { Modal, Text } = components;
+import { add as addQuark, get as getQuark, restart as restartQuark } from '../quark';
 
 const { TabBar } = await webpack.waitForModule<{
   TabBar: ((

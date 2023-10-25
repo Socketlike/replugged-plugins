@@ -1,5 +1,5 @@
 import { Logger, settings } from 'replugged';
-import type { Quark } from '@quark';
+import type { Quark } from './quark';
 
 export const _logger = Logger.plugin('Quark');
 
