@@ -90,7 +90,8 @@ modal css map:
       ._.events.on('message', (e) => console.log(ev.detail.currently_playing_type, ev.detail.item));
     ```
 - what happened to the `no Spotify pause` feature?
-  - removed. you should check out [`NoSpotifyPause`](https://github.com/Socketlike/NoSpotifyPause)
+  - removed. you should check out
+    [`NoSpotifyPause`](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/NoSpotifyPause)
     instead.
 
 ## Miscellaneous
