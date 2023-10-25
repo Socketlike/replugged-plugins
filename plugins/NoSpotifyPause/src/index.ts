@@ -5,16 +5,6 @@ const { modal } = common;
 
 const { Button } = components;
 
-declare global {
-  interface Window {
-    DiscordNative: {
-      app: {
-        relaunch: () => void;
-      };
-    };
-  }
-}
-
 export const start = (): void => {};
 
 export const stop = async (): Promise<void> => {
