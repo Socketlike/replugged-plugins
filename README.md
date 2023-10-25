@@ -23,8 +23,14 @@
 
 ## List of plugins
 
-[SpotifyModal](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/SpotifyModal),
-[NoSpotifyPause](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/NoSpotifyPause),
-[SpotifyListenAlong](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/SpotifyListenAlong),
-[Quark](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/Quark),
-[Magnificent](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/Magnificent)
+- [Magnificent](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/Magnificent):
+  removes the width & height restriction of images in image popouts.
+- [SpotifyModal](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/SpotifyModal):
+  shows a little modal on your user dock that lets you see & control what you're playing on Spotify.
+- [NoSpotifyPause](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/NoSpotifyPause):
+  stops Discord from pausing your Spotify playback while in VC.
+- [SpotifyListenAlong](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/SpotifyListenAlong):
+  allows you to use the "Listen along" feature without Spotify Premium, because Spotify Premium is
+  not actually required
+- [Quark](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/Quark): allows you to
+  create persistent (runs every startup) JavaScript snippets.

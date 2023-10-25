@@ -24,7 +24,7 @@
 </p>
 
 <p align="center">
-  a post-swc Replugged plugin that shows a little modal on your user dock that lets you see & control
+  a Replugged plugin that shows a little modal on your user dock that lets you see & control
 what you're playing on Spotify.
 </p>
 

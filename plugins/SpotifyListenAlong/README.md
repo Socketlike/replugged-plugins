@@ -1,5 +1,5 @@
 <h1 align="center">SpotifyListenAlong</h1>
-  <h4 align="center">A Post-SWC Replugged plugin that allows you to use the "Listen along" feature without Spotify Premium, because Spotify Premium is not actually required</h4>
+  <h4 align="center">a Replugged plugin that allows you to use the "Listen along" feature without Spotify Premium, because Spotify Premium is not actually required</h4>
 <p align="center">
   <a href="https://github.com/Socketlike/SpotifyListenAlong/releases/latest">
     <img alt="latest release" src="https://img.shields.io/github/v/release/Socketlike/SpotifyListenAlong?label=version&sort=semver">

@@ -1,6 +1,14 @@
 /* eslint-disable no-implicit-coercion */
 import { Injector, Logger, webpack } from 'replugged';
 
+interface SpotifyStore {
+  getActiveSocketAndDevice: () => {
+    socket: {
+      isPremium: boolean;
+    };
+  };
+}
+
 let startTime = performance.now();
 let store: SpotifyStore;
 let injected: boolean;

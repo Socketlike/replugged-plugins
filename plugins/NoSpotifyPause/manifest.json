@@ -1,0 +1,22 @@
+{
+  "$schema": "https://socketlike.github.io/replugged/plugin.schema.json",
+  "id": "lib.evelyn.NoSpotifyPause",
+  "name": "NoSpotifyPause",
+  "description": "stops Discord from pausing your Spotify playback while in VC.",
+  "author": {
+    "name": "Evelyn",
+    "discordID": "285329659023851520",
+    "github": "Socketlike"
+  },
+  "version": "1.0.5",
+  "updater": {
+    "type": "store",
+    "id": "lib.evelyn.NoSpotifyPause"
+  },
+  "license": "MIT",
+  "type": "replugged-plugin",
+  "renderer": "src/index.ts",
+  "plaintextPatches": "src/patches.ts",
+  "reloadRequired": true,
+  "source": "https://github.com/Socketlike/NoSpotifyPause"
+}

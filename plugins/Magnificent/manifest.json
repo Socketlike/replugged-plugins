@@ -2,7 +2,7 @@
   "$schema": "https://socketlike.github.io/replugged/plugin.schema.json",
   "id": "lib.evelyn.Magnificent",
   "name": "Magnificent",
-  "description": "A Post-SWC Replugged plugin that removes the width & height restriction on the img element's src in image popouts.",
+  "description": "removes the width & height restriction of images in image popouts.",
   "author": {
     "name": "Evelyn",
     "discordID": "285329659023851520",

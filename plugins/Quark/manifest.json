@@ -2,7 +2,7 @@
   "$schema": "https://socketlike.github.io/replugged/plugin.schema.json",
   "id": "lib.evelyn.Quark",
   "name": "Quark",
-  "description": "A Post-SWC Replugged plugin that allows you to create persistent JavaScript snippets.",
+  "description": "allows you to create persistent (runs every startup) JavaScript snippets.",
   "author": {
     "name": "Evelyn",
     "discordID": "285329659023851520",

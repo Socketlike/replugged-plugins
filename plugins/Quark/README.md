@@ -24,7 +24,7 @@
 </p>
 
 <p align="center">
-  a post-swc Replugged plugin that allows you to create persistent JavaScript snippets.
+  a Replugged plugin that allows you to create persistent (runs every startup) JavaScript snippets.
 </p>
 
 ## Why isn't this on the Replugged plugin store yet?

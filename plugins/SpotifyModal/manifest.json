@@ -2,7 +2,7 @@
   "$schema": "https://socketlike.github.io/replugged/plugin.schema.json",
   "id": "lib.evelyn.SpotifyModal",
   "name": "SpotifyModal",
-  "description": "A Post-SWC Replugged plugin that shows a little modal on your user dock that lets you see & control what you're playing on Spotify.",
+  "description": "shows a little modal on your user dock that lets you see & control what you're playing on Spotify.",
   "author": {
     "name": "Evelyn",
     "discordID": "285329659023851520",
