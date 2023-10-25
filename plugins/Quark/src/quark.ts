@@ -185,7 +185,7 @@ export const remove = (name: string): void => {
       'quarks',
       Object.entries(config.get('quarks'))
         .filter(([n]): boolean => n !== name)
-        .reduce((acc, [name, quark]): Record<string, Quark> => {
+        .reduce<Record<string, Quark>>((acc, [name, quark]): Record<string, Quark> => {
           acc[name] = quark;
           return acc;
         }, {}),
@@ -203,7 +203,7 @@ export const getAll = (cached = false): Record<string, Quark> => {
   if (cached)
     return [...quarks.entries()]
       .sort(([a], [b]): number => a.localeCompare(b))
-      .reduce((acc, [name, quark]): Record<string, Quark> => {
+      .reduce<Record<string, Quark>>((acc, [name, quark]): Record<string, Quark> => {
         acc[name] = _.clone(quark);
         return acc;
       }, {});

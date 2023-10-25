@@ -1,4 +1,4 @@
-import { ControlButtonKinds, DefaultConfig, DefaultConfigKeys } from '@config';
+import { ControlButtonKinds, DefaultConfig, DefaultConfigKeys } from '../../config';
 
 export namespace SettingUpdates {
   interface Base<T extends DefaultConfigKeys, D extends DefaultConfig[T]> {

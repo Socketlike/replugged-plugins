@@ -23,7 +23,7 @@ export default (props: {
   const isSliderChanging = React.useRef<boolean>(false);
   const isUpdating = React.useRef<boolean>(false);
 
-  const interval = React.useRef<NodeJS.Timer>(null);
+  const interval = React.useRef<NodeJS.Timeout>(null);
 
   const progressTimestampRef = React.useRef<number>(0);
   const durationTimestampRef = React.useRef<number>(0);

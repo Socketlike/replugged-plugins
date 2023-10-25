@@ -31,7 +31,7 @@ export const getAccessTokenFromAccountId = (accountId?: string): string => {
 export const getAccountFromAccountId = (accountId?: string): SpotifyAccount => {
   if (!accountId) return spotifyAccounts[currentSpotifyAccount.id];
 
-  return spotifyAccounts.get[accountId];
+  return spotifyAccounts[accountId];
 };
 
 export const refreshSpotifyToken = async (

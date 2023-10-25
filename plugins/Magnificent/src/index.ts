@@ -3,7 +3,6 @@ import { Injector, Logger, util, webpack } from 'replugged';
 const injector = new Injector();
 const logger = Logger.plugin('Magnificent');
 
-// we don't need to go in depth into typing the constructor; it's not needed
 interface ImageComponent {
   (): void;
   prototype: {
@@ -21,14 +20,14 @@ export const start = async (): Promise<void> => {
       // fail fast if image component is rendered as an embed
       let isEmbed = false;
 
-      const image = util.findInReactTree(res, (element): boolean => {
+      const image = util.findInReactTree(res as unknown as util.Tree, (_): boolean => {
+        const element = _ as unknown as JSX.Element;
+
         if (element?.props?.className?.match?.(/clickable-/)) isEmbed = true;
 
         return (element?.type === 'img' && typeof element?.props?.src === 'string') || isEmbed;
       }) as unknown as JSX.Element;
 
-      // (!isEmbed) can be false too.
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (image && !isEmbed)
         image.props.src = image.props.src
           .replace(/\?width=[0-9]+&height=[0-9]+$/, '')
