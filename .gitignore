@@ -1,7 +1,5 @@
-node_modules/
-dist/
 bundle/
-
-plugins/**/.git
-plugins/**/.gitignore
-plugins/**/.github
+dist/
+node_modules/
+plugins/**/unstaged/
+unstaged/
