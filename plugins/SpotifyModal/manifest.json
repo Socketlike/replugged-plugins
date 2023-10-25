@@ -18,6 +18,6 @@
   "renderer": "src/index.tsx",
   "reloadRequired": true,
   "plaintextPatches": "src/patches.ts",
-  "source": "https://github.com/Socketlike/SpotifyModal",
+  "source": "https://github.com/Socketlike/replugged-plugins/blob/main/plugins/SpotifyModal",
   "image": "https://media.discordapp.net/attachments/907813363294277652/1140263816823844864/DiscordCanary_qrl9e1908P.gif"
 }

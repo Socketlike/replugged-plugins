@@ -16,6 +16,6 @@
   "license": "MIT",
   "type": "replugged-plugin",
   "renderer": "src/index.ts",
-  "source": "https://github.com/Socketlike/Magnificent",
+  "source": "https://github.com/Socketlike/replugged-plugins/blob/main/plugins/Magnificent",
   "image": "https://media.discordapp.net/attachments/907813363294277652/1133028405298864178/FdcFooiY.gif"
 }

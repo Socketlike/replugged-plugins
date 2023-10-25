@@ -1,4 +1,5 @@
 {
+  "$schema": "https://socketlike.github.io/replugged/plugin.schema.json",
   "id": "lib.evelyn.Quark",
   "name": "Quark",
   "description": "A Post-SWC Replugged plugin that allows you to create persistent JavaScript snippets.",
@@ -10,9 +11,9 @@
   "version": "1.0.31",
   "updater": {
     "type": "github",
-    "id": "Socketlike/Quark"
+    "id": "Socketlike/replugged-plugins"
   },
   "license": "MIT",
   "type": "replugged-plugin",
-  "renderer": "./src/index.ts"
+  "renderer": "src/index.ts"
 }
