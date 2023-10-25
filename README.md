@@ -12,9 +12,6 @@
   <a href="https://github.com/Socketlike/replugged-plugins/actions/workflows/release.yml">
     <img alt="build status" src="https://img.shields.io/github/actions/workflow/status/Socketlike/replugged-plugins/release.yml?label=build">
   </a>
-  <a href="https://github.com/Socketlike/replugged-plugins/actions/workflows/nightly.yml">
-    <img alt="nightly status" src="https://img.shields.io/github/actions/workflow/status/Socketlike/replugged-plugins/nightly.yml?label=nightly&color=blueviolet">
-  </a>
 </p>
 
 <p align="center">
