@@ -19,4 +19,4 @@
   "plaintextPatches": "src/patches.ts",
   "reloadRequired": true,
   "source": "https://github.com/Socketlike/replugged-plugins/blob/main/plugins/NoSpotifyPause"
-
+}
