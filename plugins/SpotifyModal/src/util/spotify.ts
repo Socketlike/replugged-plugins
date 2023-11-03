@@ -3,16 +3,9 @@ import React from 'react';
 import { webpack } from 'replugged';
 import { lodash as _, api, fluxDispatcher, toast } from 'replugged/common';
 
-import {
-  ControlInteractions,
-  HTTPResponse,
-  SpotifyAccount,
-  SpotifySocketPayloadEvents,
-  SpotifyStore,
-} from '../types';
+import { HTTPResponse, SpotifyAccount, SpotifySocketPayloadEvents, SpotifyStore } from '../types';
 import { logger } from './misc';
 import { EventEmitter, events as globalEvents } from './events';
-import { config } from '../config';
 
 let events = new EventEmitter();
 let persist = false;
