@@ -1,6 +1,7 @@
 import { settings } from 'replugged';
 
 export type ControlButtonKinds =
+  | string
   | 'shuffle'
   | 'skip-prev'
   | 'play-pause'
@@ -8,8 +9,11 @@ export type ControlButtonKinds =
   | 'repeat'
   | 'blank';
 
+export type PluginStopBehaviors = string | 'ask' | 'restart' | 'ignore';
+
+export type VisibilityStates = string | 'always' | 'hidden' | 'auto';
+
 export const defaultConfig = {
-  automaticReauthentication: true,
   controlsLayout: ['shuffle', 'skip-prev', 'play-pause', 'skip-next', 'repeat'] as [
     ControlButtonKinds,
     ControlButtonKinds,
@@ -17,12 +21,12 @@ export const defaultConfig = {
     ControlButtonKinds,
     ControlButtonKinds,
   ],
-  controlsVisibilityState: 'auto',
+  controlsVisibilityState: 'auto' as VisibilityStates,
   debugging: false,
   hyperlinkURI: true,
-  pluginStopBehavior: 'ask',
+  pluginStopBehavior: 'ask' as PluginStopBehaviors,
   seekbarEnabled: true,
-  seekbarVisibilityState: 'always',
+  seekbarVisibilityState: 'always' as VisibilityStates,
   spotifyAppClientId: '',
   spotifyAppRedirectURI: '',
   spotifyAppOauthTokens: {} as Record<string, string>,

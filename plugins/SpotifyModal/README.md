@@ -72,7 +72,9 @@ modal css map:
     ```js
     replugged.plugins
       .getExports('lib.evelyn.SpotifyModal')
-      ._.events.on('message', (e) => console.log(ev.detail.currently_playing_type, ev.detail.item));
+      .util.events.on('message', (e) =>
+        console.log(ev.detail.currently_playing_type, ev.detail.item),
+      );
     ```
 - what happened to the `no Spotify pause` feature?
   - removed. you should check out

@@ -6,8 +6,6 @@ export namespace SettingUpdates {
     value: D;
   }
 
-  export type AutomaticReauthentication = Base<'automaticReauthentication', boolean>;
-
   export type ControlsLayout = Base<
     'controlsLayout',
     [
@@ -28,7 +26,7 @@ export namespace SettingUpdates {
 
   export type HyperlinkURI = Base<'hyperlinkURI', boolean>;
 
-  export type PluginStopBehavior = Base<'pluginStopBehavior', 'ask' | 'restartDiscord'>;
+  export type PluginStopBehavior = Base<'pluginStopBehavior', 'ask' | 'restart' | 'ignore'>;
 
   export type SeekbarEnabled = Base<'seekbarEnabled', boolean>;
 
@@ -48,7 +46,6 @@ export namespace SettingUpdates {
   >;
 
   export type Union =
-    | AutomaticReauthentication
     | ControlsLayout
     | ControlsVisibilityState
     | Debugging

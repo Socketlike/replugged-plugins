@@ -1,6 +1,4 @@
-import { Logger, types } from 'replugged';
-
-const logger = Logger.plugin('NoSpotifyPause');
+import { types } from 'replugged';
 
 export default [
   {
@@ -8,17 +6,18 @@ export default [
     replacements: [
       {
         // auto pause trigger
-        match: /function (.{1,3})\(\)\{[^}]+?\.SPOTIFY_AUTO_PAUSED.+?\}+/,
+        match: /function (.{1,3})\(\)\{if\(null==.{1,3}\).+?\.info\("Playback auto paused"\)\}/,
         replace: 'function $1(){}',
       },
       {
         // vc watcher
-        match: /function (.{1,3})\([^}]+?\)\{[^}]+?\.isCurrentClientInVoiceChannel.+?return!1\}/,
-        replace: 'function $1(){return !1}',
+        match:
+          /function (.{1,3})\(.{1,3}\)\{.{1,40}=.{1,3}\.default\.isCurrentClientInVoiceChannel\(\).+?return!1}/,
+        replace: 'function $1(){return!1}',
       },
       {
         // remove voice state detection
-        match: /VOICE_STATE_UPDATES:function\(.+?\)\{.+?\},/,
+        match: /VOICE_STATE_UPDATES:function\(.+?\)\{.+\},/,
         replace: '',
       },
       {

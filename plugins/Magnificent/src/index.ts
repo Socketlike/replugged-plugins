@@ -12,7 +12,7 @@ interface ImageComponent {
 
 export const start = async (): Promise<void> => {
   const imageComponent = await webpack.waitForModule<ImageComponent | undefined>(
-    webpack.filters.bySource('"imageClassName"'),
+    webpack.filters.bySource('showThumbhashPlaceholder:'),
   );
 
   if (imageComponent?.prototype)
@@ -23,7 +23,7 @@ export const start = async (): Promise<void> => {
       const image = util.findInReactTree(res as unknown as util.Tree, (_): boolean => {
         const element = _ as unknown as JSX.Element;
 
-        if (element?.props?.className?.match?.(/clickable-/)) isEmbed = true;
+        if (element?.props?.className?.match?.(/clickable_/)) isEmbed = true;
 
         return (element?.type === 'img' && typeof element?.props?.src === 'string') || isEmbed;
       }) as unknown as JSX.Element;

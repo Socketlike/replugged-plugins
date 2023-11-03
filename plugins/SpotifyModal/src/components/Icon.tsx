@@ -1,6 +1,6 @@
 import { React } from 'replugged/common';
 
-import { toClassNameString } from '../util';
+import { mergeClassNames } from '@shared/dom';
 
 export function Icon(props: {
   className?: string;
@@ -10,7 +10,7 @@ export function Icon(props: {
 }): JSX.Element {
   return (
     <svg
-      className={toClassNameString('icon', props.className)}
+      className={mergeClassNames('icon', props.className)}
       viewBox='0 0 24 24'
       onClick={props.onClick}
       onContextMenu={props.onContextMenu}>

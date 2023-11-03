@@ -2,32 +2,33 @@ import { webpack } from 'replugged';
 import { React, contextMenu } from 'replugged/common';
 import { ContextMenu } from 'replugged/components';
 
-import { Components } from '../../types';
-import Icon from './Icons';
-import {
-  emitPlayPause,
-  emitRepeat,
-  emitShuffle,
-  emitSkipNext,
-  emitSkipPrev,
-  emitVolume,
-} from './util';
+import { MenuSliderControl as MenuSliderControlType } from '@shared/types/discord';
 
-export const { MenuSliderControl } = await webpack.waitForModule<{
-  MenuSliderControl: Components.MenuSliderControl;
+import Icon from './Icons';
+
+import { config } from '../../config';
+import { useControls } from '../../util';
+
+const { MenuSliderControl } = await webpack.waitForModule<{
+  MenuSliderControl: MenuSliderControlType;
 }>(webpack.filters.byProps('Slider', 'Spinner'));
 
 export const openControlsContextMenu = (
   ev: React.MouseEvent,
-  props: Components.Props.ControlsContextMenu,
+  props: {
+    update: React.MutableRefObject<(state: SpotifyApi.CurrentPlaybackResponse) => void>;
+    state: SpotifyApi.CurrentPlaybackResponse;
+    progress: React.MutableRefObject<number>;
+  },
 ): void =>
   contextMenu.open(ev, (): JSX.Element => {
-    const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
+    const [state, setState] = React.useState(props.state);
+    const { setProgress, setPlaying, setRepeat, setShuffle, skip, setVolume } = useControls();
     const destroyed = React.useRef<boolean>(false);
 
     React.useEffect((): VoidFunction => {
-      props.forceUpdate.current = (): void => {
-        if (!destroyed.current) forceUpdate();
+      props.update.current = (state: SpotifyApi.CurrentPlaybackResponse): void => {
+        if (!destroyed.current) setState(state);
       };
 
       return (): void => {
@@ -42,50 +43,57 @@ export const openControlsContextMenu = (
             <ContextMenu.MenuItem
               label='Off'
               id='repeat-off'
-              disabled={props.repeat.current === 'off'}
+              disabled={state.repeat_state === 'off'}
               icon={() => <Icon.Repeat state='off' />}
-              action={(e: React.MouseEvent): void => emitRepeat(e, props.repeat.current, 'off')}
+              action={(): void => setRepeat('off')}
             />
             <ContextMenu.MenuItem
               label='All'
               id='repeat-all'
-              disabled={props.repeat.current === 'context'}
+              disabled={state.repeat_state === 'context'}
               icon={() => <Icon.Repeat state='context' />}
-              action={(e: React.MouseEvent): void => emitRepeat(e, props.repeat.current, 'context')}
+              action={(): void => setRepeat('context')}
             />
             <ContextMenu.MenuItem
               label='Track'
               id='repeat-track'
-              disabled={props.repeat.current === 'track'}
+              disabled={state.repeat_state === 'track'}
               icon={() => <Icon.Repeat state='track' />}
-              action={(e: React.MouseEvent): void => emitRepeat(e, props.repeat.current, 'track')}
+              action={(): void => setRepeat('track')}
             />
           </ContextMenu.MenuItem>
           <ContextMenu.MenuItem
             label='Skip to previous track'
             id='skip-previous'
             icon={() => <Icon.SkipPrev />}
-            action={(e: React.MouseEvent): void =>
-              emitSkipPrev(e, props.duration.current, props.progress.current)
-            }
+            action={(): void => {
+              if (
+                config.get('skipPreviousShouldResetProgress') &&
+                props.progress.current >=
+                  (state.item?.duration_ms || Infinity) *
+                    config.get('skipPreviousProgressResetThreshold')
+              )
+                setProgress(0);
+              else skip(false);
+            }}
           />
           <ContextMenu.MenuItem
-            label={`${props.playing.current ? 'Pause' : 'Resume'} playback`}
+            label={`${state.is_playing ? 'Pause' : 'Resume'} playback`}
             id='play-pause'
-            icon={() => <Icon.PlayPause state={props.playing.current} />}
-            action={(e: React.MouseEvent): void => emitPlayPause(e, props.playing.current)}
+            icon={() => <Icon.PlayPause state={state.is_playing} />}
+            action={(): void => setPlaying(!state.is_playing)}
           />
           <ContextMenu.MenuItem
             label='Skip to next track'
             id='skip-next'
             icon={() => <Icon.SkipNext />}
-            action={(e: React.MouseEvent) => emitSkipNext(e)}
+            action={() => skip(true)}
           />
           <ContextMenu.MenuItem
-            label={`Toggle shuffle ${props.shuffle.current ? 'off' : 'on'}`}
+            label={`Toggle shuffle ${state.shuffle_state ? 'off' : 'on'}`}
             id='shuffle'
-            icon={() => <Icon.Shuffle state={!props.shuffle.current} />}
-            action={(e: React.MouseEvent): void => emitShuffle(e, props.shuffle.current)}
+            icon={() => <Icon.Shuffle state={!state.shuffle_state} />}
+            action={(): void => setShuffle(state.shuffle_state)}
           />
           <ContextMenu.MenuControlItem
             id='volume'
@@ -93,9 +101,9 @@ export const openControlsContextMenu = (
             control={(data, ref): JSX.Element => (
               <MenuSliderControl
                 aria-label='Player volume'
-                value={props.volume.current}
+                value={state.device.volume_percent}
                 maxValue={100}
-                onChange={(newVolume: number): void => emitVolume(newVolume)}
+                onChange={(newVolume: number): void => setVolume(Math.round(newVolume))}
                 {...data}
                 ref={ref}
               />

@@ -1,62 +1,65 @@
 import { React } from 'replugged/common';
 
 import Icons from './Icons';
-import { emitPlayPause, emitRepeat, emitShuffle, emitSkipNext, emitSkipPrev } from './util';
 
 export default {
-  Repeat: ({ state }: { state: 'context' | 'track' | 'off' }): JSX.Element => {
-    const nextState = React.useMemo((): 'off' | 'context' | 'track' => {
-      if (state === 'off') return 'context';
-      else if (state === 'context') return 'track';
-      else return 'off';
-    }, [state]);
-
-    return (
-      <Icons.Repeat
-        onContextMenu={(e: React.MouseEvent): void => e.stopPropagation()}
-        onClick={(e: React.MouseEvent): void => emitRepeat(e, state, nextState)}
-        state={state}
-      />
-    );
-  },
-
-  SkipPrev: ({
-    duration,
-    progress,
+  Repeat: ({
+    state,
+    onClick,
   }: {
-    duration: number;
-    progress: React.MutableRefObject<number>;
-  }): JSX.Element => (
+    state: 'context' | 'track' | 'off';
+    onClick: (e: React.MouseEvent) => void;
+  }): React.ReactElement => (
+    <Icons.Repeat
+      onContextMenu={(e: React.MouseEvent): void => e.stopPropagation()}
+      onClick={onClick}
+      state={state}
+    />
+  ),
+
+  SkipPrev: ({ onClick }: { onClick: (e: React.MouseEvent) => void }): React.ReactElement => (
     <Icons.SkipPrev
       onContextMenu={(e: React.MouseEvent): void => e.stopPropagation()}
-      onClick={(e: React.MouseEvent): void => emitSkipPrev(e, duration, progress.current)}
+      onClick={onClick}
     />
   ),
 
-  PlayPause: ({ state }: { state: boolean }): JSX.Element => (
+  PlayPause: ({
+    state,
+    onClick,
+  }: {
+    state: boolean;
+    onClick: (e: React.MouseEvent) => void;
+  }): React.ReactElement => (
     <Icons.PlayPause
       onContextMenu={(e: React.MouseEvent): void => e.stopPropagation()}
-      onClick={(e: React.MouseEvent): void => emitPlayPause(e, state)}
+      onClick={onClick}
       state={state}
     />
   ),
 
-  SkipNext: (): JSX.Element => (
+  SkipNext: ({ onClick }: { onClick: (e: React.MouseEvent) => void }): React.ReactElement => (
     <Icons.SkipNext
       onContextMenu={(e: React.MouseEvent): void => e.stopPropagation()}
-      onClick={(e: React.MouseEvent): void => emitSkipNext(e)}
+      onClick={onClick}
     />
   ),
 
-  Shuffle: ({ state }: { state: boolean }) => (
+  Shuffle: ({
+    state,
+    onClick,
+  }: {
+    state: boolean;
+    onClick: (e: React.MouseEvent) => void;
+  }): React.ReactElement => (
     <Icons.Shuffle
       onContextMenu={(e: React.MouseEvent): void => e.stopPropagation()}
-      onClick={(e: React.MouseEvent): void => emitShuffle(e, state)}
+      onClick={onClick}
       state={state}
     />
   ),
 
-  None: (): JSX.Element => (
+  None: (): React.ReactElement => (
     <Icons.None onContextMenu={(e: React.MouseEvent): void => e.stopPropagation()} />
   ),
 };

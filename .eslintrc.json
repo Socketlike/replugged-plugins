@@ -92,7 +92,7 @@
     },
 
     {
-      "files": ["**/plugins/**/*.{ts,tsx}"],
+      "files": ["**/plugins/**/*.{ts,tsx}", "**/shared/**/*.{ts,tsx}"],
 
       "extends": ["eslint-config-dmitmel/rules/typescript/with-type-checking"],
 

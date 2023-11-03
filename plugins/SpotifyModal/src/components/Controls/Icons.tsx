@@ -12,7 +12,8 @@ import {
   mdiSkipPrevious,
 } from '@mdi/js';
 
-import { toClassNameString } from '../../util';
+import { mergeClassNames } from '@shared/dom';
+
 import { Icon } from '../Icon';
 import { Components } from '../../types';
 
@@ -23,7 +24,7 @@ export default {
     state,
   }: Components.Props.InteractableWithState<'context' | 'track' | 'off'>): JSX.Element => (
     <Icon
-      className={toClassNameString(
+      className={mergeClassNames(
         `repeat-${state === 'context' ? 'all' : state}-icon`,
         state !== 'off' ? 'active' : '',
       )}
@@ -70,7 +71,7 @@ export default {
     state,
   }: Components.Props.InteractableWithState<boolean>): JSX.Element => (
     <Icon
-      className={toClassNameString(`shuffle-${state ? 'on' : 'off'}-icon`, state ? 'active' : '')}
+      className={mergeClassNames(`shuffle-${state ? 'on' : 'off'}-icon`, state ? 'active' : '')}
       path={state ? mdiShuffle : mdiShuffleDisabled}
       onContextMenu={onContextMenu}
       onClick={onClick}

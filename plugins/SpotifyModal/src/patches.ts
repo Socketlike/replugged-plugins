@@ -16,14 +16,13 @@ const patches: types.PlaintextPatch[] = [
     find: 'dealer.spotify.com',
     replacements: [
       {
-        match: /(\.handleMessage=function\((.{1,3})\)){/,
+        match: /handleMessage\((.+?)\)\{/,
         replace:
-          '$1{window.replugged.plugins.getExports("lib.evelyn.SpotifyModal")?.emitMessage?.($2, this);',
+          '$&window?.replugged?.plugins?.getExports?.("lib.evelyn.SpotifyModal")?.emitMessage?.($1, this);',
       },
       {
-        match:
-          /([^;]{1,3})\.hasConnectedAccount=function\(\)\{.{0,50}return Object\.keys\((.{1,3})\)/,
-        replace: '$1.spotifyModalAccounts=$2;$&',
+        match: /hasConnectedAccount\(\)\{[^}]+?Object\.keys\((.+?)\)\.length/,
+        replace: 'spotifyModalAccounts=$1;$&',
       },
     ],
   },

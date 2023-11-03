@@ -1,45 +1,22 @@
-/* eslint-disable no-implicit-coercion */
 import { Injector, Logger, webpack } from 'replugged';
 
-interface SpotifyStore {
-  getActiveSocketAndDevice: () => {
-    socket: {
-      isPremium: boolean;
-    };
-  };
-}
-
-let startTime = performance.now();
-let store: SpotifyStore;
-let injected: boolean;
-
 const injector = new Injector();
-const logger = Logger.plugin('SpotifyListenAlong');
+const logger = Logger.plugin('SpotifyListenAlong', '#1DB954');
 
-export const getStore = async (): Promise<boolean> =>
-  Boolean(
-    store ||
-      (store = await webpack.waitForModule<SpotifyStore>(
-        webpack.filters.byProps('getActiveSocketAndDevice'),
-      )),
-  );
+export const start = async (): Promise<void> => {
+  const store = await webpack.waitForModule<{
+    getActiveSocketAndDevice(): {
+      socket: {
+        isPremium: boolean;
+      };
+    };
+  }>(webpack.filters.byProps('getActiveSocketAndDevice'));
 
-export const inject = async (): Promise<void> => {
-  try {
-    if (!injected && (await getStore()))
-      injected = !!injector.after(store, 'getActiveSocketAndDevice', (_, res) => {
-        if (res?.socket) res.socket.isPremium = true;
-        return res;
-      });
-  } catch (error) {
-    logger.error('An error occurred while injecting to store.', error);
-  }
-
-  if (!injected) {
-    logger.log('Store is not injected. Next attempt in 20 seconds.');
-    setTimeout(inject, 20e3);
-  } else logger.log(`Injected; Took ${performance.now() - startTime}ms.`);
+  if (store)
+    injector.after(store, 'getActiveSocketAndDevice', (_, res) => {
+      if (res?.socket) res.socket.isPremium = true;
+      return res;
+    });
+  else logger.error('SpotifyStore not found');
 };
-
-export const start = async (): Promise<void> => await inject();
 export const stop = (): void => injector.uninjectAll();
