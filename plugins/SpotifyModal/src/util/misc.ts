@@ -1,4 +1,4 @@
-import { Injector, Logger } from 'replugged';
+import { Injector, Logger, webpack } from 'replugged';
 
 import { DefaultConfigKeys, config } from '../config';
 
@@ -21,11 +21,6 @@ export const logger = {
 
   _: _logger,
 };
-
-export const calculatePercentage = (current: number, end: number): string =>
-  typeof end !== 'number' || typeof current !== 'number'
-    ? '0%'
-    : `${((current / end) * 100).toFixed(4)}%`;
 
 export const parseTime = (ms: number): string => {
   if (typeof ms !== 'number') return '';
@@ -72,3 +67,7 @@ export const useTrappedSettingsState = <T extends DefaultConfigKeys, D>(
     useSettingRes.onChange(newValue);
   },
 });
+
+export const containerClasses = await webpack.waitForModule<{
+  container: string;
+}>(webpack.filters.byProps('container', 'godlike'));

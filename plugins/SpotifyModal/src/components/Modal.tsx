@@ -1,4 +1,3 @@
-import { webpack } from 'replugged';
 import { React, lodash as _ } from 'replugged/common';
 
 import { mergeClassNames } from '@shared/dom';
@@ -10,13 +9,9 @@ import { SpotifyIcon } from './Icon';
 
 import { config } from '../config';
 import { useState } from '../util/spotify';
-import { events } from '../util';
+import { containerClasses, events } from '../util';
 import { SettingUpdates } from '../types';
 import { openControlsContextMenu } from './Controls/contextMenu';
-
-const containerClasses = await webpack.waitForModule<{
-  container: string;
-}>(webpack.filters.byProps('container', 'godlike'));
 
 export const ErrorPlaceholder = (props: {
   text?: string;
@@ -82,7 +77,7 @@ export const Modal = (): React.ReactElement => {
       className={mergeClassNames(
         'spotify-modal',
         showModal ? '' : 'hidden',
-        containerClasses.container,
+        containerClasses?.container,
       )}
       onContextMenu={(e: React.MouseEvent) =>
         openControlsContextMenu(e, {

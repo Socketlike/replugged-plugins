@@ -3,9 +3,11 @@ import { ErrorBoundary } from 'replugged/components';
 
 import { restartDiscordDialog } from '@shared';
 
+import { mergeClassNames } from '@shared/dom';
+
 import { config } from './config';
 import { ErrorPlaceholder, Modal } from './components';
-import { events, logger } from './util';
+import { containerClasses, events, logger } from './util';
 import { SpotifyAccount, SpotifySocketPayloadEvents } from './types';
 
 import './style.css';
@@ -14,13 +16,19 @@ export const renderModal = (): JSX.Element => (
   <div id='spotify-modal-root'>
     <ErrorBoundary
       fallback={
-        <ErrorPlaceholder
-          text='Rendering Modal failed'
-          subtext='See DevTools Console for more details.'
-        />
+        <div
+          id='spotify-modal'
+          className={mergeClassNames('spotify-modal', containerClasses?.container)}>
+          <div className='main'>
+            <ErrorPlaceholder
+              text='Something went wrong while rendering the modal :('
+              subtext='See Console output for more details.'
+            />
+          </div>
+        </div>
       }
       onError={(error: Error, message: React.ErrorInfo) =>
-        logger._.error('(modal)', `rendering failed`, error, message)
+        logger._.error('(modal)', `rendering Modal failed\n`, error, '\n', message)
       }>
       <Modal />
     </ErrorBoundary>
