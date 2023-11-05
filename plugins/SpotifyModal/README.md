@@ -30,32 +30,38 @@ modal css map:
 - root: `#spotify-modal-root`
   - modal: `.spotify-modal` | `#spotify-modal`
     - main view: `.main`
-    - header: `.header`
-      - cover art: `.cover-art`
-      - track info: `.track-info`
-        - song name: `.title`
-        - artists: `.artists`
-    - seekbar container: `.seekbar-container`
-      - seekbar timestamps: `.seekbar-timestamps`
-        - current: `.current`
-        - song duration: `.duration`
-      - seekbar: `.seekbar`
-        - inner: `.inner`
-        - grabber: `.grabber`
-    - controls: `.controls`
-      - repeat icons:
-        - all: `.repeat-all-icon`
-        - off: `.repeat-off-icon`
-        - track: `.repeat-track-icon`
-      - skip previous: `.skip-prev-icon`
-      - play: `.play-icon`
-      - pause: `.pause-icon`
-      - skip next: `.skip-next-icon`
-      - shuffle icons:
-        - off: `.shuffle-off-icon`
-        - on: `.shuffle-on-icon`
-      - no icon: `.no-icon`
-      - active (highlight): `.active`
+      - error placeholder: `.placeholder`
+        - Spotify icon: `.spotify` | `.icon` | `.icon.spotify`
+        - message: `.text`
+          - main (header): `.main`
+          - sub: `.sub`
+      - header: `.header`
+        - cover art: `.cover-art`
+        - track info: `.track-info`
+          - song name: `.title`
+          - artists: `.artists`
+      - seekbar container: `.seekbar-container`
+        - seekbar timestamps: `.seekbar-timestamps`
+          - current: `.current`
+          - song duration: `.duration`
+        - seekbar: `.seekbar`
+          - inner: `.inner`
+          - grabber: `.grabber`
+      - controls: `.controls`
+        - repeat icons:
+          - all: `.repeat-all-icon`
+          - off: `.repeat-off-icon`
+          - track: `.repeat-track-icon`
+        - skip previous: `.skip-prev-icon`
+        - play: `.play-icon`
+        - pause: `.pause-icon`
+        - skip next: `.skip-next-icon`
+        - shuffle icons:
+          - off: `.shuffle-off-icon`
+          - on: `.shuffle-on-icon`
+        - no icon: `.no-icon`
+        - active (highlight): `.active`
+        - disabled: `.disabled`
   - divider: `.divider`
 
 ## Known issues
