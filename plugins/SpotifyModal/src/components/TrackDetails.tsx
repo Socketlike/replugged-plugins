@@ -53,7 +53,7 @@ export const Artists = (props: {
                   {artist.name}
                 </a>
                 {index !== (props.track as SpotifyApi.TrackObjectFull).artists.length - 1
-                  ? ','
+                  ? ', '
                   : ''}
               </>
             ),

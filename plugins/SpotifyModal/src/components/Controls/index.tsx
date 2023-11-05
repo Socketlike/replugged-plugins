@@ -6,18 +6,20 @@ import Button from './Buttons';
 
 import { config } from '../../config';
 import { SettingUpdates } from '../../types';
-import { events, logger, useControls } from '../../util';
+import { events, logger, useControls, usePlayerControlStates } from '../../util';
+
+const nextRepeatStates = {
+  normal: { off: 'context', context: 'track', track: 'off' },
+  noContext: { off: 'track', context: 'off', track: 'off' },
+  noTrack: { off: 'context', context: 'off', track: 'off' },
+} as const;
 
 export const ControlButtons = (props: {
-  duration: number;
-  playing: boolean;
   progress: React.MutableRefObject<number>;
-  repeat: 'off' | 'context' | 'track';
-  shouldShow: boolean;
-  shuffle: boolean;
 }): JSX.Element => {
   const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
   const { setProgress, setPlaying, setRepeat, setShuffle, skip } = useControls();
+  const { disallows, duration, playing, repeat, shuffle } = usePlayerControlStates();
 
   React.useEffect(() =>
     events.on<SettingUpdates.Union>('settingsUpdate', (event): void => {
@@ -35,22 +37,37 @@ export const ControlButtons = (props: {
         switch (kind) {
           case 'play-pause':
             return (
-              <Button.PlayPause onClick={() => setPlaying(!props.playing)} state={props.playing} />
+              <Button.PlayPause
+                onClick={() =>
+                  (playing ? !disallows.pausing : !disallows.resuming) && setPlaying(!playing)
+                }
+                state={playing}
+                disabled={playing ? disallows.pausing : disallows.resuming}
+              />
             );
           case 'repeat':
             return (
               <Button.Repeat
-                onClick={() =>
-                  setRepeat(
-                    ({ off: 'context', context: 'track', track: 'off' } as const)[props.repeat],
-                  )
-                }
-                state={props.repeat}
+                onClick={() => {
+                  if (disallows.toggling_repeat_context && disallows.toggling_repeat_track) return;
+
+                  if (disallows.toggling_repeat_context)
+                    setRepeat(nextRepeatStates.noContext[repeat]);
+                  else if (disallows.toggling_repeat_track)
+                    setRepeat(nextRepeatStates.noTrack[repeat]);
+                  else setRepeat(nextRepeatStates.normal[repeat]);
+                }}
+                state={repeat}
+                disabled={disallows.toggling_repeat_context && disallows.toggling_repeat_track}
               />
             );
           case 'shuffle':
             return (
-              <Button.Shuffle onClick={() => setShuffle(!props.shuffle)} state={props.shuffle} />
+              <Button.Shuffle
+                onClick={() => !disallows.toggling_shuffle && setShuffle(!shuffle)}
+                state={shuffle}
+                disabled={disallows.toggling_shuffle}
+              />
             );
           case 'skip-prev':
             return (
@@ -59,15 +76,22 @@ export const ControlButtons = (props: {
                   if (
                     config.get('skipPreviousShouldResetProgress') &&
                     props.progress.current >=
-                      props.duration * config.get('skipPreviousProgressResetThreshold')
+                      duration * config.get('skipPreviousProgressResetThreshold') &&
+                    !disallows.seeking
                   )
                     setProgress(0);
-                  else skip(false);
+                  else if (!disallows.skipping_prev) skip(false);
                 }}
+                disabled={disallows.skipping_prev && disallows.seeking}
               />
             );
           case 'skip-next':
-            return <Button.SkipNext onClick={() => skip(true)} />;
+            return (
+              <Button.SkipNext
+                onClick={() => !disallows.skipping_next && skip(true)}
+                disabled={disallows.skipping_next}
+              />
+            );
           default:
             return <Button.None />;
         }
@@ -77,12 +101,8 @@ export const ControlButtons = (props: {
 };
 
 export const Controls = (props: {
-  duration: number;
-  playing: boolean;
   progress: React.MutableRefObject<number>;
-  repeat: 'off' | 'context' | 'track';
   shouldShow: boolean;
-  shuffle: boolean;
 }): React.ReactElement => (
   <div className={mergeClassNames('controls-container', props.shouldShow ? '' : 'hidden')}>
     <ControlButtons {...props} />

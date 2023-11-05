@@ -24,16 +24,3 @@ export type SpotifySocketPayloadEvents =
       };
       type: 'DEVICE_STATE_CHANGED';
     };
-
-export type SpotifySocketData =
-  | {
-      type: 'pong';
-    }
-  | {
-      payloads: [
-        {
-          events: [SpotifySocketPayloadEvents];
-        },
-      ];
-      type: 'message';
-    };

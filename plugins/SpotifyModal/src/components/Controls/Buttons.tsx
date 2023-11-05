@@ -6,56 +6,79 @@ export default {
   Repeat: ({
     state,
     onClick,
+    disabled,
   }: {
     state: 'context' | 'track' | 'off';
     onClick: (e: React.MouseEvent) => void;
+    disabled?: boolean;
   }): React.ReactElement => (
     <Icons.Repeat
       onContextMenu={(e: React.MouseEvent): void => e.stopPropagation()}
       onClick={onClick}
       state={state}
+      disabled={disabled}
     />
   ),
 
-  SkipPrev: ({ onClick }: { onClick: (e: React.MouseEvent) => void }): React.ReactElement => (
+  SkipPrev: ({
+    onClick,
+    disabled,
+  }: {
+    onClick: (e: React.MouseEvent) => void;
+    disabled?: boolean;
+  }): React.ReactElement => (
     <Icons.SkipPrev
       onContextMenu={(e: React.MouseEvent): void => e.stopPropagation()}
       onClick={onClick}
+      disabled={disabled}
     />
   ),
 
   PlayPause: ({
     state,
     onClick,
+    disabled,
   }: {
     state: boolean;
     onClick: (e: React.MouseEvent) => void;
+    disabled?: boolean;
   }): React.ReactElement => (
     <Icons.PlayPause
       onContextMenu={(e: React.MouseEvent): void => e.stopPropagation()}
       onClick={onClick}
       state={state}
+      disabled={disabled}
     />
   ),
 
-  SkipNext: ({ onClick }: { onClick: (e: React.MouseEvent) => void }): React.ReactElement => (
+  SkipNext: ({
+    onClick,
+    disabled,
+  }: {
+    onClick: (e: React.MouseEvent) => void;
+    disabled?: boolean;
+  }): React.ReactElement => (
     <Icons.SkipNext
       onContextMenu={(e: React.MouseEvent): void => e.stopPropagation()}
       onClick={onClick}
+      disabled={disabled}
     />
   ),
 
   Shuffle: ({
     state,
     onClick,
+    disabled,
   }: {
     state: boolean;
     onClick: (e: React.MouseEvent) => void;
+    disabled?: boolean;
   }): React.ReactElement => (
     <Icons.Shuffle
       onContextMenu={(e: React.MouseEvent): void => e.stopPropagation()}
       onClick={onClick}
       state={state}
+      disabled={disabled}
     />
   ),
 

@@ -16,9 +16,9 @@ const patches: types.PlaintextPatch[] = [
     find: 'dealer.spotify.com',
     replacements: [
       {
-        match: /handleMessage\((.+?)\)\{/,
+        match: /handleEvent\((.{1,3})\)\{/,
         replace:
-          '$&window?.replugged?.plugins?.getExports?.("lib.evelyn.SpotifyModal")?.emitMessage?.($1, this);',
+          '$&window?.replugged?.plugins?.getExports?.("lib.evelyn.SpotifyModal")?.emitEvent?.($1, this);',
       },
       {
         match: /hasConnectedAccount\(\)\{[^}]+?Object\.keys\((.+?)\)\.length/,

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React from 'react';
 import { webpack } from 'replugged';
-import { lodash as _, api, fluxDispatcher, toast } from 'replugged/common';
+import { lodash as _, toast } from 'replugged/common';
 
 import { HTTPResponse, SpotifyAccount, SpotifySocketPayloadEvents, SpotifyStore } from '../types';
 import { logger } from './misc';
@@ -15,6 +15,10 @@ export const store = await webpack.waitForModule<SpotifyStore>(
   webpack.filters.byProps('getActiveSocketAndDevice'),
 );
 
+export const spotifyUtils = await webpack.waitForModule<{
+  getAccessToken: (accountId: string) => Promise<HTTPResponse<{ access_token: string }>>;
+}>(webpack.filters.byProps('SpotifyAPI'));
+
 export const spotifyAccounts = store.spotifyModalAccounts || ({} as Record<string, SpotifyAccount>);
 
 export const getTokenFromAccountId = (accountId: string): string =>
@@ -22,29 +26,16 @@ export const getTokenFromAccountId = (accountId: string): string =>
 
 export const refreshSpotifyToken = async (
   accountId: string,
-  oauth?: boolean,
 ): Promise<HTTPResponse<{ access_token: string }>> => {
-  if (oauth) logger.error('(spotify)', 'oauth token refresh not implemented');
-  else {
-    const token = await api.get<{ access_token: string }>({
-      url: `/users/@me/connections/spotify/${accountId}/access-token`,
-    });
+  const token = await spotifyUtils.getAccessToken(accountId);
 
-    if (token.ok) {
-      fluxDispatcher.dispatch({
-        type: 'SPOTIFY_ACCOUNT_ACCESS_TOKEN',
-        accountId,
-        accessToken: token.body.access_token,
-      });
+  if (accountId in spotifyAccounts && token.ok)
+    spotifyAccounts[accountId].accessToken = token.body.access_token;
 
-      spotifyAccounts[accountId].accessToken = token.body.access_token;
-    }
-
-    return token;
-  }
+  return token;
 };
 
-export const sendSpotifyRequest = (
+export const sendSpotifyRequest = async (
   accountId: string,
   endpoint: string,
   init: RequestInit,
@@ -55,33 +46,33 @@ export const sendSpotifyRequest = (
 
   persist = true;
 
-  return fetch(new URL(endpoint.replace(/^\//, ''), 'https://api.spotify.com/v1/me/'), {
+  const res = await fetch(new URL(endpoint.replace(/^\//, ''), 'https://api.spotify.com/v1/me/'), {
     ...init,
     mode: 'cors',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${getTokenFromAccountId(accountId)}`,
     },
-  }).then(async (res) => {
-    if (res.status === 401) {
-      if (!isRetrying) {
-        logger.log('(spotify)', 'reauthing');
+  });
 
-        const token = await refreshSpotifyToken(accountId);
+  if (res.status === 401) {
+    if (!isRetrying) {
+      logger.log('(spotify)', 'reauthing');
 
-        if (token.ok) {
-          logger.log('(spotify)', 'retrying', endpoint);
-          return await sendSpotifyRequest(accountId, endpoint, init, true);
-        }
+      const token = await refreshSpotifyToken(accountId);
+
+      if (token.ok) {
+        logger.log('(spotify)', 'retrying', endpoint);
+        return await sendSpotifyRequest(accountId, endpoint, init, true);
       }
-
-      logger.log('(spotify)', 'retrying', endpoint, 'failed');
     }
 
-    persist = false;
+    logger.log('(spotify)', 'retrying', endpoint, 'failed');
+  }
 
-    return res;
-  });
+  persist = false;
+
+  return res;
 };
 
 const dummyState = {
@@ -95,29 +86,41 @@ const dummyState = {
   device: {
     volume_percent: 0,
   },
+  actions: {
+    disallows: {
+      resuming: true,
+      seeking: true,
+      skipping_next: true,
+      skipping_prev: true,
+      toggling_shuffle: true,
+      toggling_repeat_context: true,
+      toggling_repeat_track: true,
+    },
+  },
   repeat_state: 'off',
   shuffle_state: false,
   is_playing: false,
   progress_ms: 0,
   timestamp: 0,
-} as SpotifyApi.CurrentPlaybackResponse;
+  isDummy: true,
+} as SpotifyApi.CurrentPlaybackResponse & { isDummy: boolean };
 
-let playbackState: SpotifyApi.CurrentPlaybackResponse = _.clone(dummyState);
+let playbackState: SpotifyApi.CurrentPlaybackResponse & { isDummy: boolean } = _.clone(dummyState);
 
 export const setState = (newState: SpotifyApi.CurrentPlaybackResponse): void => {
-  playbackState = newState || _.clone(dummyState);
+  playbackState = newState?.item ? { ...newState, isDummy: false } : _.clone(dummyState);
 
   logger.log('(spotify)', 'new state', _.clone(playbackState));
 
   events.emit('state', playbackState);
 };
 
-export const useState = (): SpotifyApi.CurrentPlaybackResponse => {
+export const useState = (): SpotifyApi.CurrentPlaybackResponse & { isDummy: boolean } => {
   const [state, setState] = React.useState(playbackState);
 
   React.useEffect(
     (): (() => void) | void =>
-      events.on<SpotifyApi.CurrentPlaybackResponse>('state', (event): void =>
+      events.on<SpotifyApi.CurrentPlaybackResponse & { isDummy: boolean }>('state', (event): void =>
         setState(event.detail),
       ),
     [],
@@ -135,16 +138,26 @@ export const setCurrentAccountId = (newCurrentAccountId: string): void => {
   events.emit('activeAccount', newCurrentAccountId);
 };
 
-export const useTime = (): {
+export const usePlayerControlStates = (): {
+  disallows: SpotifyApi.DisallowsObject;
   duration: number;
   playing: boolean;
   progress: number;
+  repeat: 'off' | 'context' | 'track';
+  shuffle: boolean;
   timestamp: number;
+  volume: number;
 } => {
   const [duration, setDuration] = React.useState(playbackState?.item?.duration_ms || 0);
   const [playing, setPlaying] = React.useState(playbackState?.is_playing);
   const [progress, setProgress] = React.useState(playbackState?.progress_ms || 0);
-  const [timestamp, setTimestamp] = React.useState(playbackState?.timestamp);
+  const [repeat, setRepeat] = React.useState(playbackState?.repeat_state || 'off');
+  const [shuffle, setShuffle] = React.useState(playbackState?.shuffle_state);
+  const [timestamp, setTimestamp] = React.useState(playbackState?.timestamp || 0);
+  const [volume, setVolume] = React.useState(playbackState?.device?.volume_percent || 0);
+  const [disallows, setDisallows] = React.useState(
+    playbackState?.actions?.disallows || _.clone(dummyState.actions.disallows),
+  );
 
   React.useEffect(
     (): (() => void) | void =>
@@ -152,12 +165,16 @@ export const useTime = (): {
         setDuration(event.detail?.item?.duration_ms || 0);
         setPlaying(event.detail?.is_playing);
         setProgress(event.detail?.progress_ms || 0);
-        setTimestamp(event.detail?.timestamp);
+        setRepeat(event.detail?.repeat_state || 'off');
+        setShuffle(event.detail?.shuffle_state);
+        setTimestamp(event.detail?.timestamp || 0);
+        setVolume(playbackState?.device?.volume_percent || 0);
+        setDisallows(playbackState?.actions?.disallows || _.clone(dummyState.actions.disallows));
       }),
     [],
   );
 
-  return { duration, playing, progress, timestamp };
+  return { disallows, duration, playing, progress, repeat, shuffle, timestamp, volume };
 };
 
 export const useControls = (): {
@@ -238,7 +255,7 @@ globalEvents.on('accountSwitch', () => {
 globalEvents.on<{
   accountId: string;
   data: SpotifySocketPayloadEvents;
-}>('message', (event): void => {
+}>('event', (event): void => {
   const { accountId, data } = event.detail;
 
   if (!currentAccountId) setCurrentAccountId(accountId);
@@ -298,9 +315,17 @@ globalEvents.on<SpotifyApi.CurrentPlaybackResponse>('ready', async (): Promise<v
 
       if (raw && res.ok) {
         const state = JSON.parse(raw) as SpotifyApi.CurrentPlaybackResponse;
-        setCurrentAccountId(accountId);
 
-        events.emit('stateUpdate', state);
+        globalEvents.emit<{
+          accountId: string;
+          data: SpotifySocketPayloadEvents;
+        }>('event', {
+          accountId,
+          data: {
+            event: { state: { ...state, timestamp: Date.now() } },
+            type: 'PLAYER_STATE_CHANGED',
+          },
+        });
 
         break;
       }

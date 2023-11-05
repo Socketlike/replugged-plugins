@@ -5,7 +5,7 @@ import { restartDiscordDialog } from '@shared';
 import { config } from './config';
 import { Modal } from './components';
 import { events, logger } from './util';
-import { SpotifyAccount, SpotifySocketData } from './types';
+import { SpotifyAccount, SpotifySocketPayloadEvents } from './types';
 
 import './style.css';
 
@@ -15,11 +15,11 @@ export const renderModal = (): JSX.Element => (
   </div>
 );
 
-export const emitMessage = (msg: MessageEvent<string>, account: SpotifyAccount): void => {
-  const raw = JSON.parse(msg.data) as SpotifySocketData;
+export const emitEvent = (data: SpotifySocketPayloadEvents, account: SpotifyAccount): void => {
+  if (data.type === 'PLAYER_STATE_CHANGED' && typeof data.event.state?.timestamp === 'number')
+    data.event.state.timestamp = Date.now();
 
-  if (raw.type === 'message' && raw.payloads?.[0]?.events?.[0])
-    events.emit('message', { accountId: account.accountId, data: raw.payloads[0].events[0] });
+  events.emit('event', { accountId: account.accountId, data });
 };
 
 const postConnectionOpenListener = (): void => {

@@ -72,7 +72,7 @@ modal css map:
     ```js
     replugged.plugins
       .getExports('lib.evelyn.SpotifyModal')
-      .util.events.on('message', (e) =>
+      .util.events.on('message', (ev) =>
         console.log(ev.detail.currently_playing_type, ev.detail.item),
       );
     ```

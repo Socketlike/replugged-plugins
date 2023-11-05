@@ -22,11 +22,15 @@ export default {
     onClick,
     onContextMenu,
     state,
-  }: Components.Props.InteractableWithState<'context' | 'track' | 'off'>): JSX.Element => (
+    disabled,
+  }: Components.Props.InteractableWithState<'context' | 'track' | 'off'> & {
+    disabled?: boolean;
+  }): JSX.Element => (
     <Icon
       className={mergeClassNames(
         `repeat-${state === 'context' ? 'all' : state}-icon`,
-        state !== 'off' ? 'active' : '',
+        state !== 'off' && !disabled && 'active',
+        disabled && 'disabled',
       )}
       path={state === 'off' ? mdiRepeatOff : state === 'track' ? mdiRepeatOnce : mdiRepeat}
       onContextMenu={onContextMenu}
@@ -34,9 +38,13 @@ export default {
     />
   ),
 
-  SkipPrev: ({ onContextMenu, onClick }: Components.Props.Interactable): JSX.Element => (
+  SkipPrev: ({
+    onContextMenu,
+    onClick,
+    disabled,
+  }: Components.Props.Interactable & { disabled?: boolean }): JSX.Element => (
     <Icon
-      className='skip-prev-icon'
+      className={mergeClassNames('skip-prev-icon', disabled && 'disabled')}
       path={mdiSkipPrevious}
       onContextMenu={onContextMenu}
       onClick={onClick}
@@ -47,18 +55,23 @@ export default {
     onClick,
     onContextMenu,
     state,
-  }: Components.Props.InteractableWithState<boolean>): JSX.Element => (
+    disabled,
+  }: Components.Props.InteractableWithState<boolean> & { disabled?: boolean }): JSX.Element => (
     <Icon
-      className={`${state ? 'pause' : 'play'}-icon`}
+      className={mergeClassNames(`${state ? 'pause' : 'play'}-icon`, disabled && 'disabled')}
       path={state ? mdiPause : mdiPlay}
       onContextMenu={onContextMenu}
       onClick={onClick}
     />
   ),
 
-  SkipNext: ({ onClick, onContextMenu }: Components.Props.Interactable): JSX.Element => (
+  SkipNext: ({
+    onClick,
+    onContextMenu,
+    disabled,
+  }: Components.Props.Interactable & { disabled?: boolean }): JSX.Element => (
     <Icon
-      className='skip-next-icon'
+      className={mergeClassNames('skip-next-icon', disabled && 'disabled')}
       path={mdiSkipNext}
       onContextMenu={onContextMenu}
       onClick={onClick}
@@ -69,9 +82,14 @@ export default {
     onClick,
     onContextMenu,
     state,
-  }: Components.Props.InteractableWithState<boolean>): JSX.Element => (
+    disabled,
+  }: Components.Props.InteractableWithState<boolean> & { disabled?: boolean }): JSX.Element => (
     <Icon
-      className={mergeClassNames(`shuffle-${state ? 'on' : 'off'}-icon`, state ? 'active' : '')}
+      className={mergeClassNames(
+        `shuffle-${state ? 'on' : 'off'}-icon`,
+        state && !disabled && 'active',
+        disabled && 'disabled',
+      )}
       path={state ? mdiShuffle : mdiShuffleDisabled}
       onContextMenu={onContextMenu}
       onClick={onClick}

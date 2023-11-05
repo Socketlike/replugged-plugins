@@ -4,7 +4,7 @@ import { Slider } from 'replugged/components';
 import { useInterval } from '@shared/react';
 import { mergeClassNames } from '@shared/dom';
 
-import { parseTime, useControls, useTime } from '../util';
+import { parseTime, useControls, usePlayerControlStates } from '../util';
 
 export const Seekbar = (props: {
   shouldShow: boolean;
@@ -15,7 +15,7 @@ export const Seekbar = (props: {
   const isSliderChanging = React.useRef<boolean>(false);
   const isUpdating = React.useRef<boolean>(false);
 
-  const { duration, progress, playing, timestamp } = useTime();
+  const { disallows, duration, progress, playing, timestamp } = usePlayerControlStates();
   const [realProgress, setRealProgress] = React.useState(progress);
 
   useInterval(() => {
@@ -29,7 +29,7 @@ export const Seekbar = (props: {
     if (!isSliderChanging.current) setRealProgress(nowProgress);
 
     props.progressRef.current = nowProgress;
-  }, 500);
+  }, 1000);
 
   return (
     <div className={mergeClassNames('seekbar-container', !props.shouldShow ? 'hidden' : '')}>
@@ -45,6 +45,7 @@ export const Seekbar = (props: {
         minValue={0}
         maxValue={duration}
         value={realProgress}
+        disabled={disallows.seeking}
         asValueChanges={(): void => {
           if (!isSliderChanging.current) isSliderChanging.current = true;
         }}
