@@ -1,6 +1,5 @@
 import { webpack } from 'replugged';
 import { React, lodash as _ } from 'replugged/common';
-import { ErrorBoundary } from 'replugged/components';
 
 import { mergeClassNames } from '@shared/dom';
 
@@ -11,7 +10,7 @@ import { SpotifyIcon } from './Icon';
 
 import { config } from '../config';
 import { useState } from '../util/spotify';
-import { events, logger } from '../util';
+import { events } from '../util';
 import { SettingUpdates } from '../types';
 import { openControlsContextMenu } from './Controls/contextMenu';
 
@@ -19,7 +18,10 @@ const containerClasses = await webpack.waitForModule<{
   container: string;
 }>(webpack.filters.byProps('container', 'godlike'));
 
-export const Placeholder = (props: { text?: string; subtext?: string }): React.ReactElement => (
+export const ErrorPlaceholder = (props: {
+  text?: string;
+  subtext?: string;
+}): React.ReactElement => (
   <div className='placeholder'>
     <SpotifyIcon className='spotify' />
     {(props?.text || props?.subtext) && (
@@ -75,46 +77,35 @@ export const Modal = (): React.ReactElement => {
   );
 
   return (
-    <ErrorBoundary
-      fallback={
-        <Placeholder
-          text='Rendering Modal failed'
-          subtext='See DevTools Console for more details.'
-        />
+    <div
+      id='spotify-modal'
+      className={mergeClassNames(
+        'spotify-modal',
+        showModal ? '' : 'hidden',
+        containerClasses.container,
+      )}
+      onContextMenu={(e: React.MouseEvent) =>
+        openControlsContextMenu(e, {
+          progress: progressRef,
+        })
       }
-      onError={(error: Error, message: React.ErrorInfo) =>
-        logger._.error('(modal)', `rendering failed`, error, message)
-      }>
-      <div
-        id='spotify-modal'
-        className={mergeClassNames(
-          'spotify-modal',
-          showModal ? '' : 'hidden',
-          containerClasses.container,
+      onMouseEnter={(): void => setShowOptionalComponents(true)}
+      onMouseLeave={(): void => setShowOptionalComponents(false)}>
+      <div className='main'>
+        {state.isDummy ? (
+          <ErrorPlaceholder
+            text='Waiting for player...'
+            subtext='Update your Spotify state manually if this takes too long.'
+          />
+        ) : (
+          <>
+            <TrackDetails track={state.item} />
+            <Seekbar shouldShow={showSeekbar} progressRef={progressRef} />
+            <Controls progress={progressRef} shouldShow={showControls} />{' '}
+          </>
         )}
-        onContextMenu={(e: React.MouseEvent) =>
-          openControlsContextMenu(e, {
-            progress: progressRef,
-          })
-        }
-        onMouseEnter={(): void => setShowOptionalComponents(true)}
-        onMouseLeave={(): void => setShowOptionalComponents(false)}>
-        <div className='main'>
-          {state.isDummy ? (
-            <Placeholder
-              text='Waiting for player...'
-              subtext='Update your Spotify state manually if this takes too long.'
-            />
-          ) : (
-            <>
-              <TrackDetails track={state.item} />
-              <Seekbar shouldShow={showSeekbar} progressRef={progressRef} />
-              <Controls progress={progressRef} shouldShow={showControls} />{' '}
-            </>
-          )}
-        </div>
-        <div className='divider' />
       </div>
-    </ErrorBoundary>
+      <div className='divider' />
+    </div>
   );
 };

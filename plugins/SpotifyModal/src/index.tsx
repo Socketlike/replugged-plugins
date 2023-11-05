@@ -1,9 +1,10 @@
 import { React, fluxDispatcher } from 'replugged/common';
+import { ErrorBoundary } from 'replugged/components';
 
 import { restartDiscordDialog } from '@shared';
 
 import { config } from './config';
-import { Modal } from './components';
+import { ErrorPlaceholder, Modal } from './components';
 import { events, logger } from './util';
 import { SpotifyAccount, SpotifySocketPayloadEvents } from './types';
 
@@ -11,7 +12,18 @@ import './style.css';
 
 export const renderModal = (): JSX.Element => (
   <div id='spotify-modal-root'>
-    <Modal />
+    <ErrorBoundary
+      fallback={
+        <ErrorPlaceholder
+          text='Rendering Modal failed'
+          subtext='See DevTools Console for more details.'
+        />
+      }
+      onError={(error: Error, message: React.ErrorInfo) =>
+        logger._.error('(modal)', `rendering failed`, error, message)
+      }>
+      <Modal />
+    </ErrorBoundary>
   </div>
 );
 
