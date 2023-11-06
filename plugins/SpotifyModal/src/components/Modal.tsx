@@ -69,6 +69,7 @@ export const Modal = (): React.ReactElement => {
           break;
       }
     }),
+    [],
   );
 
   return (
