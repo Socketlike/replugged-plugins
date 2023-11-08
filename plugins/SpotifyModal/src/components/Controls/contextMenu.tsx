@@ -90,7 +90,7 @@ export const openControlsContextMenu = (
               id='shuffle'
               disabled={disallows.toggling_shuffle}
               icon={() => <Icon.Shuffle state={!shuffle} />}
-              action={(): void => setShuffle(shuffle)}
+              action={(): void => setShuffle(!shuffle)}
             />
             <ContextMenu.MenuControlItem
               id='volume'
