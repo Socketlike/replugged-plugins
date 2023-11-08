@@ -244,14 +244,6 @@ export const useControls = (): {
     [accountId],
   );
 
-  React.useEffect(
-    () =>
-      events.on('activeAccount', (event) => {
-        setActiveAccountId(event.detail);
-      }),
-    [],
-  );
-
   return { setPlaying, setRepeat, setShuffle, setProgress, setVolume, skip };
 };
 
