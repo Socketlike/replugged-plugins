@@ -140,7 +140,7 @@ export const useActiveAccountId = (): string => {
 };
 
 export const setActiveAccountId = (newActiveAccountId: string): void => {
-  currentAccountId = newActiveAccountId;
+  activeAccountId = newActiveAccountId;
 
   if (!newActiveAccountId) logger.log('(spotify)', 'clear current account');
   else logger.log('(spotify)', 'new active account', newActiveAccountId);
