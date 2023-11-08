@@ -17,6 +17,7 @@ export const Seekbar = (props: {
 
   const { disallows, duration, progress, playing, timestamp } = usePlayerControlStates();
   const [realProgress, setRealProgress] = React.useState(progress);
+  const [seekingProgress, setSeekingProgress] = React.useState(0);
 
   useInterval(() => {
     const now = Date.now();
@@ -31,10 +32,15 @@ export const Seekbar = (props: {
     props.progressRef.current = nowProgress;
   }, 1000);
 
+  // reset seeking progress on new state
+  React.useEffect((): void => setSeekingProgress(0), [timestamp]);
+
   return (
     <div className={mergeClassNames('seekbar-container', !props.shouldShow ? 'hidden' : '')}>
       <div className='seekbar-timestamps'>
-        <span className='progress'>{parseTime(realProgress)}</span>
+        <span className='progress'>
+          {parseTime(isSliderChanging.current ? seekingProgress : realProgress)}
+        </span>
         <span className='duration'>{parseTime(duration)}</span>
       </div>
       <Slider
@@ -46,8 +52,9 @@ export const Seekbar = (props: {
         maxValue={duration}
         value={realProgress}
         disabled={disallows.seeking}
-        asValueChanges={(): void => {
+        asValueChanges={(value: number): void => {
           if (!isSliderChanging.current) isSliderChanging.current = true;
+          setSeekingProgress(value);
         }}
         onChange={(newValue: number): void => {
           if (isUpdating.current) return;
