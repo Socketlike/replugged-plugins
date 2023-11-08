@@ -14,7 +14,7 @@ export default {
   }): React.ReactElement => (
     <Icons.Repeat
       onContextMenu={(e: React.MouseEvent): void => e.stopPropagation()}
-      onClick={onClick}
+      onClick={disabled ? () => {} : onClick}
       state={state}
       disabled={disabled}
     />
@@ -29,7 +29,7 @@ export default {
   }): React.ReactElement => (
     <Icons.SkipPrev
       onContextMenu={(e: React.MouseEvent): void => e.stopPropagation()}
-      onClick={onClick}
+      onClick={disabled ? () => {} : onClick}
       disabled={disabled}
     />
   ),
@@ -45,7 +45,7 @@ export default {
   }): React.ReactElement => (
     <Icons.PlayPause
       onContextMenu={(e: React.MouseEvent): void => e.stopPropagation()}
-      onClick={onClick}
+      onClick={disabled ? () => {} : onClick}
       state={state}
       disabled={disabled}
     />
@@ -60,7 +60,7 @@ export default {
   }): React.ReactElement => (
     <Icons.SkipNext
       onContextMenu={(e: React.MouseEvent): void => e.stopPropagation()}
-      onClick={onClick}
+      onClick={disabled ? () => {} : onClick}
       disabled={disabled}
     />
   ),
@@ -76,7 +76,7 @@ export default {
   }): React.ReactElement => (
     <Icons.Shuffle
       onContextMenu={(e: React.MouseEvent): void => e.stopPropagation()}
-      onClick={onClick}
+      onClick={disabled ? () => {} : onClick}
       state={state}
       disabled={disabled}
     />

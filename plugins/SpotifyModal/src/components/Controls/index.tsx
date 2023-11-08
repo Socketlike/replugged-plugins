@@ -38,9 +38,7 @@ export const ControlButtons = (props: {
           case 'play-pause':
             return (
               <Button.PlayPause
-                onClick={() =>
-                  (playing ? !disallows.pausing : !disallows.resuming) && setPlaying(!playing)
-                }
+                onClick={() => setPlaying(!playing)}
                 state={playing}
                 disabled={playing ? disallows.pausing : disallows.resuming}
               />
@@ -49,8 +47,6 @@ export const ControlButtons = (props: {
             return (
               <Button.Repeat
                 onClick={() => {
-                  if (disallows.toggling_repeat_context && disallows.toggling_repeat_track) return;
-
                   if (disallows.toggling_repeat_context)
                     setRepeat(nextRepeatStates.noContext[repeat]);
                   else if (disallows.toggling_repeat_track)
@@ -64,7 +60,7 @@ export const ControlButtons = (props: {
           case 'shuffle':
             return (
               <Button.Shuffle
-                onClick={() => !disallows.toggling_shuffle && setShuffle(!shuffle)}
+                onClick={() => setShuffle(!shuffle)}
                 state={shuffle}
                 disabled={disallows.toggling_shuffle}
               />
@@ -91,10 +87,7 @@ export const ControlButtons = (props: {
             );
           case 'skip-next':
             return (
-              <Button.SkipNext
-                onClick={() => !disallows.skipping_next && skip(true)}
-                disabled={disallows.skipping_next}
-              />
+              <Button.SkipNext onClick={() => skip(true)} disabled={disallows.skipping_next} />
             );
           default:
             return <Button.None />;
