@@ -8,7 +8,7 @@ import { Controls, openControlsContextMenu } from './Controls';
 import { SpotifyIcon } from './Icon';
 
 import { config } from '../config';
-import { useState } from '../util/spotify';
+import { useActiveAccountId, useState } from '../util/spotify';
 import { containerClasses, globalEvents } from '../util';
 
 export const ErrorPlaceholder = (props: {
@@ -28,6 +28,7 @@ export const ErrorPlaceholder = (props: {
 
 export const Modal = (): React.ReactElement => {
   const state = useState();
+  const activeAccountId = useActiveAccountId();
 
   const progressRef = React.useRef<number>(0);
 
@@ -87,7 +88,7 @@ export const Modal = (): React.ReactElement => {
       onMouseEnter={(): void => setShowOptionalComponents(true)}
       onMouseLeave={(): void => setShowOptionalComponents(false)}>
       <div className='main'>
-        {state.is_dummy ? (
+        {state.is_dummy || !showModal || !activeAccountId ? (
           <ErrorPlaceholder
             text='Waiting for player...'
             subtext='Update your Spotify state manually if this takes too long.'

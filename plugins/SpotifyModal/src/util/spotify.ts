@@ -16,7 +16,7 @@ let events = new EventEmitter<{
   activeAccount: string;
 }>();
 let persist = false;
-let currentAccountId: string;
+let activeAccountId: string;
 
 export const store = webpack.getByStoreName<SpotifyStore>('SpotifyStore');
 
@@ -128,13 +128,24 @@ export const useState = (): SpotifyState => {
   return state;
 };
 
-export const setCurrentAccountId = (newCurrentAccountId: string): void => {
-  currentAccountId = newCurrentAccountId;
+export const useActiveAccountId = (): string => {
+  const [id, setId] = React.useState(activeAccountId);
 
-  if (!currentAccountId) logger.log('(spotify)', 'clear current account');
-  else logger.log('(spotify)', 'new active account', newCurrentAccountId);
+  React.useEffect(
+    (): (() => void) => events.on('activeAccount', (event): void => setId(event.detail)),
+    [],
+  );
 
-  events.emit('activeAccount', newCurrentAccountId);
+  return id;
+};
+
+export const setActiveAccountId = (newActiveAccountId: string): void => {
+  currentAccountId = newActiveAccountId;
+
+  if (!newActiveAccountId) logger.log('(spotify)', 'clear current account');
+  else logger.log('(spotify)', 'new active account', newActiveAccountId);
+
+  events.emit('activeAccount', newActiveAccountId);
 };
 
 export const usePlayerControlStates = (): {
@@ -184,26 +195,27 @@ export const useControls = (): {
   setVolume: (volume: number) => void;
   skip: (next: boolean) => void;
 } => {
-  const [activeAccountId, setActiveAccountId] = React.useState(currentAccountId);
+  const accountId = useActiveAccountId();
+
   const setPlaying = React.useCallback(
     (state: boolean) => {
       void sendSpotifyRequest(activeAccountId, `player/${state ? 'play' : 'pause'}`, {
         method: 'PUT',
       });
     },
-    [activeAccountId],
+    [accountId],
   );
   const setRepeat = React.useCallback(
     (state: 'off' | 'context' | 'track') => {
       void sendSpotifyRequest(activeAccountId, `player/repeat?state=${state}`, { method: 'PUT' });
     },
-    [activeAccountId],
+    [accountId],
   );
   const setShuffle = React.useCallback(
     (state: boolean) => {
       void sendSpotifyRequest(activeAccountId, `player/shuffle?state=${state}`, { method: 'PUT' });
     },
-    [activeAccountId],
+    [accountId],
   );
   const setProgress = React.useCallback(
     (position: number) => {
@@ -211,7 +223,7 @@ export const useControls = (): {
         method: 'PUT',
       });
     },
-    [activeAccountId],
+    [accountId],
   );
   const setVolume = React.useCallback(
     (volume: number) => {
@@ -221,7 +233,7 @@ export const useControls = (): {
         { method: 'PUT' },
       );
     },
-    [activeAccountId],
+    [accountId],
   );
   const skip = React.useCallback(
     (next: boolean) => {
@@ -229,7 +241,7 @@ export const useControls = (): {
         method: 'POST',
       });
     },
-    [activeAccountId],
+    [accountId],
   );
 
   React.useEffect(
@@ -246,7 +258,7 @@ export const useControls = (): {
 globalEvents.on('accountSwitch', () => {
   logger.log('(spotify)', 'clear states');
 
-  setCurrentAccountId('');
+  setActiveAccountId('');
 
   globalEvents.emit('showUpdate', false);
 });
@@ -255,9 +267,9 @@ globalEvents
   .chainableOn('event', (event): void => {
     const { accountId, data } = event.detail;
 
-    if (!currentAccountId) setCurrentAccountId(accountId);
+    if (!activeAccountId) setActiveAccountId(accountId);
 
-    if (currentAccountId === accountId)
+    if (activeAccountId === accountId)
       switch (data.type) {
         case 'PLAYER_STATE_CHANGED':
           setState(data.event.state);
@@ -265,7 +277,7 @@ globalEvents
 
         case 'DEVICE_STATE_CHANGED': {
           if (!persist) {
-            if (!data.event.devices.length) setCurrentAccountId('');
+            if (!data.event.devices.length) setActiveAccountId('');
 
             globalEvents.emit('showUpdate', Boolean(data.event.devices.length));
             logger.log(

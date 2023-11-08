@@ -31,3 +31,19 @@
   not actually required
 - [Quark](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/Quark): allows you to
   create persistent (runs every startup) JavaScript snippets.
+
+## Building
+
+- Clone repository
+  ```bash
+  git clone https://github.com/Socketlike/replugged-plugins --recurse-submodules
+  ```
+- Install dependencies
+  ```bash
+  pnpm i
+  ```
+- Build
+  ```bash
+  pnpm build:dev # Produces unminified with sourcemapped artifacts
+  pnpm build:prod # Produces minified artifacts
+  ```
