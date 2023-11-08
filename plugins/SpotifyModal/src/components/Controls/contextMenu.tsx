@@ -17,12 +17,25 @@ export const openControlsContextMenu = (
   ev: React.MouseEvent,
   props: {
     progress: React.MutableRefObject<number>;
+    forceUpdate: React.MutableRefObject<() => void>;
   },
 ): void =>
   contextMenu.open(ev, (): JSX.Element => {
     const state = useState();
     const { setProgress, setPlaying, setRepeat, setShuffle, skip, setVolume } = useControls();
     const { disallows, duration, playing, repeat, shuffle, volume } = usePlayerControlStates();
+
+    const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
+    const destroyed = React.useRef(false);
+    const isVolumeUpdating = React.useRef(false);
+
+    React.useEffect((): (() => void) => {
+      props.forceUpdate.current = () => !destroyed.current && forceUpdate();
+
+      return () => {
+        destroyed.current = true;
+      };
+    }, []);
 
     return (
       <ContextMenu.ContextMenu onClose={contextMenu.close} navId='spotify-modal-controls'>
@@ -55,25 +68,22 @@ export const openControlsContextMenu = (
               label='Skip to previous track'
               id='skip-previous'
               disabled={
-                !config.get('skipPreviousShouldResetProgress')
-                  ? disallows.skipping_prev
-                  : disallows.skipping_prev && disallows.seeking
+                config.get('skipPreviousShouldResetProgress') &&
+                config.get('skipPreviousProgressResetThreshold') * duration <=
+                  props.progress.current
+                  ? disallows.seeking
+                  : disallows.skipping_prev
               }
               icon={() => <Icon.SkipPrev />}
               action={(): void => {
                 if (
                   config.get('skipPreviousShouldResetProgress') &&
-                  props.progress.current >=
-                    duration * config.get('skipPreviousProgressResetThreshold') &&
+                  duration * config.get('skipPreviousProgressResetThreshold') <=
+                    props.progress.current &&
                   !disallows.seeking
                 )
                   setProgress(0);
                 else if (!disallows.skipping_prev) skip(false);
-                else
-                  toast.toast(
-                    '[SpotifyModal] Unable to skip to previous track.',
-                    toast.Kind.FAILURE,
-                  );
               }}
             />
             <ContextMenu.MenuItem
@@ -105,7 +115,15 @@ export const openControlsContextMenu = (
                   aria-label='Player volume'
                   value={volume}
                   maxValue={100}
-                  onChange={(newVolume: number): void => setVolume(Math.round(newVolume))}
+                  onChange={(newVolume: number): void => {
+                    if (isVolumeUpdating.current) return;
+
+                    isVolumeUpdating.current = true;
+
+                    setVolume(Math.round(newVolume));
+
+                    isVolumeUpdating.current = false;
+                  }}
                   {...data}
                   ref={ref}
                 />

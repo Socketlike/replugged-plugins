@@ -13,8 +13,8 @@ import {
   containerClasses,
   globalEvents,
   useActiveAccountId,
-  useState,
   usePlayerControlStates,
+  useState,
 } from '../util';
 
 export const ErrorPlaceholder = (props: {
@@ -39,6 +39,7 @@ export const Modal = (): React.ReactElement => {
 
   const [realProgress, setRealProgress] = React.useState(0);
   const progressRef = React.useRef(0);
+  const forceUpdateContextMenuRef = React.useRef(() => {});
 
   const [showModal, setShowModal] = React.useState(false);
   const [showSeekbar, setShowSeekbar] = React.useState(
@@ -91,6 +92,8 @@ export const Modal = (): React.ReactElement => {
     setRealProgress(nowProgress);
 
     progressRef.current = nowProgress;
+
+    forceUpdateContextMenuRef?.current?.();
   }, 1000);
 
   return (
@@ -103,7 +106,8 @@ export const Modal = (): React.ReactElement => {
       )}
       onContextMenu={(e: React.MouseEvent) =>
         openControlsContextMenu(e, {
-          progress,
+          progress: progressRef,
+          forceUpdate: forceUpdateContextMenuRef,
         })
       }
       onMouseEnter={(): void => setShowOptionalComponents(true)}
@@ -118,7 +122,7 @@ export const Modal = (): React.ReactElement => {
           <>
             <TrackDetails track={state.item} />
             <Seekbar shouldShow={showSeekbar} progress={realProgress} />
-            <Controls progress={progress} shouldShow={showControls} />{' '}
+            <Controls progress={realProgress} shouldShow={showControls} />
           </>
         )}
       </div>
