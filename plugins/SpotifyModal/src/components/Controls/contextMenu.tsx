@@ -26,7 +26,7 @@ export const openControlsContextMenu = (
 
     return (
       <ContextMenu.ContextMenu onClose={contextMenu.close} navId='spotify-modal-controls'>
-        {!state.isDummy && (
+        {!state.is_dummy && (
           <ContextMenu.MenuGroup label='Controls'>
             <ContextMenu.MenuItem label='Toggle repeat' id='repeat'>
               <ContextMenu.MenuItem
