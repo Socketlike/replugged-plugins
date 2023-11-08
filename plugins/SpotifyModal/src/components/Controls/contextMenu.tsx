@@ -1,5 +1,5 @@
 import { webpack } from 'replugged';
-import { React, contextMenu } from 'replugged/common';
+import { React, contextMenu, toast } from 'replugged/common';
 import { ContextMenu } from 'replugged/components';
 
 import { MenuSliderControl as MenuSliderControlType } from '@shared/types/discord';
@@ -69,6 +69,11 @@ export const openControlsContextMenu = (
                 )
                   setProgress(0);
                 else if (!disallows.skipping_prev) skip(false);
+                else
+                  toast.toast(
+                    '[SpotifyModal] Unable to skip to previous track.',
+                    toast.Kind.FAILURE,
+                  );
               }}
             />
             <ContextMenu.MenuItem

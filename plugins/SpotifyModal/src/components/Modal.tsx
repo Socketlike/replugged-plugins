@@ -1,6 +1,7 @@
 import { React, lodash as _ } from 'replugged/common';
 
 import { mergeClassNames } from '@shared/dom';
+import { useInterval } from '@shared/react';
 
 import { Seekbar } from './Seekbar';
 import { TrackDetails } from './TrackDetails';
@@ -8,8 +9,13 @@ import { Controls, openControlsContextMenu } from './Controls';
 import { SpotifyIcon } from './Icon';
 
 import { config } from '../config';
-import { useActiveAccountId, useState } from '../util/spotify';
-import { containerClasses, globalEvents } from '../util';
+import {
+  containerClasses,
+  globalEvents,
+  useActiveAccountId,
+  useState,
+  usePlayerControlStates,
+} from '../util';
 
 export const ErrorPlaceholder = (props: {
   text?: string;
@@ -29,8 +35,10 @@ export const ErrorPlaceholder = (props: {
 export const Modal = (): React.ReactElement => {
   const state = useState();
   const activeAccountId = useActiveAccountId();
+  const { playing, progress, timestamp, duration } = usePlayerControlStates();
 
-  const progressRef = React.useRef<number>(0);
+  const [realProgress, setRealProgress] = React.useState(0);
+  const progressRef = React.useRef(0);
 
   const [showModal, setShowModal] = React.useState(false);
   const [showSeekbar, setShowSeekbar] = React.useState(
@@ -72,6 +80,19 @@ export const Modal = (): React.ReactElement => {
     [],
   );
 
+  useInterval(() => {
+    const now = Date.now();
+    let nowProgress: number;
+
+    if (!playing) nowProgress = progress;
+    else if (now + progress < timestamp + duration) nowProgress = now + progress - timestamp;
+    else if (nowProgress !== duration) nowProgress = duration;
+
+    setRealProgress(nowProgress);
+
+    progressRef.current = nowProgress;
+  }, 1000);
+
   return (
     <div
       id='spotify-modal'
@@ -82,7 +103,7 @@ export const Modal = (): React.ReactElement => {
       )}
       onContextMenu={(e: React.MouseEvent) =>
         openControlsContextMenu(e, {
-          progress: progressRef,
+          progress,
         })
       }
       onMouseEnter={(): void => setShowOptionalComponents(true)}
@@ -96,8 +117,8 @@ export const Modal = (): React.ReactElement => {
         ) : (
           <>
             <TrackDetails track={state.item} />
-            <Seekbar shouldShow={showSeekbar} progressRef={progressRef} />
-            <Controls progress={progressRef} shouldShow={showControls} />{' '}
+            <Seekbar shouldShow={showSeekbar} progress={realProgress} />
+            <Controls progress={progress} shouldShow={showControls} />{' '}
           </>
         )}
       </div>

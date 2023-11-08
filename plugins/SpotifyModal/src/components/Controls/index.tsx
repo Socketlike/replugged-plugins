@@ -1,4 +1,4 @@
-import { React, lodash as _ } from 'replugged/common';
+import { React, lodash as _, toast } from 'replugged/common';
 
 import { mergeClassNames } from '@shared/dom';
 
@@ -13,9 +13,7 @@ const nextRepeatStates = {
   noTrack: { off: 'context', context: 'off', track: 'off' },
 } as const;
 
-export const ControlButtons = (props: {
-  progress: React.MutableRefObject<number>;
-}): JSX.Element => {
+export const ControlButtons = (props: { progress: number }): JSX.Element => {
   const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
   const { setProgress, setPlaying, setRepeat, setShuffle, skip } = useControls();
   const { disallows, duration, playing, repeat, shuffle } = usePlayerControlStates();
@@ -71,17 +69,17 @@ export const ControlButtons = (props: {
                 onClick={() => {
                   if (
                     config.get('skipPreviousShouldResetProgress') &&
-                    props.progress.current >=
-                      duration * config.get('skipPreviousProgressResetThreshold') &&
+                    config.get('skipPreviousProgressResetThreshold') * duration <= props.progress &&
                     !disallows.seeking
                   )
                     setProgress(0);
                   else if (!disallows.skipping_prev) skip(false);
                 }}
                 disabled={
-                  !config.get('skipPreviousShouldResetProgress')
-                    ? disallows.skipping_prev
-                    : disallows.skipping_prev && disallows.seeking
+                  config.get('skipPreviousShouldResetProgress') &&
+                  config.get('skipPreviousProgressResetThreshold') * duration <= props.progress
+                    ? disallows.seeking
+                    : disallows.skipping_prev
                 }
               />
             );
@@ -97,10 +95,7 @@ export const ControlButtons = (props: {
   );
 };
 
-export const Controls = (props: {
-  progress: React.MutableRefObject<number>;
-  shouldShow: boolean;
-}): React.ReactElement => (
+export const Controls = (props: { progress: number; shouldShow: boolean }): React.ReactElement => (
   <div className={mergeClassNames('controls-container', props.shouldShow ? '' : 'hidden')}>
     <ControlButtons {...props} />
   </div>
