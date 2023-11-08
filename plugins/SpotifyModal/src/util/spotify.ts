@@ -199,7 +199,7 @@ export const useControls = (): {
 
   const setPlaying = React.useCallback(
     (state: boolean) => {
-      void sendSpotifyRequest(activeAccountId, `player/${state ? 'play' : 'pause'}`, {
+      void sendSpotifyRequest(accountId, `player/${state ? 'play' : 'pause'}`, {
         method: 'PUT',
       });
     },
@@ -207,19 +207,19 @@ export const useControls = (): {
   );
   const setRepeat = React.useCallback(
     (state: 'off' | 'context' | 'track') => {
-      void sendSpotifyRequest(activeAccountId, `player/repeat?state=${state}`, { method: 'PUT' });
+      void sendSpotifyRequest(accountId, `player/repeat?state=${state}`, { method: 'PUT' });
     },
     [accountId],
   );
   const setShuffle = React.useCallback(
     (state: boolean) => {
-      void sendSpotifyRequest(activeAccountId, `player/shuffle?state=${state}`, { method: 'PUT' });
+      void sendSpotifyRequest(accountId, `player/shuffle?state=${state}`, { method: 'PUT' });
     },
     [accountId],
   );
   const setProgress = React.useCallback(
     (position: number) => {
-      void sendSpotifyRequest(activeAccountId, `player/seek?position_ms=${position}`, {
+      void sendSpotifyRequest(accountId, `player/seek?position_ms=${position}`, {
         method: 'PUT',
       });
     },
@@ -228,7 +228,7 @@ export const useControls = (): {
   const setVolume = React.useCallback(
     (volume: number) => {
       void sendSpotifyRequest(
-        activeAccountId,
+        accountId,
         `player/volume?volume_percent=${Math.round(volume)}`,
         { method: 'PUT' },
       );
@@ -237,7 +237,7 @@ export const useControls = (): {
   );
   const skip = React.useCallback(
     (next: boolean) => {
-      void sendSpotifyRequest(activeAccountId, `player/${next ? 'next' : 'previous'}`, {
+      void sendSpotifyRequest(accountId, `player/${next ? 'next' : 'previous'}`, {
         method: 'POST',
       });
     },

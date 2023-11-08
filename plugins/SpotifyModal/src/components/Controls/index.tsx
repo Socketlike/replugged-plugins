@@ -27,6 +27,7 @@ export const ControlButtons = (props: {
         logger.log('(controls)', 'controls layout update', _.clone(event.detail.value));
       }
     }),
+    [],
   );
 
   return (
