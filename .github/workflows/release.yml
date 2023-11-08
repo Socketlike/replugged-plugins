@@ -14,8 +14,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-        submodule: recursive
+        uses: actions/checkout@v4
+        with:
+          submodule: recursive
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
