@@ -54,7 +54,11 @@ export const openControlsContextMenu = (
             <ContextMenu.MenuItem
               label='Skip to previous track'
               id='skip-previous'
-              disabled={disallows.skipping_prev && disallows.seeking}
+              disabled={
+                !config.get('skipPreviousShouldResetProgress')
+                  ? disallows.skipping_prev
+                  : disallows.skipping_prev && disallows.seeking
+              }
               icon={() => <Icon.SkipPrev />}
               action={(): void => {
                 if (

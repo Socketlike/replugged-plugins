@@ -1,6 +1,6 @@
 import { Injector, Logger, webpack } from 'replugged';
 
-import { DefaultConfigKeys, config } from '../config';
+import { config } from '../config';
 
 export const injector = new Injector();
 
@@ -55,18 +55,6 @@ export const handleOverflow = (element: HTMLElement): void => {
     if (!element.classList.contains('overflow')) element.classList.add('overflow');
   } else if (element.classList.contains('overflow')) element.classList.remove('overflow');
 };
-
-export const useTrappedSettingsState = <T extends DefaultConfigKeys, D>(
-  useSettingRes: { value: D; onChange: (newValue: D) => void },
-  key: T,
-  trap: (key: T, newValue: D) => void,
-): { value: D; onChange: (newValue: D) => void } => ({
-  value: useSettingRes.value,
-  onChange: (newValue): void => {
-    trap(key, newValue);
-    useSettingRes.onChange(newValue);
-  },
-});
 
 export const containerClasses = await webpack.waitForModule<{
   container: string;

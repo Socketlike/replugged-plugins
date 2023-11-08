@@ -4,14 +4,12 @@ import { mergeClassNames } from '@shared/dom';
 
 import { Seekbar } from './Seekbar';
 import { TrackDetails } from './TrackDetails';
-import { Controls } from './Controls';
+import { Controls, openControlsContextMenu } from './Controls';
 import { SpotifyIcon } from './Icon';
 
 import { config } from '../config';
 import { useState } from '../util/spotify';
-import { containerClasses, events } from '../util';
-import { SettingUpdates } from '../types';
-import { openControlsContextMenu } from './Controls/contextMenu';
+import { containerClasses, globalEvents } from '../util';
 
 export const ErrorPlaceholder = (props: {
   text?: string;
@@ -47,7 +45,7 @@ export const Modal = (): React.ReactElement => {
 
   React.useEffect(
     () =>
-      events.on<boolean>('showUpdate', (event) => {
+      globalEvents.on('showUpdate', (event) => {
         setShowModal(event.detail);
       }),
     [],
@@ -57,18 +55,19 @@ export const Modal = (): React.ReactElement => {
     if (state.is_playing) setShowModal(true);
   }, [state]);
 
-  React.useEffect(() =>
-    events.on<SettingUpdates.Union>('settingsUpdate', (event) => {
-      switch (event.detail.key) {
-        case 'seekbarVisibilityState':
-          setShowSeekbar(event.detail.value === 'always');
-          break;
+  React.useEffect(
+    () =>
+      globalEvents.on('settingsUpdate', (event) => {
+        switch (event.detail.key) {
+          case 'seekbarVisibilityState':
+            setShowSeekbar(event.detail.value === 'always');
+            break;
 
-        case 'controlsVisibilityState':
-          setShowControls(event.detail.value === 'always');
-          break;
-      }
-    }),
+          case 'controlsVisibilityState':
+            setShowControls(event.detail.value === 'always');
+            break;
+        }
+      }),
     [],
   );
 
@@ -88,7 +87,7 @@ export const Modal = (): React.ReactElement => {
       onMouseEnter={(): void => setShowOptionalComponents(true)}
       onMouseLeave={(): void => setShowOptionalComponents(false)}>
       <div className='main'>
-        {state.isDummy ? (
+        {state.is_dummy ? (
           <ErrorPlaceholder
             text='Waiting for player...'
             subtext='Update your Spotify state manually if this takes too long.'

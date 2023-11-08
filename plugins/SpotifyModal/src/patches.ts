@@ -1,6 +1,6 @@
-import { types } from 'replugged';
+import { PlaintextPatch } from 'replugged/types';
 
-const patches: types.PlaintextPatch[] = [
+export default [
   {
     /* https://github.com/Vendicated/Vencord/blob/main/src/plugins/spotifyControls/index.tsx#L49-L57 */
     find: 'showTaglessAccountPanel:',
@@ -20,12 +20,6 @@ const patches: types.PlaintextPatch[] = [
         replace:
           '$&window?.replugged?.plugins?.getExports?.("lib.evelyn.SpotifyModal")?.emitEvent?.($1, this);',
       },
-      {
-        match: /hasConnectedAccount\(\)\{[^}]+?Object\.keys\((.+?)\)\.length/,
-        replace: 'spotifyModalAccounts=$1;$&',
-      },
     ],
   },
-];
-
-export default patches;
+] as PlaintextPatch[];

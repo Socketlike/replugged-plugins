@@ -1,7 +1,6 @@
 import { settings } from 'replugged';
 
-export type ControlButtonKinds =
-  | string
+export type ControlButtonKind =
   | 'shuffle'
   | 'skip-prev'
   | 'play-pause'
@@ -9,32 +8,42 @@ export type ControlButtonKinds =
   | 'repeat'
   | 'blank';
 
-export type PluginStopBehaviors = string | 'ask' | 'restart' | 'ignore';
+export type VisibilityState = 'always' | 'hidden' | 'auto';
 
-export type VisibilityStates = string | 'always' | 'hidden' | 'auto';
+export interface DefaultConfig {
+  controlsLayout: [
+    ControlButtonKind,
+    ControlButtonKind,
+    ControlButtonKind,
+    ControlButtonKind,
+    ControlButtonKind,
+  ];
+  controlsVisibilityState: VisibilityState;
+  debugging: boolean;
+  hyperlinkURI: boolean;
+  pluginStopBehavior: 'ask' | 'restart' | 'ignore';
+  seekbarEnabled: boolean;
+  seekbarVisibilityState: VisibilityState;
+  spotifyAppClientId: string;
+  spotifyAppRedirectURI: string;
+  spotifyAppOauthTokens: Record<string, string>;
+  skipPreviousShouldResetProgress: boolean;
+  skipPreviousProgressResetThreshold: number;
+}
 
-export const defaultConfig = {
-  controlsLayout: ['shuffle', 'skip-prev', 'play-pause', 'skip-next', 'repeat'] as [
-    ControlButtonKinds,
-    ControlButtonKinds,
-    ControlButtonKinds,
-    ControlButtonKinds,
-    ControlButtonKinds,
-  ],
-  controlsVisibilityState: 'auto' as VisibilityStates,
+export const defaultConfig: DefaultConfig = {
+  controlsLayout: ['shuffle', 'skip-prev', 'play-pause', 'skip-next', 'repeat'],
+  controlsVisibilityState: 'auto',
   debugging: false,
   hyperlinkURI: true,
-  pluginStopBehavior: 'ask' as PluginStopBehaviors,
+  pluginStopBehavior: 'ask',
   seekbarEnabled: true,
-  seekbarVisibilityState: 'always' as VisibilityStates,
+  seekbarVisibilityState: 'always',
   spotifyAppClientId: '',
   spotifyAppRedirectURI: '',
-  spotifyAppOauthTokens: {} as Record<string, string>,
+  spotifyAppOauthTokens: {},
   skipPreviousShouldResetProgress: true,
   skipPreviousProgressResetThreshold: 0.15,
 };
-
-export type DefaultConfig = typeof defaultConfig;
-export type DefaultConfigKeys = keyof DefaultConfig;
 
 export const config = await settings.init('lib.evelyn.SpotifyModal', defaultConfig);

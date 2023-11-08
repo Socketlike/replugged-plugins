@@ -5,8 +5,7 @@ import { mergeClassNames } from '@shared/dom';
 import Button from './Buttons';
 
 import { config } from '../../config';
-import { SettingUpdates } from '../../types';
-import { events, logger, useControls, usePlayerControlStates } from '../../util';
+import { globalEvents, logger, useControls, usePlayerControlStates } from '../../util';
 
 const nextRepeatStates = {
   normal: { off: 'context', context: 'track', track: 'off' },
@@ -22,10 +21,9 @@ export const ControlButtons = (props: {
   const { disallows, duration, playing, repeat, shuffle } = usePlayerControlStates();
 
   React.useEffect(() =>
-    events.on<SettingUpdates.Union>('settingsUpdate', (event): void => {
+    globalEvents.on('settingsUpdate', (event): void => {
       if (event.detail.key === 'controlsLayout') {
         forceUpdate();
-
         logger.log('(controls)', 'controls layout update', _.clone(event.detail.value));
       }
     }),
@@ -82,7 +80,11 @@ export const ControlButtons = (props: {
                     setProgress(0);
                   else if (!disallows.skipping_prev) skip(false);
                 }}
-                disabled={disallows.skipping_prev && disallows.seeking}
+                disabled={
+                  !config.get('skipPreviousShouldResetProgress')
+                    ? disallows.skipping_prev
+                    : disallows.skipping_prev && disallows.seeking
+                }
               />
             );
           case 'skip-next':
@@ -111,3 +113,4 @@ export const Controls = (props: {
 
 export * from './Icons';
 export * from './Buttons';
+export * from './contextMenu';

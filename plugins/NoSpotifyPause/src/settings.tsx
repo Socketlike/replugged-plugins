@@ -13,8 +13,8 @@ export const Settings = (): JSX.Element => (
       note='Controls what the plugin does when it stops'
       options={[
         { label: 'Ask whether to restart Discord or not in a popout', value: 'ask' },
-        { label: 'Restart Discord', value: 'restartDiscord' },
-        { label: 'Do not restart Discord', value: 'doNotRestartDiscord' },
+        { label: 'Restart Discord immediately', value: 'restart' },
+        { label: 'Do nothing', value: 'ignore' },
       ]}
       {...util.useSetting(config, 'pluginStopBehavior')}>
       Plugin Stop Behavior

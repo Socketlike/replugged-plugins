@@ -3,37 +3,29 @@ import React from 'react';
 import { webpack } from 'replugged';
 import { lodash as _, toast } from 'replugged/common';
 
-import { HTTPResponse, SpotifyAccount, SpotifySocketPayloadEvents, SpotifyStore } from '../types';
-import { logger } from './misc';
-import { EventEmitter, events as globalEvents } from './events';
+import { EventEmitter } from '@shared/misc';
 
-let events = new EventEmitter();
+import { ConnectedAccountsStore, HTTPResponse, SpotifyStore } from '../types';
+import { logger } from './misc';
+import { globalEvents } from './events';
+
+type SpotifyState = SpotifyApi.CurrentPlaybackResponse & { is_dummy: boolean };
+
+let events = new EventEmitter<{
+  state: SpotifyState;
+  activeAccount: string;
+}>();
 let persist = false;
 let currentAccountId: string;
 
-export const store = await webpack.waitForModule<SpotifyStore>(
-  webpack.filters.byProps('getActiveSocketAndDevice'),
-);
+export const store = webpack.getByStoreName<SpotifyStore>('SpotifyStore');
+
+export const connectedAccountsStore =
+  webpack.getByStoreName<ConnectedAccountsStore>('ConnectedAccountsStore');
 
 export const spotifyUtils = await webpack.waitForModule<{
   getAccessToken: (accountId: string) => Promise<HTTPResponse<{ access_token: string }>>;
 }>(webpack.filters.byProps('SpotifyAPI'));
-
-export const spotifyAccounts = store.spotifyModalAccounts || ({} as Record<string, SpotifyAccount>);
-
-export const getTokenFromAccountId = (accountId: string): string =>
-  spotifyAccounts[accountId]?.accessToken || '';
-
-export const refreshSpotifyToken = async (
-  accountId: string,
-): Promise<HTTPResponse<{ access_token: string }>> => {
-  const token = await spotifyUtils.getAccessToken(accountId);
-
-  if (accountId in spotifyAccounts && token.ok)
-    spotifyAccounts[accountId].accessToken = token.body.access_token;
-
-  return token;
-};
 
 export const sendSpotifyRequest = async (
   accountId: string,
@@ -42,7 +34,14 @@ export const sendSpotifyRequest = async (
   isRetrying?: boolean,
 ): Promise<Response> => {
   if (!accountId)
-    return Promise.resolve(new Response('', { status: 401, statusText: 'No accountId provided' }));
+    return Promise.resolve(new Response('', { status: 500, statusText: 'no accountId provided' }));
+
+  const token = connectedAccountsStore.getAccount(accountId, 'spotify')?.accessToken;
+
+  if (!token)
+    return Promise.resolve(
+      new Response('', { status: 500, statusText: 'accountId has no accessToken' }),
+    );
 
   persist = true;
 
@@ -51,7 +50,7 @@ export const sendSpotifyRequest = async (
     mode: 'cors',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getTokenFromAccountId(accountId)}`,
+      Authorization: `Bearer ${token}`,
     },
   });
 
@@ -59,7 +58,7 @@ export const sendSpotifyRequest = async (
     if (!isRetrying) {
       logger.log('(spotify)', 'reauthing');
 
-      const token = await refreshSpotifyToken(accountId);
+      const token = await spotifyUtils.getAccessToken(accountId);
 
       if (token.ok) {
         logger.log('(spotify)', 'retrying', endpoint);
@@ -67,7 +66,10 @@ export const sendSpotifyRequest = async (
       }
     }
 
-    logger.log('(spotify)', 'retrying', endpoint, 'failed');
+    logger.error('(spotify)', 'retrying', endpoint, 'failed', res.clone());
+  } else if (!res.ok) {
+    toast.toast(`[SpotifyModal] control action failed (HTTP ${res.status})`, toast.Kind.FAILURE);
+    logger.error('(spotify)', 'control action failed', res.clone());
   }
 
   persist = false;
@@ -102,27 +104,24 @@ const dummyState = {
   is_playing: false,
   progress_ms: 0,
   timestamp: 0,
-  isDummy: true,
-} as SpotifyApi.CurrentPlaybackResponse & { isDummy: boolean };
+  is_dummy: true,
+} as SpotifyState;
 
-let playbackState: SpotifyApi.CurrentPlaybackResponse & { isDummy: boolean } = _.clone(dummyState);
+let playbackState: SpotifyState = _.clone(dummyState);
 
 export const setState = (newState: SpotifyApi.CurrentPlaybackResponse): void => {
-  playbackState = newState?.item ? { ...newState, isDummy: false } : _.clone(dummyState);
+  playbackState = newState?.item ? { ...newState, is_dummy: false } : _.clone(dummyState);
 
   logger.log('(spotify)', 'new state', _.clone(playbackState));
 
   events.emit('state', playbackState);
 };
 
-export const useState = (): SpotifyApi.CurrentPlaybackResponse & { isDummy: boolean } => {
+export const useState = (): SpotifyState => {
   const [state, setState] = React.useState(playbackState);
 
   React.useEffect(
-    (): (() => void) | void =>
-      events.on<SpotifyApi.CurrentPlaybackResponse & { isDummy: boolean }>('state', (event): void =>
-        setState(event.detail),
-      ),
+    (): (() => void) | void => events.on('state', (event): void => setState(event.detail)),
     [],
   );
 
@@ -161,7 +160,7 @@ export const usePlayerControlStates = (): {
 
   React.useEffect(
     (): (() => void) | void =>
-      events.on<SpotifyApi.CurrentPlaybackResponse>('state', (event): void => {
+      events.on('state', (event): void => {
         setDuration(event.detail?.item?.duration_ms || 0);
         setPlaying(event.detail?.is_playing);
         setProgress(event.detail?.progress_ms || 0);
@@ -235,7 +234,7 @@ export const useControls = (): {
 
   React.useEffect(
     () =>
-      events.on<string>('activeAccount', (event) => {
+      events.on('activeAccount', (event) => {
         setActiveAccountId(event.detail);
       }),
     [],
@@ -252,83 +251,68 @@ globalEvents.on('accountSwitch', () => {
   globalEvents.emit('showUpdate', false);
 });
 
-globalEvents.on<{
-  accountId: string;
-  data: SpotifySocketPayloadEvents;
-}>('event', (event): void => {
-  const { accountId, data } = event.detail;
+globalEvents
+  .chainableOn('event', (event): void => {
+    const { accountId, data } = event.detail;
 
-  if (!currentAccountId) setCurrentAccountId(accountId);
+    if (!currentAccountId) setCurrentAccountId(accountId);
 
-  if (currentAccountId === accountId)
-    switch (data.type) {
-      case 'PLAYER_STATE_CHANGED':
-        setState(data.event.state);
-        break;
+    if (currentAccountId === accountId)
+      switch (data.type) {
+        case 'PLAYER_STATE_CHANGED':
+          setState(data.event.state);
+          break;
 
-      case 'DEVICE_STATE_CHANGED': {
-        if (!persist) {
-          if (!data.event.devices.length) setCurrentAccountId('');
+        case 'DEVICE_STATE_CHANGED': {
+          if (!persist) {
+            if (!data.event.devices.length) setCurrentAccountId('');
 
-          globalEvents.emit('showUpdate', Boolean(data.event.devices.length));
-          logger.log(
-            '(spotify)',
-            'showUpdate fired (player device state)',
-            Boolean(data.event.devices.length),
-          );
-        } else {
-          persist = false;
-          logger.log('(spotify)', 'showUpdate not fired (persistence)');
+            globalEvents.emit('showUpdate', Boolean(data.event.devices.length));
+            logger.log(
+              '(spotify)',
+              'showUpdate fired (player device state)',
+              Boolean(data.event.devices.length),
+            );
+          } else {
+            persist = false;
+            logger.log('(spotify)', 'showUpdate not fired (persistence)');
+          }
+
+          break;
         }
 
-        break;
+        default:
+          logger.log('(spotify)', 'unknown data', data);
       }
+  })
+  .chainableOn('ready', async (): Promise<void> => {
+    if (store.shouldShowActivity()) {
+      logger.log('(spotify)', 'fetching state');
 
-      default:
-        logger.log('(spotify)', 'unknown data', data);
-    }
-});
+      for (const accountId of connectedAccountsStore
+        .getAccounts()
+        .filter(({ type, showActivity }) => type === 'spotify' && showActivity)
+        .map(({ id }) => id)) {
+        const res = await sendSpotifyRequest(accountId, 'player', { method: 'GET' });
+        const state: SpotifyApi.CurrentPlaybackResponse = await res
+          .clone()
+          .json()
+          .catch((error) => {
+            logger._.error('(spotify)', 'failed parsing state for', accountId, res.clone(), error);
+            return _.clone(dummyState);
+          });
 
-globalEvents.on<SpotifyApi.CurrentPlaybackResponse>('ready', async (): Promise<void> => {
-  if (!store.spotifyModalAccounts) {
-    toast.toast(
-      "(SpotifyModal) .spotifyModalAccounts wasn't found on SpotifyStore. controls will not work. please report this on GitHub.",
-      toast.Kind.FAILURE,
-    );
+        if (res.ok) {
+          globalEvents.emit('event', {
+            accountId,
+            data: {
+              event: { state: { ...state, timestamp: Date.now() } },
+              type: 'PLAYER_STATE_CHANGED',
+            },
+          });
 
-    logger.error(
-      "(spotify) critical: .spotifyModalAccounts wasn't found on SpotifyStore - the plaintext patch for it is likely broken.\nplease report this on GitHub.",
-    );
-  }
-
-  if (store.shouldShowActivity()) {
-    logger.log('(spotify)', 'fetching state');
-
-    const accountIds = Object.keys(spotifyAccounts);
-
-    let res: Response;
-    let raw: string;
-
-    for (const accountId of accountIds) {
-      res = await sendSpotifyRequest(accountId, 'player', { method: 'GET' });
-      raw = await res.clone().text();
-
-      if (raw && res.ok) {
-        const state = JSON.parse(raw) as SpotifyApi.CurrentPlaybackResponse;
-
-        globalEvents.emit<{
-          accountId: string;
-          data: SpotifySocketPayloadEvents;
-        }>('event', {
-          accountId,
-          data: {
-            event: { state: { ...state, timestamp: Date.now() } },
-            type: 'PLAYER_STATE_CHANGED',
-          },
-        });
-
-        break;
+          break;
+        }
       }
     }
-  }
-});
+  });

@@ -1,6 +1,6 @@
 export * from './components';
 export * from './events';
-export * from './store';
+export * from './stores';
 
 export interface HTTPResponse<T = Record<string, unknown>> {
   body: T;

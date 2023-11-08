@@ -1,1 +1,2 @@
-export * as discord from './discord';
+export * from './discord';
+export * from './util';
