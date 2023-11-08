@@ -227,11 +227,9 @@ export const useControls = (): {
   );
   const setVolume = React.useCallback(
     (volume: number) => {
-      void sendSpotifyRequest(
-        accountId,
-        `player/volume?volume_percent=${Math.round(volume)}`,
-        { method: 'PUT' },
-      );
+      void sendSpotifyRequest(accountId, `player/volume?volume_percent=${Math.round(volume)}`, {
+        method: 'PUT',
+      });
     },
     [accountId],
   );

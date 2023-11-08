@@ -20,13 +20,14 @@ export const ControlButtons = (props: {
   const { setProgress, setPlaying, setRepeat, setShuffle, skip } = useControls();
   const { disallows, duration, playing, repeat, shuffle } = usePlayerControlStates();
 
-  React.useEffect(() =>
-    globalEvents.on('settingsUpdate', (event): void => {
-      if (event.detail.key === 'controlsLayout') {
-        forceUpdate();
-        logger.log('(controls)', 'controls layout update', _.clone(event.detail.value));
-      }
-    }),
+  React.useEffect(
+    () =>
+      globalEvents.on('settingsUpdate', (event): void => {
+        if (event.detail.key === 'controlsLayout') {
+          forceUpdate();
+          logger.log('(controls)', 'controls layout update', _.clone(event.detail.value));
+        }
+      }),
     [],
   );
 
