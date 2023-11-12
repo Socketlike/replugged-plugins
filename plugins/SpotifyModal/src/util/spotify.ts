@@ -39,7 +39,7 @@ export const sendSpotifyRequest = async (
     return Promise.resolve(new Response('', { status: 500, statusText: 'no accountId provided' }));
 
   const token =
-    connectedAccountsStore.getAccount(accountId, 'spotify')?.accessToken || overrideToken;
+    overrideToken || connectedAccountsStore.getAccount(accountId, 'spotify')?.accessToken;
 
   if (!token)
     return Promise.resolve(
