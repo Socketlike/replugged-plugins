@@ -17,6 +17,7 @@ let events = new EventEmitter<{
 }>();
 let persist = false;
 let activeAccountId: string;
+let switchingAccounts = false;
 
 export const store = webpack.getByStoreName<SpotifyStore>('SpotifyStore');
 
@@ -32,11 +33,13 @@ export const sendSpotifyRequest = async (
   endpoint: string,
   init: RequestInit,
   isRetrying?: boolean,
+  overrideToken?: string,
 ): Promise<Response> => {
   if (!accountId)
     return Promise.resolve(new Response('', { status: 500, statusText: 'no accountId provided' }));
 
-  const token = connectedAccountsStore.getAccount(accountId, 'spotify')?.accessToken;
+  const token =
+    connectedAccountsStore.getAccount(accountId, 'spotify')?.accessToken || overrideToken;
 
   if (!token)
     return Promise.resolve(
@@ -62,7 +65,7 @@ export const sendSpotifyRequest = async (
 
       if (token.ok) {
         logger.log('(spotify)', 'retrying', endpoint);
-        return await sendSpotifyRequest(accountId, endpoint, init, true);
+        return await sendSpotifyRequest(accountId, endpoint, init, true, token.body.access_token);
       }
     }
 
@@ -245,17 +248,25 @@ export const useControls = (): {
   return { setPlaying, setRepeat, setShuffle, setProgress, setVolume, skip };
 };
 
-globalEvents.on('accountSwitch', () => {
-  logger.log('(spotify)', 'clear states');
-
-  setActiveAccountId('');
-
-  globalEvents.emit('showUpdate', false);
-});
-
 globalEvents
-  .chainableOn('event', (event): void => {
-    const { accountId, data } = event.detail;
+  .chainableOn('accountSwitch', () => {
+    switchingAccounts = true;
+
+    logger.log('(spotify)', 'clear states');
+
+    setActiveAccountId('');
+
+    globalEvents.emit('showUpdate', false);
+  })
+  .chainableOn('event', ({ detail: { accountId, data } }): void => {
+    if (switchingAccounts) {
+      logger.log(
+        '(spotify)',
+        'ignoring new state because we are currently switching accounts',
+        data,
+      );
+      return;
+    }
 
     if (!activeAccountId) setActiveAccountId(accountId);
 
@@ -288,6 +299,8 @@ globalEvents
       }
   })
   .chainableOn('ready', async (): Promise<void> => {
+    switchingAccounts = false;
+
     if (store.shouldShowActivity()) {
       logger.log('(spotify)', 'fetching state');
 
@@ -301,10 +314,9 @@ globalEvents
           .json()
           .catch((error) => {
             logger._.error('(spotify)', 'failed parsing state for', accountId, res.clone(), error);
-            return _.clone(dummyState);
           });
 
-        if (res.ok) {
+        if (res.ok && state) {
           globalEvents.emit('event', {
             accountId,
             data: {
