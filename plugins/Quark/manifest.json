@@ -8,7 +8,7 @@
     "discordID": "285329659023851520",
     "github": "Socketlike"
   },
-  "version": "1.0.33",
+  "version": "1.0.34",
   "updater": {
     "type": "github",
     "id": "Socketlike/replugged-plugins"
