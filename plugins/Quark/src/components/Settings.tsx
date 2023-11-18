@@ -1,186 +1,135 @@
+import React from 'react';
+
 import { util } from 'replugged';
-import { React, modal, toast } from 'replugged/common';
-import {
-  Button,
-  FormItem,
-  Modal,
-  Switch,
-  SwitchItem,
-  Text,
-  TextInput,
-  Tooltip,
-} from 'replugged/components';
+import { toast } from 'replugged/common';
+import { Button, Switch, SwitchItem, Text, Tooltip } from 'replugged/components';
 
-import { mdiPencil, mdiTrashCan } from '@mdi/js';
+import { Icon as BaseIcon } from '@shared/react';
 
-import { openEditor } from './Editor';
+import { mdiPencil, mdiRefresh, mdiTrashCan } from '@mdi/js';
 
-import {
-  Quark,
-  add as addQuark,
-  getAll as getAllQuarks,
-  has as hasQuark,
-  remove as removeQuark,
-  toggle as toggleQuark,
-} from '../quark';
+import { openCreateQuarkModal, openEditorModal } from './modals';
+
 import { config } from '../util';
+import { useQuarks } from '../quark';
+import { Quark } from '../types';
 
-interface ModalProps {
-  transitionState: 0 | 1 | 2 | 3 | 4;
-  onClose(): Promise<void>;
-}
-
-const Icon = (props: {
+export const Icon = (props: {
   tooltip?: string;
   className?: string;
   onClick?: (ev: React.MouseEvent) => void;
   path: string;
 }): JSX.Element => (
   <Tooltip text={props.tooltip}>
-    <svg
+    <BaseIcon
       className={props.className}
       onClick={props.onClick}
+      path={props.path}
       width={24}
       height={24}
-      viewBox='0 0 24 24'>
-      <path d={props.path} fill='currentColor' />
-    </svg>
+    />
   </Tooltip>
 );
 
-const Card = (props: {
+export const Card = (props: {
+  manage: {
+    del: () => Promise<boolean>;
+    edit: (quark: Quark) => Promise<boolean>;
+    restart: () => boolean;
+    start: () => boolean;
+    stop: () => boolean;
+  };
   name: string;
   quark: Quark;
-  forceUpdateParent: () => void;
-}): JSX.Element => {
-  const { name, quark, forceUpdateParent } = props;
-
-  const [enabled, setEnabled] = React.useState(quark.enabled || false);
-
-  return (
-    <div className='quark-card'>
-      <Text.H2 variant='text-md/bold' className='name'>
-        {typeof name === 'string' ? name || '<blank>' : '<not displayable>'}
-      </Text.H2>
-      <div className='actions'>
-        <div className='buttons'>
-          <Icon
-            tooltip='Edit scripts'
-            onClick={() => openEditor(name)}
-            path={mdiPencil}
-            className='edit'
-          />
-          <Icon
-            tooltip='Delete snippet'
-            onClick={() => {
-              removeQuark(name);
-              toast.toast(`Deleted "${name}"`, toast.Kind.SUCCESS);
-              forceUpdateParent();
-            }}
-            path={mdiTrashCan}
-            className='delete'
-          />
-        </div>
-        <Switch
-          className='switch'
-          checked={enabled}
-          onChange={(newValue: boolean): void => {
-            toggleQuark(name, newValue);
-            toast.toast(`${newValue ? 'Enabled' : 'Disabled'} "${name}"`, toast.Kind.SUCCESS);
-            setEnabled(newValue);
-          }}
+}): JSX.Element => (
+  <div className='quark-card'>
+    <Text.H2 variant='text-md/bold' className='name'>
+      {props.name}
+    </Text.H2>
+    <div className='actions'>
+      <div className='buttons'>
+        <Icon
+          tooltip='Edit'
+          onClick={() => openEditorModal(props.name)}
+          path={mdiPencil}
+          className='button edit'
         />
-      </div>
-    </div>
-  );
-};
-
-const NewQuarkModal = (props: ModalProps & { forceUpdate: () => void }): JSX.Element => {
-  const { forceUpdate, ...modalProps } = props;
-
-  const [name, setName] = React.useState('');
-  const firstStart = React.useRef(true);
-  const alreadyExists = React.useMemo((): boolean => hasQuark(name.trim()), [name]);
-  const blankName = React.useMemo((): boolean => !name.trim(), [name]);
-  const valid = React.useMemo(
-    (): boolean => !(alreadyExists || blankName),
-    [alreadyExists, blankName],
-  );
-  const reason = React.useMemo((): string => {
-    if (firstStart.current) return '';
-    else if (blankName) return 'This snippet has an invalid name. (spaces only / blank name)';
-    else if (alreadyExists) return 'A snippet with this name already exists.';
-
-    return '';
-  }, [valid]);
-
-  React.useEffect((): void => {
-    firstStart.current = false;
-  }, []);
-
-  return (
-    <Modal.ModalRoot {...modalProps} className='quark-new'>
-      <Modal.ModalHeader className='header'>
-        <Text.H1 variant='heading-lg/bold'>Create New Snippet</Text.H1>
-        <Modal.ModalCloseButton onClick={modalProps.onClose} className='close-button' />
-      </Modal.ModalHeader>
-      <Modal.ModalContent className='content'>
-        <FormItem
-          className='input-form'
-          title='Snippet name'
-          note={reason}
-          noteStyle={{
-            color: 'var(--text-danger)',
-            marginTop: '4px',
-            fontSize: '13px',
-          }}
-          notePosition='after'>
-          <TextInput
-            className='input'
-            value={name}
-            onChange={(newName: string): void => {
-              setName(newName);
+        <Icon
+          tooltip='Delete'
+          onClick={() =>
+            void props.manage
+              .del()
+              .then((ok) =>
+                ok
+                  ? toast.toast(`Deleted "${props.name}"`, toast.Kind.SUCCESS)
+                  : toast.toast(
+                      `Failed deleting "${props.name}".${
+                        config.get('debugging') ? ' See Console for more details.' : ''
+                      }`,
+                      toast.Kind.FAILURE,
+                    ),
+              )
+          }
+          path={mdiTrashCan}
+          className='button delete'
+        />
+        {props.quark.enabled && (
+          <Icon
+            tooltip='Reload'
+            onClick={() => {
+              if (props.manage.restart())
+                toast.toast(`Restarted "${props.name}"`, toast.Kind.SUCCESS);
+              else
+                toast.toast(
+                  `Failed restarting "${props.name}".${
+                    config.get('debugging') ? ' See Console for more details.' : ''
+                  }`,
+                  toast.Kind.FAILURE,
+                );
             }}
+            path={mdiRefresh}
+            className='button reload'
           />
-        </FormItem>
-        <Button
-          className='create-button'
-          disabled={!valid}
-          onClick={(): void => {
-            addQuark(name.trim(), { enabled: false, start: '', stop: '' });
-            openEditor(name.trim());
-            forceUpdate();
-            modalProps.onClose();
-          }}>
-          Create Snippet
-        </Button>
-      </Modal.ModalContent>
-    </Modal.ModalRoot>
-  );
-};
-
-const openNewQuarkModal = (forceUpdate: () => void): void => {
-  modal.openModal(
-    (props: ModalProps): JSX.Element => <NewQuarkModal {...props} forceUpdate={forceUpdate} />,
-  );
-};
+        )}
+      </div>
+      <Switch
+        className='switch'
+        checked={props.quark.enabled}
+        onChange={(newValue: boolean): void =>
+          void props.manage.edit({ ...props.quark, enabled: newValue }).then((ok) => {
+            if (ok && (newValue ? props.manage.start() : props.manage.stop()))
+              toast.toast(
+                `${newValue ? 'Enabled' : 'Disabled'} "${props.name}"`,
+                toast.Kind.SUCCESS,
+              );
+            else
+              toast.toast(
+                `Failed ${newValue ? 'enabling' : 'disabling'} "${props.name}".${
+                  config.get('debugging') ? ' See Console for more details.' : ''
+                }`,
+                toast.Kind.FAILURE,
+              );
+          })
+        }
+      />
+    </div>
+  </div>
+);
 
 export const Settings = (): JSX.Element => {
-  const [, forceUpdate] = React.useReducer((x: number): number => x + 1, 0);
+  const quarks = useQuarks();
 
   return (
     <div className='quark-settings'>
-      <SwitchItem note='Enable more verbose logs' {...util.useSetting(config, 'debugging')}>
+      <SwitchItem note='Enable verbose logs' {...util.useSetting(config, 'debugging')}>
         Debugging
       </SwitchItem>
-      <Button className='new-button' onClick={(): void => openNewQuarkModal(forceUpdate)}>
-        New Snippet
+      <Button className='create-button' onClick={(): void => openCreateQuarkModal()}>
+        Create New Quark
       </Button>
-      {Object.entries(getAllQuarks()).map(
-        ([name, quark]): JSX.Element => (
-          <Card name={name} quark={quark} forceUpdateParent={forceUpdate} />
-        ),
-      )}
+      <div className='cards'>
+        {quarks.map((quark) => quark.exists && <Card {...quark} key={quark.name} />)}
+      </div>
     </div>
   );
 };

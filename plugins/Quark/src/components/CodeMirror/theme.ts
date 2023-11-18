@@ -1,7 +1,9 @@
 import { EditorView } from 'codemirror';
+
 import type { Extension } from '@codemirror/state';
 import { HighlightStyle, type TagStyle, syntaxHighlighting } from '@codemirror/language';
 import { tags } from '@lezer/highlight';
+
 import type { StyleSpec } from 'style-mod';
 
 const createTheme = ({

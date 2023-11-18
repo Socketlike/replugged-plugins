@@ -1,2 +1,2 @@
-export { Editor, openEditor } from './Editor';
+export * from './modals';
 export { Settings } from './Settings';

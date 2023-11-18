@@ -1,18 +1,19 @@
 import { Logger, settings } from 'replugged';
-import type { Quark } from './quark';
-
-export const _logger = Logger.plugin('Quark');
 
 export const defaultConfig = {
   debugging: false,
-  quarks: {} as Record<string, Quark>,
 };
 
 export const config = await settings.init('lib.evelyn.Quark', defaultConfig);
 
 export const logger = {
-  error: (...args: unknown[]): void =>
-    config.get('debugging') ? _logger.error(...args) : undefined,
-  log: (...args: unknown[]): void => (config.get('debugging') ? _logger.log(...args) : undefined),
-  warn: (...args: unknown[]): void => (config.get('debugging') ? _logger.warn(...args) : undefined),
+  log: (...args: unknown[]): void => config.get('debugging') && logger._.log(...args),
+  warn: (...args: unknown[]): void => config.get('debugging') && logger._.warn(...args),
+  error: (...args: unknown[]): void => config.get('debugging') && logger._.error(...args),
+
+  _log: (...args: unknown[]): void => !config.get('debugging') && logger._.log(...args),
+  _warn: (...args: unknown[]): void => !config.get('debugging') && logger._.warn(...args),
+  _error: (...args: unknown[]): void => !config.get('debugging') && logger._.error(...args),
+
+  _: Logger.plugin('Quark'),
 };

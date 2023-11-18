@@ -1,107 +1,115 @@
-.quark-new,
+.quark-create,
 .quark-editor {
   border-radius: 8px;
   min-height: 0;
   width: unset;
+
+  .header {
+    background-color: var(--background-secondary);
+    justify-content: space-between;
+  }
+
+  .close-button {
+    padding: 0;
+
+    [class*='contents-'] {
+      height: 24px;
+    }
+  }
 }
 
-.quark-new .header,
-.quark-editor .header {
-  background-color: var(--background-secondary);
-  justify-content: space-between;
-}
+.quark-editor {
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
 
-.quark-new .close-button,
-.quark-editor .close-button {
-  padding: 0;
-}
+  .tab-bar {
+    margin: 0;
+  }
 
-.quark-new .close-button [class*='contents-'],
-.quark-editor .close-button [class*='contents-'] {
-  height: 24px;
-}
-
-.quark-editor .content {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  padding-top: 16px;
-  padding-bottom: 16px;
-}
-
-.quark-editor .invalid-quark-header {
-  text-align: center;
-  width: 100%;
-}
-
-.quark-editor .tab-bar {
-  margin: 0;
-}
-
-.quark-codemirror .cm-scroller {
-  height: 400px;
-  width: 800px;
+  .quark-codemirror .cm-scroller {
+    height: 400px;
+    width: 800px;
+  }
 }
 
 .quark-settings {
   display: flex;
   gap: 18px;
   flex-direction: column;
+
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+
+    .quark-card {
+      display: flex;
+      height: fit-content;
+      justify-content: space-between;
+      background-color: var(--background-tertiary);
+      padding: 16px;
+      border-radius: 6px;
+
+      &:last-child:nth-child(2n - 1) {
+        grid-column: span 2;
+      }
+
+      .name {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-width: 540px;
+      }
+
+      .actions {
+        display: flex;
+        gap: 8px;
+
+        .buttons {
+          display: flex;
+          gap: 4px;
+
+          .button {
+            color: var(--text-muted);
+            cursor: pointer;
+
+            &:hover {
+              color: var(--text-normal);
+            }
+
+            &.delete {
+              color: var(--red-400);
+
+              &:hover {
+                color: var(--red-460);
+              }
+            }
+
+            /* unused */
+            &.disabled {
+              color: var(--text-muted) !important;
+              cursor: not-allowed;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
-.quark-card {
-  display: flex;
-  height: fit-content;
-  justify-content: space-between;
-  background-color: var(--background-tertiary);
-  padding: 16px;
-  border-radius: 6px;
+.quark-settings,
+.quark-create {
+  .create-button {
+    width: 100%;
+  }
 }
 
-.quark-card .name {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 540px;
-}
-
-.quark-card .actions {
-  display: flex;
-  gap: 8px;
-}
-
-.quark-card .buttons {
-  display: flex;
-  gap: 4px;
-}
-
-.quark-card .buttons .edit {
-  color: var(--text-muted);
-  cursor: pointer;
-}
-
-.quark-card .buttons .edit:hover {
-  color: var(--text-normal);
-}
-
-.quark-card .buttons .delete {
-  color: var(--red-400);
-  cursor: pointer;
-}
-
-.quark-card .buttons .delete:hover {
-  color: var(--red-460);
-}
-
-.quark-settings .new-button {
-  width: 100%;
-}
-
-.quark-new .button {
-  width: 100%;
-}
-
-.quark-new .content {
+.quark-create .content {
   display: flex;
   flex-direction: column;
   width: 500px;

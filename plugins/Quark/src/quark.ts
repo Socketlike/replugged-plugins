@@ -1,229 +1,239 @@
+import React from 'react';
 import { lodash as _ } from 'replugged/common';
+import * as idb from 'idb-keyval';
 
-import { _logger, config, logger } from './util';
+import { EventEmitter } from '@shared/misc';
 
-type ReactState<T> = [T, React.Dispatch<React.SetStateAction<T>>];
+import { logger } from './util';
+import { Quark } from './types';
 
-export interface Quark {
-  enabled: boolean;
-  start: string;
-  stop?: string;
-}
+export const store = idb.createStore('quark-replugged', 'quarks');
 
-export interface QuarkState {
-  enabled: ReactState<boolean>;
-  name: ReactState<string>;
-  start: ReactState<string>;
-  stop: ReactState<string | undefined>;
-}
+export const events = new EventEmitter<{ set: string; del: string; start: string; stop: string }>();
 
-export interface QuarkTools {
-  logger: (...args: unknown[]) => void;
-  storage: Map<string, unknown>;
-}
+export const runningQuarks = new Map<string, () => void>();
+export const loadedQuarks = new Map<string, Quark>(await idb.entries(store));
 
-export const quarks = new Map<string, Quark>(Object.entries(config.get('quarks')));
-export const storage = new Map<string, Map<string, unknown>>();
-export const started = new Set<string>();
+/** @internal */
+export const _start = (name: string, quark: Quark): boolean => {
+  if (!quark) return;
 
-export const createQuarkTools = (name: string): QuarkTools => {
-  if (quarks.has(name) && !storage.has(name))
-    storage.set(name, new Map<string, unknown>([['snippetName', name]]));
+  /* eslint-disable @typescript-eslint/no-implied-eval, no-new-func */
+  const start = new Function('quark', quark.start || '') as () => void;
+  const stop = new Function('quark', quark.stop || '') as () => void;
+  /* eslint-enable @typescript-eslint/no-implied-eval, no-new-func */
 
-  return {
-    logger: (...args: unknown[]): void => _logger.log(`(quark "${name}")`, ...args),
-    storage: storage.get(name) || new Map<string, unknown>([['snippetName', name]]),
-  };
+  logger.log(`[${name}], start`);
+
+  try {
+    start();
+    runningQuarks.set(name, stop);
+
+    logger.log(`[${name}], start, ok`);
+    logger._log(`started "${name}"`);
+
+    events.emit('start', name);
+
+    return true;
+  } catch (error) {
+    logger.error(`[${name}], start, error:`, error);
+    logger._error(`failed starting "${name}"`);
+
+    return false;
+  }
 };
+/** @internal */
+export const _stop = (name: string, stop: () => void): boolean => {
+  if (!stop) return;
 
-export const start = (name: string): void => {
-  if (!quarks.has(name))
-    logger.log(
-      `won't start quark "${name || '<blank name>'}" failed: no such quark with name "${
-        name || '<blank name>'
-      }"${name in config.get('quarks') && name ? ` (you should try .load("${name}"))` : ''}`,
-    );
-  else {
-    const quark = quarks.get(name);
+  logger.log(`[${name}], stop`);
 
-    if (started.has(name)) logger.log(`won't start quark "${name}": already running`);
-    else if (!quark.enabled)
-      logger.log(
-        `won't start quark "${name}": not enabled${
-          'enabled' in quark ? '' : ' (the key "enabled" is missing in quark. try adding it)'
-        }`,
-      );
-    else if (typeof quark.start !== 'string')
-      logger.error(`won't start quark "${name}": "start" is not a string`);
-    else {
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-implied-eval, no-new-func
-        Function('quark', quark.start).call(window, createQuarkTools(name));
-        started.add(name);
-        _logger.log(`started quark "${name}"`);
-      } catch (e) {
-        _logger.error(`starting quark "${name}" failed: eval error`, e);
-      }
-    }
+  try {
+    stop?.();
+    runningQuarks.delete(name);
+
+    logger.log(`[${name}], stop, ok`);
+    logger._log(`stopped "${name}"`);
+
+    events.emit('stop', name);
+
+    return true;
+  } catch (error) {
+    logger.error(`[${name}], stop, error:`, error);
+    logger._error(`failed stopping "${name}"`);
+
+    return false;
   }
 };
 
-export const stop = (name: string): void => {
-  if (!quarks.has(name))
-    logger.log(
-      `won't stop quark "${name || '<blank name>'}": no such quark with name "${
-        name || '<blank name>'
-      }"${name in config.get('quarks') && name ? ` (you should try load("${name}"))` : ''}`,
-    );
-  else {
-    const quark = quarks.get(name);
+export const isQuark = (quarkLike: unknown): quarkLike is Quark =>
+  typeof quarkLike === 'object' &&
+  'enabled' in quarkLike &&
+  'start' in quarkLike &&
+  'stop' in quarkLike;
 
-    if (!started.has(name)) logger.log(`won't stop quark "${name}": not running`);
-    else if (typeof quark.stop !== 'string' && quark.stop)
-      logger.error(`won't stop quark "${name}": "stop" is not undefined / string`);
-    else {
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-implied-eval, no-new-func
-        Function('quark', quark.stop).call(window, createQuarkTools(name));
-        _logger.log(`stopped quark "${name}"`);
-      } catch (e) {
-        _logger.error(`stopping quark "${name}" failed: eval error`, e);
-      } finally {
-        storage.delete(name);
-        started.delete(name);
-      }
-    }
-  }
+export const validate = (quarkLike?: unknown): Quark =>
+  isQuark(quarkLike)
+    ? quarkLike
+    : {
+        enabled: false,
+        start: '',
+        stop: '',
+      };
+
+export const get = (name: string): Quark => loadedQuarks.get(name);
+
+export const set = (name: string, quarkLike?: unknown): Promise<boolean> =>
+  idb
+    .set(name, validate(quarkLike), store)
+    .then(async () => {
+      loadedQuarks.set(name, await idb.get(name, store));
+      events.emit('set', name);
+
+      logger.log(`idb set, [${name}], ok:`, quarkLike);
+
+      return true;
+    })
+    .catch((error) => {
+      logger.error(`[${name}], set, error:`, error);
+
+      return false;
+    });
+
+export const del = (name: string): Promise<boolean> =>
+  idb
+    .del(name, store)
+    .then(() => {
+      loadedQuarks.delete(name);
+      events.emit('del', name);
+
+      logger.log(`idb del, [${name}], ok`);
+
+      return true;
+    })
+    .catch((error) => {
+      logger.error(`idb del, [${name}], error:`, error);
+
+      return false;
+    });
+
+export const start = (name: string): boolean => {
+  const quark = get(name);
+
+  if (runningQuarks.has(name) || !quark.enabled) return false;
+
+  return _start(name, quark);
 };
 
 export const startAll = (): void => {
-  for (const [name] of quarks) start(name);
+  const quarks = [...loadedQuarks.entries()].filter(([_, quark]) => quark.enabled);
+
+  logger.log(`all [${quarks.map(([name]) => `"${name}"`).join(', ')}], start:`, quarks);
+  logger._log('starting all quarks');
+
+  quarks.forEach(([name, quark]) => _start(name, quark));
+};
+
+export const stop = (name: string): boolean => {
+  if (!runningQuarks.has(name)) return false;
+
+  return _stop(name, runningQuarks.get(name));
 };
 
 export const stopAll = (): void => {
-  for (const name of started) stop(name);
+  logger.log(`all [${[...runningQuarks.keys()].map((name) => `"${name}"`).join(', ')}], stop:`, [
+    ...runningQuarks.entries(),
+  ]);
+  logger._log('stopping all quarks');
+
+  runningQuarks.forEach((stop, name) => _stop(name, stop));
 };
 
-export const load = (name: string): void => {
-  const quarksConfig = config.get('quarks');
+export const restart = (name: string): boolean => {
+  logger.log(`[${name}], restart`);
+  logger._log(`restarting "${name}"`);
 
-  if (name in quarksConfig && typeof name === 'string' && name) {
-    if (started.has(name)) stop(name);
+  const ok = stop(name) && start(name);
 
-    quarks.set(name, quarksConfig[name]);
+  logger.log(`[${name}], restart, ${ok ? 'ok' : 'not ok'}`);
+  logger._log(`${ok ? 'restarted' : 'failed restarting'} ${name}`);
 
-    logger.log(`loaded quark "${name}"`);
-  } else
-    logger.log(
-      `won't load quark "${name || '<blank name>'}"${
-        typeof name !== 'string' || !name ? ' (invalid name)' : ''
-      }`,
-    );
+  return ok;
 };
 
-export const unload = (name: string): void => {
-  if (quarks.has(name)) {
-    if (started.has(name)) stop(name);
+export const _useQuark = (
+  name: string,
+): {
+  exists: boolean;
+  manage: {
+    del: () => Promise<boolean>;
+    edit: (quark: Quark) => Promise<boolean>;
+    restart: () => boolean;
+    start: () => boolean;
+    stop: () => boolean;
+  };
+  name: string;
+  quark: Quark;
+  running: boolean;
+} => ({
+  exists: loadedQuarks.has(name),
+  manage: {
+    del: () => del(name),
+    edit: (quark: Quark) => set(name, quark),
+    restart: () => restart(name),
+    start: () => start(name),
+    stop: () => stop(name),
+  },
+  name,
+  quark: get(name),
+  running: runningQuarks.has(name),
+});
 
-    quarks.delete(name);
+export const useQuark = (name: string): ReturnType<typeof _useQuark> => {
+  const [quark, setQuark] = React.useState(_useQuark(name));
 
-    logger.log(`unloaded quark "${name}"`);
-  } else logger.log(`won't unload quark "${name || '<blank name>'}" (not loaded)`);
+  React.useEffect(() => {
+    const listener = ({ detail: quarkName }: CustomEvent<string>): void =>
+      quarkName === name && setQuark(_useQuark(name));
+
+    events
+      .chainableOn('set', listener)
+      .chainableOn('del', listener)
+      .chainableOn('start', listener)
+      .on('stop', listener);
+
+    return () =>
+      events
+        .chainableOff('set', listener)
+        .chainableOff('del', listener)
+        .chainableOff('start', listener)
+        .off('stop', listener);
+  }, []);
+
+  return quark;
 };
 
-export const loadAll = (): void => {
-  const quarksConfig = config.get('quarks');
+export const useQuarks = (): Array<ReturnType<typeof _useQuark>> => {
+  const [quarks, setQuarks] = React.useState(
+    [...loadedQuarks.keys()].map((name) => _useQuark(name)),
+  );
 
-  for (const [name] of Object.entries(quarksConfig)) load(name);
+  React.useEffect(() => {
+    const listener = (): void => setQuarks([...loadedQuarks.keys()].map((name) => _useQuark(name)));
+
+    events
+      .chainableOn('set', listener)
+      .chainableOn('del', listener)
+      .chainableOn('start', listener)
+      .on('stop', listener);
+
+    return () =>
+      events
+        .chainableOff('set', listener)
+        .chainableOff('del', listener)
+        .chainableOff('start', listener)
+        .off('stop', listener);
+  }, []);
+
+  return quarks;
 };
-
-export const unloadAll = (): void => {
-  for (const [name] of quarks) unload(name);
-};
-
-export const restart = (name: string): void => {
-  if (!quarks.has(name))
-    logger.log(
-      `won't restart quark "${name || '<blank name>'}": no such quark with name "${
-        name || '<blank name>'
-      }"${name in config.get('quarks') && name ? ' (you should try load("${name}"))' : ''}`,
-    );
-  else {
-    load(name);
-    start(name);
-
-    logger.log(`restarted quark "${name}"`);
-  }
-};
-
-export const add = (name: string, quark: Quark, force?: boolean): void => {
-  if (typeof name !== 'string' || !name)
-    logger.log(`won't add quark "${name || '<blank name>'}": invalid name`);
-  else if (!force && (name in config.get('quarks') || name in [...quarks.keys()]))
-    logger.log(`won't add quark "${name}": quark with name "${name}" already exists`);
-  else if (typeof quark !== 'object' || !('enabled' in quark) || !('start' in quark))
-    logger.log(
-      `won't add quark "${name}": invalid quark object${
-        !('enabled' in quark) ? ' (missing enabled key)' : ''
-      }${!('start' in quark) ? ' (missing start key)' : ''}`,
-    );
-  else {
-    config.set('quarks', { ...config.get('quarks'), [name]: quark });
-    load(name);
-
-    logger.log(`added quark "${name}"`);
-  }
-};
-
-export const remove = (name: string): void => {
-  if (typeof name !== 'string' || !name)
-    logger.log(`won't remove quark "${name || '<blank name>'}": invalid name`);
-  else if (!(name in config.get('quarks')) && !(name in [...quarks.keys()]))
-    logger.log(`won't remove quark "${name}": quark with name "${name}" doesn't exist`);
-  else {
-    config.set(
-      'quarks',
-      Object.entries(config.get('quarks'))
-        .filter(([n]): boolean => n !== name)
-        .reduce<Record<string, Quark>>((acc, [name, quark]): Record<string, Quark> => {
-          acc[name] = quark;
-          return acc;
-        }, {}),
-    );
-    unload(name);
-
-    logger.log(`removed quark "${name}"`);
-  }
-};
-
-export const get = (name: string, cached = false): Quark =>
-  _.clone(cached ? quarks.get(name) : config.get('quarks')[name]);
-
-export const getAll = (cached = false): Record<string, Quark> => {
-  if (cached)
-    return [...quarks.entries()]
-      .sort(([a], [b]): number => a.localeCompare(b))
-      .reduce<Record<string, Quark>>((acc, [name, quark]): Record<string, Quark> => {
-        acc[name] = _.clone(quark);
-        return acc;
-      }, {});
-  else return _.clone(config.get('quarks'));
-};
-
-export const toggle = (name: string, state: boolean): void => {
-  if (typeof name !== 'string' || !name)
-    logger.log(`won't toggle quark "${name || '<blank name>'}": invalid name`);
-  else if (!(name in config.get('quarks')) && !(name in [...quarks.keys()]))
-    logger.log(`won't toggle quark "${name}": quark with name "${name}" doesn't exist`);
-  else {
-    const quark = get(name);
-
-    quark.enabled = state;
-
-    add(name, quark, true);
-
-    if (quark.enabled && !started.has(name)) start(name);
-  }
-};
-
-export const has = (name: string, cached = false): boolean => Boolean(get(name, cached));
