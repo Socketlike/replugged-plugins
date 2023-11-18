@@ -1,21 +1,8 @@
-import { React } from 'replugged/common';
+import React from 'react';
 
-import { mergeClassNames } from '@shared/dom';
+import { Icon } from '@shared/react';
 
-export const Icon = (props: {
-  className?: string;
-  onClick?: (event: React.MouseEvent) => void;
-  onContextMenu?: (event: React.MouseEvent) => void;
-  path: string;
-}): React.ReactElement => (
-  <svg
-    className={mergeClassNames('icon', props.className)}
-    viewBox='0 0 24 24'
-    onClick={props.onClick}
-    onContextMenu={props.onContextMenu}>
-    <path fill='currentColor' d={props.path} />
-  </svg>
-);
+export { Icon } from '@shared/react';
 
 export const SpotifyIcon = (props: {
   className?: string;
