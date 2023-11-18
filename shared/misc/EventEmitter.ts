@@ -43,6 +43,14 @@ export class EventEmitter<EventMap extends Record<string, unknown>> {
     this._target.removeEventListener(event, listener as EventListener);
   }
 
+  public chainableOff<T extends keyof EventMap>(
+    event: T & string,
+    listener: (event: CustomEvent<EventMap[T]>) => void,
+  ): this {
+    this.off(event, listener);
+    return this;
+  }
+
   public emit<T>(event: string, data?: T): void {
     this._target.dispatchEvent(new CustomEvent(event, { detail: data }));
   }
