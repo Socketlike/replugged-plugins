@@ -1,5 +1,7 @@
+import React from 'react';
+
 import { webpack } from 'replugged';
-import { React, contextMenu, toast } from 'replugged/common';
+import { contextMenu } from 'replugged/common';
 import { ContextMenu } from 'replugged/components';
 
 import { MenuSliderControl as MenuSliderControlType } from '@shared/types/discord';

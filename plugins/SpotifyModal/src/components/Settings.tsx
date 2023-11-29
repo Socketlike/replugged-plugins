@@ -1,5 +1,7 @@
+import React from 'react';
+
 import { util } from 'replugged';
-import { React, lodash as _ } from 'replugged/common';
+import { lodash as _ } from 'replugged/common';
 import { Category, Divider, FormItem, SelectItem, Slider, SwitchItem } from 'replugged/components';
 
 import { ToPrimitive } from '@shared/types/util';

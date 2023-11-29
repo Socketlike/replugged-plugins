@@ -1,4 +1,6 @@
-import { React, toast } from 'replugged/common';
+import React from 'react';
+
+import { toast } from 'replugged/common';
 import { Tooltip } from 'replugged/components';
 
 import { mergeClassNames } from '@shared/dom';

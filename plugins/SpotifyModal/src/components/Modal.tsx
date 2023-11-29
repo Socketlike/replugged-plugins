@@ -1,4 +1,6 @@
-import { React, lodash as _ } from 'replugged/common';
+import React from 'react';
+
+import { lodash as _ } from 'replugged/common';
 
 import { mergeClassNames } from '@shared/dom';
 import { useInterval } from '@shared/react';

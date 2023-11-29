@@ -1,4 +1,4 @@
-import { React } from 'replugged/common';
+import React from 'react';
 
 import Icons from './Icons';
 

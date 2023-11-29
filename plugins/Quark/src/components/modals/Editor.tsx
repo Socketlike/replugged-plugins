@@ -1,11 +1,12 @@
+import React from 'react';
+
 import { webpack } from 'replugged';
-import { React, components, modal, toast } from 'replugged/common';
+import { components, modal, toast } from 'replugged/common';
 import { ErrorBoundary, Modal, Text } from 'replugged/components';
+import type { ModalProps } from 'replugged/dist/renderer/modules/common/modal';
 
 import { mergeClassNames } from '@shared/dom';
 import type { TabBar } from '@shared/types';
-
-import type { ModalProps } from 'replugged/dist/renderer/modules/common/modal';
 
 import { CodeMirror } from '../CodeMirror';
 import { useQuark } from '../../quark';

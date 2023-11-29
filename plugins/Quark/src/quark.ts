@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { lodash as _ } from 'replugged/common';
 import * as idb from 'idb-keyval';
 

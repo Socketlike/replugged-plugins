@@ -1,4 +1,5 @@
-import { React } from 'replugged/common';
+import React from 'react';
+
 import { Slider } from 'replugged/components';
 
 import { mergeClassNames } from '@shared/dom';

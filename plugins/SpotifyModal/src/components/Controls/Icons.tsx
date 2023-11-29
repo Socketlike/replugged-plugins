@@ -1,4 +1,4 @@
-import { React } from 'replugged/common';
+import React from 'react';
 
 import {
   mdiPause,
@@ -15,7 +15,7 @@ import {
 import { mergeClassNames } from '@shared/dom';
 
 import { Icon } from '../Icon';
-import { Components } from '../../types';
+import { InteractableProps, InteractableWithStateProps } from '../../types';
 
 export default {
   Repeat: ({
@@ -23,9 +23,9 @@ export default {
     onContextMenu,
     state,
     disabled,
-  }: Components.Props.InteractableWithState<'context' | 'track' | 'off'> & {
+  }: InteractableWithStateProps<'context' | 'track' | 'off'> & {
     disabled?: boolean;
-  }): JSX.Element => (
+  }): React.ReactElement => (
     <Icon
       className={mergeClassNames(
         `repeat-${state === 'context' ? 'all' : state}-icon`,
@@ -42,7 +42,7 @@ export default {
     onContextMenu,
     onClick,
     disabled,
-  }: Components.Props.Interactable & { disabled?: boolean }): JSX.Element => (
+  }: InteractableProps & { disabled?: boolean }): JSX.Element => (
     <Icon
       className={mergeClassNames('skip-prev-icon', disabled && 'disabled')}
       path={mdiSkipPrevious}
@@ -56,7 +56,7 @@ export default {
     onContextMenu,
     state,
     disabled,
-  }: Components.Props.InteractableWithState<boolean> & { disabled?: boolean }): JSX.Element => (
+  }: InteractableWithStateProps<boolean> & { disabled?: boolean }): JSX.Element => (
     <Icon
       className={mergeClassNames(`${state ? 'pause' : 'play'}-icon`, disabled && 'disabled')}
       path={state ? mdiPause : mdiPlay}
@@ -69,7 +69,7 @@ export default {
     onClick,
     onContextMenu,
     disabled,
-  }: Components.Props.Interactable & { disabled?: boolean }): JSX.Element => (
+  }: InteractableProps & { disabled?: boolean }): JSX.Element => (
     <Icon
       className={mergeClassNames('skip-next-icon', disabled && 'disabled')}
       path={mdiSkipNext}
@@ -83,7 +83,7 @@ export default {
     onContextMenu,
     state,
     disabled,
-  }: Components.Props.InteractableWithState<boolean> & { disabled?: boolean }): JSX.Element => (
+  }: InteractableWithStateProps<boolean> & { disabled?: boolean }): JSX.Element => (
     <Icon
       className={mergeClassNames(
         `shuffle-${state ? 'on' : 'off'}-icon`,
@@ -96,7 +96,7 @@ export default {
     />
   ),
 
-  None: ({ onClick, onContextMenu }: Components.Props.Interactable) => (
+  None: ({ onClick, onContextMenu }: InteractableProps) => (
     <Icon className='no-icon' path='' onContextMenu={onContextMenu} onClick={onClick} />
   ),
 };

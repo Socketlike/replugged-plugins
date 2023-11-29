@@ -1,13 +1,12 @@
-import { React, modal } from 'replugged/common';
+import React from 'react';
+
+import { modal } from 'replugged/common';
 import { Modal, Text, Tooltip } from 'replugged/components';
+import type { ModalProps } from 'replugged/dist/renderer/modules/common/modal';
 
 import { mdiHelpCircle } from '@mdi/js';
 
-import { Components } from '../../types';
-
-const { openModal } = modal;
-
-export const AuthLinkGuide = (props: Components.Props.Modal): JSX.Element => {
+export const AuthLinkGuide = (props: ModalProps): React.ReactElement => {
   return (
     <Modal.ModalRoot {...props} className='spotify-modal-oauth2-guide'>
       <Modal.ModalHeader className='header'>
@@ -20,7 +19,7 @@ export const AuthLinkGuide = (props: Components.Props.Modal): JSX.Element => {
   );
 };
 
-export const AuthLinkGenerator = (props: Components.Props.Modal): JSX.Element => {
+export const AuthLinkGenerator = (props: ModalProps): React.ReactElement => {
   return (
     <Modal.ModalRoot {...props} className='spotify-modal-oauth2-generator'>
       <Modal.ModalHeader className='header'>
@@ -28,7 +27,7 @@ export const AuthLinkGenerator = (props: Components.Props.Modal): JSX.Element =>
         <Tooltip text='Guide' className='guide-button-tooltip'>
           <svg
             onClick={(): void => {
-              openModal(AuthLinkGuide);
+              modal.openModal((props) => <AuthLinkGuide {...props} />);
             }}
             viewBox='0 0 24 24'
             className='guide-button'>

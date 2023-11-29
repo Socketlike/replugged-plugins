@@ -1,4 +1,5 @@
-import { React } from 'replugged/common';
+import React from 'react';
+
 import { webpack } from 'replugged';
 
 import { EditorView, basicSetup } from 'codemirror';
