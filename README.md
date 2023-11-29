@@ -27,7 +27,7 @@
   </a>: stops Discord from pausing your Spotify playback while in VC.
 - [Quark](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/Quark)
   <a href="https://replugged.dev/install?identifier=Socketlike/replugged-plugins&id=lib.evelyn.Quark&source=github">
-  <img alt="install Quark" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fgithub.com%2FSocketlike%2Freplugged-plugins%2Fraw%2Fmain%2Fplugins%2FQuark%2Fmanifest.json&query=%24.version&prefix=v&label=install">
+  <img alt="install Quark - this plugin is not approved by the Replugged team; use at your own risk!" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fgithub.com%2FSocketlike%2Freplugged-plugins%2Fraw%2Fmain%2Fplugins%2FQuark%2Fmanifest.json&query=%24.version&prefix=v&label=install%20(!)&color=yellow">
   </a>: allows you to create persistent (runs every startup) JavaScript snippets.
 - [SpotifyListenAlong](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/SpotifyListenAlong)
   <a href="https://replugged.dev/install?identifier=lib.evelyn.SpotifyListenAlong">
