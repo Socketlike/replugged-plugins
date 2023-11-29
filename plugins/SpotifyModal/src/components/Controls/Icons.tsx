@@ -42,7 +42,7 @@ export default {
     onContextMenu,
     onClick,
     disabled,
-  }: InteractableProps & { disabled?: boolean }): JSX.Element => (
+  }: InteractableProps & { disabled?: boolean }): React.ReactElement => (
     <Icon
       className={mergeClassNames('skip-prev-icon', disabled && 'disabled')}
       path={mdiSkipPrevious}
@@ -56,7 +56,7 @@ export default {
     onContextMenu,
     state,
     disabled,
-  }: InteractableWithStateProps<boolean> & { disabled?: boolean }): JSX.Element => (
+  }: InteractableWithStateProps<boolean> & { disabled?: boolean }): React.ReactElement => (
     <Icon
       className={mergeClassNames(`${state ? 'pause' : 'play'}-icon`, disabled && 'disabled')}
       path={state ? mdiPause : mdiPlay}
@@ -69,7 +69,7 @@ export default {
     onClick,
     onContextMenu,
     disabled,
-  }: InteractableProps & { disabled?: boolean }): JSX.Element => (
+  }: InteractableProps & { disabled?: boolean }): React.ReactElement => (
     <Icon
       className={mergeClassNames('skip-next-icon', disabled && 'disabled')}
       path={mdiSkipNext}
@@ -83,7 +83,7 @@ export default {
     onContextMenu,
     state,
     disabled,
-  }: InteractableWithStateProps<boolean> & { disabled?: boolean }): JSX.Element => (
+  }: InteractableWithStateProps<boolean> & { disabled?: boolean }): React.ReactElement => (
     <Icon
       className={mergeClassNames(
         `shuffle-${state ? 'on' : 'off'}-icon`,

@@ -22,7 +22,7 @@ export const openControlsContextMenu = (
     forceUpdate: React.MutableRefObject<() => void>;
   },
 ): void =>
-  contextMenu.open(ev, (): JSX.Element => {
+  contextMenu.open(ev, (): React.ReactElement => {
     const state = useState();
     const { setProgress, setPlaying, setRepeat, setShuffle, skip, setVolume } = useControls();
     const { disallows, duration, playing, repeat, shuffle, volume } = usePlayerControlStates();
@@ -112,7 +112,7 @@ export const openControlsContextMenu = (
             <ContextMenu.MenuControlItem
               id='volume'
               label='Player volume'
-              control={(data, ref): JSX.Element => (
+              control={(data, ref): React.ReactElement => (
                 <MenuSliderControl
                   aria-label='Player volume'
                   value={volume}

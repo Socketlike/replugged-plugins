@@ -32,7 +32,7 @@ const useSetting = <T extends keyof DefaultConfig>(
   };
 };
 
-export const Settings = (): JSX.Element => (
+export const Settings = (): React.ReactElement => (
   <div className='spotify-modal-settings'>
     <Category title='Visibility' note="Change specific elements' visibility">
       <SelectItem

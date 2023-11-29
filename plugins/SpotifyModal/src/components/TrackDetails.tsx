@@ -40,7 +40,7 @@ const handleSpotifyURLInteraction = (
 
 export const Artists = (props: {
   track: SpotifyApi.TrackObjectFull | SpotifyApi.EpisodeObjectFull;
-}): JSX.Element => {
+}): React.ReactElement => {
   const elementRef = React.useRef<HTMLSpanElement>(null);
 
   React.useEffect((): void => handleOverflow(elementRef.current));
@@ -67,7 +67,7 @@ export const Artists = (props: {
 
 export const CoverArt = (props: {
   track: SpotifyApi.TrackObjectFull | SpotifyApi.EpisodeObjectFull;
-}): JSX.Element => {
+}): React.ReactElement => {
   const image =
     props.track.type === 'track'
       ? props.track.album.images[0]?.url
@@ -91,7 +91,7 @@ export const CoverArt = (props: {
 
 export const Title = (props: {
   track: SpotifyApi.TrackObjectFull | SpotifyApi.EpisodeObjectFull;
-}): JSX.Element => {
+}): React.ReactElement => {
   const elementRef = React.useRef<HTMLAnchorElement>(null);
 
   React.useEffect((): void => handleOverflow(elementRef.current));

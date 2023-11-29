@@ -1,13 +1,13 @@
-import { common, components, settings, util } from 'replugged';
+import React from 'react';
 
-const { React } = common;
-const { SelectItem } = components;
+import { SelectItem } from 'replugged/components';
+import { settings, util } from 'replugged';
 
 export const config = await settings.init('lib.evelyn.NoSpotifyPause', {
   pluginStopBehavior: 'ask',
 });
 
-export const Settings = (): JSX.Element => (
+export const Settings = (): React.ReactElement => (
   <div>
     <SelectItem
       note='Controls what the plugin does when it stops'

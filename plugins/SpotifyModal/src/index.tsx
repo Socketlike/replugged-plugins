@@ -1,4 +1,6 @@
-import { React, fluxDispatcher } from 'replugged/common';
+import React from 'react';
+
+import { fluxDispatcher } from 'replugged/common';
 import { ErrorBoundary } from 'replugged/components';
 
 import { mergeClassNames } from '@shared/dom';
@@ -11,7 +13,7 @@ import { SpotifyStore } from './types';
 
 import './style.css';
 
-export const renderModal = (): JSX.Element => (
+export const renderModal = (): React.ReactElement => (
   <div id='spotify-modal-root'>
     <ErrorBoundary
       fallback={

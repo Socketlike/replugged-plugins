@@ -19,7 +19,7 @@ export const Icon = (props: {
   className?: string;
   onClick?: (ev: React.MouseEvent) => void;
   path: string;
-}): JSX.Element => (
+}): React.ReactElement => (
   <Tooltip text={props.tooltip}>
     <BaseIcon
       className={props.className}
@@ -41,7 +41,7 @@ export const Card = (props: {
   };
   name: string;
   quark: Quark;
-}): JSX.Element => (
+}): React.ReactElement => (
   <div className='quark-card'>
     <Text.H2 variant='text-md/bold' className='name'>
       {props.name}
@@ -116,7 +116,7 @@ export const Card = (props: {
   </div>
 );
 
-export const Settings = (): JSX.Element => {
+export const Settings = (): React.ReactElement => {
   const quarks = useQuarks();
 
   return (

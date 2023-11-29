@@ -15,7 +15,7 @@ const nextRepeatStates = {
   noTrack: { off: 'context', context: 'off', track: 'off' },
 } as const;
 
-export const ControlButtons = (props: { progress: number }): JSX.Element => {
+export const ControlButtons = (props: { progress: number }): React.ReactElement => {
   const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
   const { setProgress, setPlaying, setRepeat, setShuffle, skip } = useControls();
   const { disallows, duration, playing, repeat, shuffle } = usePlayerControlStates();
@@ -33,7 +33,7 @@ export const ControlButtons = (props: { progress: number }): JSX.Element => {
 
   return (
     <>
-      {config.get('controlsLayout').map((kind): JSX.Element => {
+      {config.get('controlsLayout').map((kind): React.ReactElement => {
         switch (kind) {
           case 'play-pause':
             return (

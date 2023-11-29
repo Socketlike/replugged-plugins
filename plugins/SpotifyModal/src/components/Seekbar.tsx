@@ -6,7 +6,7 @@ import { mergeClassNames } from '@shared/dom';
 
 import { parseTime, useControls, usePlayerControlStates } from '../util';
 
-export const Seekbar = (props: { shouldShow: boolean; progress: number }): JSX.Element => {
+export const Seekbar = (props: { shouldShow: boolean; progress: number }): React.ReactElement => {
   const { setProgress } = useControls();
 
   const isSliderChanging = React.useRef<boolean>(false);
