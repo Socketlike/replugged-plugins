@@ -2,14 +2,16 @@ import React from 'react';
 
 import { mergeClassNames } from '@shared/dom';
 
-export const Icon = (props: {
+export interface IconProps {
   className?: string;
-  width?: number;
   height?: number;
   onClick?: (event: React.MouseEvent) => void;
   onContextMenu?: (event: React.MouseEvent) => void;
   path: string;
-}): React.ReactElement => (
+  width?: number;
+}
+
+export const Icon = (props: IconProps): React.ReactElement => (
   <svg
     className={mergeClassNames('icon', props.className)}
     width={props.width}
