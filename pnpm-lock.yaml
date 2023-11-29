@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+dependencies:
+  iso-639-1:
+    specifier: ^3.1.0
+    version: 3.1.0
+
 devDependencies:
   '@codemirror/lang-javascript':
     specifier: ^6.2.1
@@ -47,6 +52,9 @@ devDependencies:
   codemirror:
     specifier: ^6.0.1
     version: 6.0.1(@lezer/common@1.1.1)
+  discord-api-types:
+    specifier: ^0.37.65
+    version: 0.37.65
   eslint:
     specifier: ^8.53.0
     version: 8.53.0
@@ -68,9 +76,15 @@ devDependencies:
   replugged:
     specifier: ^4.7.6
     version: 4.7.6(@codemirror/view@6.22.0)(@lezer/common@1.1.1)
+  simple-icons:
+    specifier: ^10.0.0
+    version: 10.0.0
   style-mod:
     specifier: ^4.1.0
     version: 4.1.0
+  translate:
+    specifier: ^2.0.2
+    version: 2.0.2
   typescript:
     specifier: ^5.2.2
     version: 5.2.2
@@ -1438,6 +1452,10 @@ packages:
       path-type: 4.0.0
     dev: true
 
+  /discord-api-types@0.37.65:
+    resolution: {integrity: sha512-CQHW3Nu04LEHIj1Xps/sfGhTdrowilxnek2tirpLhwvrmgmLr1C6A+4JFLs+0kJMH2IX2QgDyA9GfNehqN+xPQ==}
+    dev: true
+
   /doctrine@2.1.0:
     resolution: {integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==}
     engines: {node: '>=0.10.0'}
@@ -2380,6 +2398,11 @@ packages:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
     dev: true
 
+  /iso-639-1@3.1.0:
+    resolution: {integrity: sha512-rWcHp9dcNbxa5C8jA/cxFlWNFNwy5Vup0KcFvgA8sPQs9ZeJHj/Eq0Y8Yz2eL8XlWYpxw4iwh9FfTeVxyqdRMw==}
+    engines: {node: '>=6.0'}
+    dev: false
+
   /iterator.prototype@1.1.2:
     resolution: {integrity: sha512-DR33HMMr8EzwuRL8Y9D3u2BMj8+RqSE850jfGu59kS7tbmPLzGkZmVSfyCFSDxuZiEY6Rzt3T2NA/qU+NwVj1w==}
     dependencies:
@@ -2985,6 +3008,11 @@ packages:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
     dev: true
 
+  /simple-icons@10.0.0:
+    resolution: {integrity: sha512-oDCgnJ2n3+Ae9Q5hNIuzq0dKwGkmW7h3Jq+HZpd0e3jAQRW/Kp5lnMauakbcUjW/XjXz+v7uJz1ecDRVoQL/HA==}
+    engines: {node: '>=0.12.18'}
+    dev: true
+
   /sisteransi@1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
     dev: true
@@ -3123,6 +3151,10 @@ packages:
     engines: {node: '>=8.0'}
     dependencies:
       is-number: 7.0.0
+    dev: true
+
+  /translate@2.0.2:
+    resolution: {integrity: sha512-K07zjM146c2RYbdlG0xCNGkE6WPdcWjdWX55SOpHzgIq9Elj+LvvXDAfbeQ8gSfkrluaGahnNv2pYfq82UiBDQ==}
     dev: true
 
   /ts-api-utils@1.0.3(typescript@5.2.2):

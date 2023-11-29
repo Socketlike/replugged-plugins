@@ -1,0 +1,20 @@
+{
+  "$schema": "https://socketlike.github.io/replugged/plugin.schema.json",
+  "id": "lib.evelyn.Translator",
+  "name": "Translator",
+  "description": "allows you to translate messages in-app.",
+  "author": {
+    "name": "Evelyn",
+    "discordID": "285329659023851520",
+    "github": "Socketlike"
+  },
+  "version": "1.0.0",
+  "updater": {
+    "type": "store",
+    "id": "lib.evelyn.Translator"
+  },
+  "license": "MIT",
+  "type": "replugged-plugin",
+  "renderer": "src/index.tsx",
+  "source": "https://github.com/Socketlike/replugged-plugins/blob/main/plugins/Translator"
+}
