@@ -42,14 +42,5 @@ that.
 
 ## Scope
 
-You can access these things from your snippets:
-
-```ts
-{
-  this: window,
-  quark: {
-    logger: (...args: unknown[]) => void,
-    storage: Map<string, unknown>, // default: ['snippetName' => <quark's name>]
-  }
-}
-```
+Scope is `window`.  
+There are no restrains on what can be accessed.
