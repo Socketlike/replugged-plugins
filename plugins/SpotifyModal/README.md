@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://replugged.dev/install?identifier=lib.evelyn.SpotifyModal">
-    <img alt="install" src="https://img.shields.io/github/v/release/Socketlike/SpotifyModal?label=Install&sort=semver&style=for-the-badge">
+    <img alt="install" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Freplugged.dev%2Fapi%2Fv1%2Fstore%2Flib.evelyn.SpotifyModal&query=%24.version&prefix=v&label=Install&style=for-the-badge">
   </a>
 </p>
 

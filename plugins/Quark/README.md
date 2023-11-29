@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://replugged.dev/install?identifier=Socketlike/Quark&source=github">
-    <img alt="install" src="https://img.shields.io/github/v/release/Socketlike/Quark?label=Install&sort=semver&style=for-the-badge">
+    <img alt="install" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fgithub.com%2FSocketlike%2Freplugged-plugins%2Fraw%2Fmain%2Fplugins%2FQuark%2Fmanifest.json&query=%24.version&prefix=v&label=Install&style=for-the-badge">
   </a>
 </p>
 
