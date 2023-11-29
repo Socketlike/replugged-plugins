@@ -40,7 +40,7 @@ Still confused? Let me enlighten you:
 You can add / remove / edit snippets in the plugin's settings menu. It cannot get any easier than
 that.
 
-## Scope
+## Closure
 
-Scope is `window`.  
+The scripts' closure is `window`.  
 There are no restrains on what can be accessed.
