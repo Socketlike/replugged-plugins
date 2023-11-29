@@ -1,9 +1,8 @@
-import { AnyFunction } from 'replugged/types';
 import React from 'react';
 
 /** Source: Dan Abramov @ overreacted.io */
-export const useInterval = (callback: AnyFunction, delay: number): void => {
-  const savedCallback = React.useRef<AnyFunction>();
+export const useInterval = (callback: (...args: any[]) => void, delay: number): void => {
+  const savedCallback = React.useRef<(...args: any[]) => void>();
 
   React.useEffect(() => {
     savedCallback.current = callback;
