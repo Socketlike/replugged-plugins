@@ -3,15 +3,21 @@ import React from 'react';
 import { APIMessage } from 'discord-api-types/v9';
 
 import { Injector, webpack } from 'replugged';
-import { fluxDispatcher, lodash, toast } from 'replugged/common';
+import { fluxDispatcher, toast } from 'replugged/common';
 import { Tooltip } from 'replugged/components';
 
 import { mergeClassNames } from '@shared/dom';
 
-import { TranslateIcon } from './Icon';
-import { config } from './Settings';
-import { translate } from './translator';
+import { TranslateIcon } from './components';
 import { logger } from './util';
+import {
+  translateMessage,
+  translatedMessageExists,
+  untranslateAllMessages,
+  untranslateMessage,
+} from './translator';
+
+import './style.css';
 
 const injector = new Injector();
 
@@ -21,95 +27,72 @@ interface MessageUpdateAction {
   translated?: boolean;
 }
 
-interface MessageTagModule {
-  renderSystemTag: (props: { message: APIMessage }) => React.ReactNode;
-}
+export const translateAndUpdateMessage = async (message: APIMessage): Promise<void> => {
+  const translateResult = await translateMessage(message);
 
-export const translatedMessages = new Map<
-  string,
-  { original: string; translated: string; message: APIMessage }
->();
-
-export const translateMessage = async (message: APIMessage): Promise<void> => {
-  const original = message.content;
-  const translated = await translate(original);
-
-  if ('error' in translated) {
-    logger.error(
-      '(translateMessage)',
-      'failed',
-      `("${config.get('engine')}", "${config.get('language') || 'discord'}"):`,
-      translated.error,
+  if ('error' in translateResult)
+    toast.toast(
+      `Unable to translate message: ${String(translateResult.error)}`,
+      toast.Kind.FAILURE,
     );
-    toast.toast(`Unable to translate message: ${String(translated.error)}`, toast.Kind.FAILURE);
-  } else {
+  else {
     fluxDispatcher.dispatch({
       type: 'MESSAGE_UPDATE',
-      message: lodash.assign(lodash.clone(message), { content: translated.text }),
+      message: translateResult.message,
       translated: true,
     });
 
-    translatedMessages.set(message.id, {
-      original,
-      message: lodash.clone(message),
-      translated: translated.text,
-    });
-
-    toast.toast('Translated message.', toast.Kind.SUCCESS);
+    toast.toast('Translated message', toast.Kind.SUCCESS);
   }
 };
 
+export const untranslateAndUpdateMessage = (message: APIMessage): void => {
+  fluxDispatcher.dispatch({
+    type: 'MESSAGE_UPDATE',
+    message: untranslateMessage(message),
+  });
+
+  toast.toast('Untranslated message', toast.Kind.SUCCESS);
+};
+
+export const untranslateAndUpdateAllMessages = (): void =>
+  untranslateAllMessages().forEach((message) =>
+    fluxDispatcher.dispatch({
+      type: 'MESSAGE_UPDATE',
+      message,
+    }),
+  );
+
 export const onMessageUpdate = ({ message, translated }: MessageUpdateAction): void => {
-  if (!translated && translatedMessages.has(message.id)) {
-    if (translatedMessages.get(message.id).original !== message.content)
-      void translateMessage(message);
-    else
-      fluxDispatcher.dispatch({
-        type: 'MESSAGE_UPDATE',
-        message: lodash.assign(lodash.clone(message), {
-          content: translatedMessages.get(message.id).translated,
-        }),
-        translated: true,
-      });
-  }
+  if (!translated && translatedMessageExists(message.id)) void translateAndUpdateMessage(message);
 };
 
 export const start = async (): Promise<void> => {
-  const messageTagModule = await webpack.waitForModule<MessageTagModule>(
-    webpack.filters.byProps('renderSystemTag'),
-  );
+  const systemTagModule = await webpack.waitForModule<{
+    renderSystemTag: (props: { message: APIMessage; compact: boolean }) => React.ReactNode;
+  }>(webpack.filters.byProps('renderSystemTag'));
 
-  const botTagCozyClasses = await webpack.waitForModule<{ botTagCozy: string }>(
-    webpack.filters.byProps('botTagCozy'),
-  );
-
-  if (messageTagModule?.renderSystemTag)
-    injector.after(messageTagModule, 'renderSystemTag', ([args], res): React.ReactNode => {
+  if (systemTagModule?.renderSystemTag)
+    injector.after(systemTagModule, 'renderSystemTag', ([args], res): React.ReactNode => {
       return [
         res,
-        translatedMessages.has(args?.message?.id) && (
+        translatedMessageExists(args?.message?.id) && (
           <Tooltip text='Translated'>
             <TranslateIcon
-              className={mergeClassNames(
-                'translator-translated-tag',
-                botTagCozyClasses?.botTagCozy,
-              )}
+              className={mergeClassNames('translated-icon', args?.compact ? 'compact' : 'cozy')}
             />
           </Tooltip>
         ),
       ];
     });
+  else logger.warn('(start)', "couldn't find systemTagModule");
 
   injector.utils.addPopoverButton((message) => ({
     icon: TranslateIcon,
-    label: translatedMessages.has(message.id) ? 'Untranslate' : 'Translate',
+    label: translatedMessageExists(message.id) ? 'Untranslate' : 'Translate',
     onClick: (_, message): void => {
-      if (translatedMessages.has(message.id)) {
-        message.content = translatedMessages.get(message.id).original;
-        translatedMessages.delete(message.id);
-
-        fluxDispatcher.dispatch({ type: 'MESSAGE_UPDATE', message });
-      } else void translateMessage(message);
+      if (translatedMessageExists(message.id)) untranslateAndUpdateMessage(message);
+      else void translateAndUpdateMessage(message);
     },
   }));
 
@@ -121,16 +104,10 @@ export const stop = (): void => {
 
   injector.uninjectAll();
 
-  [...translatedMessages.entries()].forEach(([id, { original, message }]): void => {
-    message.content = original;
-
-    translatedMessages.delete(id);
-
-    fluxDispatcher.dispatch({ type: 'MESSAGE_UPDATE', message });
-  });
+  untranslateAndUpdateAllMessages();
 };
 
-export * from './Settings';
-export * from './Icon';
-export * from './translator';
-export * from './util';
+export { Settings } from './components';
+export * as components from './components';
+export * as translator from './translator';
+export * as util from './util';

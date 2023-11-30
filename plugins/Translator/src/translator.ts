@@ -1,9 +1,15 @@
 import _translate from 'translate';
 
-import { i18n, toast } from 'replugged/common';
+import { APIMessage } from 'discord-api-types/v9';
 
-import { config } from './Settings';
-import { logger } from './util';
+import { lodash as _, i18n } from 'replugged/common';
+
+import { config } from './util';
+
+export const translatedMessages = new Map<
+  string,
+  { original: string; translated: string; message: APIMessage }
+>();
 
 export const translate = async (
   text: string,
@@ -28,3 +34,45 @@ export const translate = async (
 
   return result;
 };
+
+export const translateMessage = async (
+  message: APIMessage,
+  engine = config.get('engine'),
+): Promise<{ message: APIMessage; text: string; error?: unknown }> => {
+  const translatedMessage = _.clone(message);
+  const translationResult =
+    translatedMessages.has(translatedMessage.id) &&
+    translatedMessage.content === translatedMessages.get(translatedMessage.id).original &&
+    translatedMessage.content === translatedMessages.get(translatedMessage.id).translated
+      ? { text: translatedMessages.get(translatedMessage.id).translated }
+      : await translate(translatedMessage.content, engine);
+
+  translatedMessage.content = translationResult.text;
+
+  if (!('error' in translationResult))
+    translatedMessages.set(translatedMessage.id, {
+      message: _.clone(message),
+      original: message.content,
+      translated: translatedMessage.content,
+    });
+
+  return { message: translatedMessage, ...translationResult };
+};
+
+export const untranslateMessage = (message: APIMessage): APIMessage => {
+  const untranslatedMessage = _.clone(message);
+
+  if (translatedMessages.has(message.id)) {
+    untranslatedMessage.content = translatedMessages.get(message.id).original;
+    translatedMessages.delete(message.id);
+  }
+
+  return untranslatedMessage;
+};
+
+export const untranslateAllMessages = (): APIMessage[] => {
+  return [...translatedMessages.values()].map(({ message }) => untranslateMessage(message));
+};
+
+export const translatedMessageExists = (messageId: string): boolean =>
+  translatedMessages.has(messageId);

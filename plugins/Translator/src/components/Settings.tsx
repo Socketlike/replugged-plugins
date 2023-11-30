@@ -1,34 +1,12 @@
 import React from 'react';
 import ISO6391 from 'iso-639-1';
 
-import { settings, util } from 'replugged';
+import { util } from 'replugged';
 import { Category, FormItem, SelectItem, TextInput } from 'replugged/components';
 
 import { ToPrimitive } from '@shared/types';
 
-export const defaultConfig: {
-  apiKeys: {
-    deepl: string;
-    yandex: string;
-    google?: never;
-    libre?: never;
-  };
-  engine: 'google' | 'deepl' | 'libre' | 'yandex';
-  language: string;
-  urlLibreTranslate: string;
-} = {
-  apiKeys: {
-    deepl: '',
-    yandex: '',
-  },
-  engine: 'google',
-  language: '',
-  urlLibreTranslate: '',
-};
-
-export type DefaultConfig = typeof defaultConfig;
-
-export const config = await settings.init('lib.evelyn.Translator', defaultConfig);
+import { DefaultConfig, config } from '../util';
 
 const useSetting = <T extends keyof DefaultConfig>(
   key: T,
