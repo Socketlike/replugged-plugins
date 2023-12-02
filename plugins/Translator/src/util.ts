@@ -1,27 +1,18 @@
+import { EventEmitter } from '@shared/misc';
 import { Logger, settings } from 'replugged';
 
 export const logger = Logger.plugin('Translator');
 
 export const defaultConfig: {
-  apiKeys: {
-    deepl: string;
-    yandex: string;
-    google?: never;
-    libre?: never;
-  };
-  engine: 'google' | 'deepl' | 'libre' | 'yandex';
   language: string;
-  urlLibreTranslate: string;
+  url: string;
 } = {
-  apiKeys: {
-    deepl: '',
-    yandex: '',
-  },
-  engine: 'google',
   language: '',
-  urlLibreTranslate: '',
+  url: 'https://lingva.ml',
 };
 
 export type DefaultConfig = typeof defaultConfig;
 
 export const config = await settings.init('lib.evelyn.Translator', defaultConfig);
+
+export const events = new EventEmitter<{ languageChanged: string }>();

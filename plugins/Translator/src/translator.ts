@@ -1,4 +1,4 @@
-import _translate from 'translate';
+import translator from '@sckt/translate';
 
 import { APIMessage } from 'discord-api-types/v9';
 
@@ -6,26 +6,20 @@ import { lodash as _, i18n } from 'replugged/common';
 
 import { config } from './util';
 
-export const translatedMessages = new Map<
-  string,
-  { original: string; translated: string; message: APIMessage }
->();
-
-export const translate = async (
-  text: string,
-  engine = config.get('engine'),
-): Promise<{ text: string; error?: unknown }> => {
-  const key = config.get('apiKeys')[engine] || '';
-  const to = config.get('language') || i18n.getLocale()?.split?.('-')?.[0] || 'en';
+export const _translate = async (text: string): Promise<{ text: string; error?: unknown }> => {
+  const to = config.get('language') || i18n.getLocale().split('-')[0];
 
   let result: { text: string; error?: unknown } = { text };
 
   if (!text) result.error = 'message content is empty';
-  else if (['deepl', 'yandex'].includes(engine) && !key)
-    result.error = `missing API key for engine "${engine}"`;
   else {
-    const res = await _translate(text, { engine, key, to })
-      .then((translatedText) => ({ text: translatedText }))
+    const res = await translator(text, {
+      engine: 'lingva',
+      url: config.get('url'),
+      to,
+      from: 'auto',
+    })
+      .then((text) => ({ text }))
       .catch((error) => ({ text, error }));
 
     if ('error' in res) result.error = res.error;
@@ -35,44 +29,28 @@ export const translate = async (
   return result;
 };
 
-export const translateMessage = async (
+export const originalCache = new Map<string, APIMessage>();
+
+export const translate = async (
   message: APIMessage,
-  engine = config.get('engine'),
 ): Promise<{ message: APIMessage; text: string; error?: unknown }> => {
   const translatedMessage = _.clone(message);
-  const translationResult =
-    translatedMessages.has(translatedMessage.id) &&
-    translatedMessage.content === translatedMessages.get(translatedMessage.id).original &&
-    translatedMessage.content === translatedMessages.get(translatedMessage.id).translated
-      ? { text: translatedMessages.get(translatedMessage.id).translated }
-      : await translate(translatedMessage.content, engine);
+  const translationResult = await _translate(translatedMessage.content);
 
   translatedMessage.content = translationResult.text;
 
-  if (!('error' in translationResult))
-    translatedMessages.set(translatedMessage.id, {
-      message: _.clone(message),
-      original: message.content,
-      translated: translatedMessage.content,
-    });
+  if (!('error' in translationResult)) originalCache.set(translatedMessage.id, _.clone(message));
 
   return { message: translatedMessage, ...translationResult };
 };
 
-export const untranslateMessage = (message: APIMessage): APIMessage => {
-  const untranslatedMessage = _.clone(message);
+export const untranslate = (messageId: string): APIMessage => {
+  const untranslatedMessage = originalCache.get(messageId);
 
-  if (translatedMessages.has(message.id)) {
-    untranslatedMessage.content = translatedMessages.get(message.id).original;
-    translatedMessages.delete(message.id);
-  }
+  originalCache.delete(messageId);
 
   return untranslatedMessage;
 };
 
-export const untranslateAllMessages = (): APIMessage[] => {
-  return [...translatedMessages.values()].map(({ message }) => untranslateMessage(message));
-};
-
-export const translatedMessageExists = (messageId: string): boolean =>
-  translatedMessages.has(messageId);
+export const untranslateAll = (): APIMessage[] =>
+  [...originalCache.keys()].map((id) => untranslate(id));
