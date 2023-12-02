@@ -16,5 +16,6 @@
   "license": "MIT",
   "type": "replugged-plugin",
   "renderer": "src/index.tsx",
-  "source": "https://github.com/Socketlike/replugged-plugins/blob/main/plugins/Translator"
+  "source": "https://github.com/Socketlike/replugged-plugins/blob/main/plugins/Translator",
+  "image": "https://cdn.discordapp.com/attachments/907813363294277652/1180472264278413332/1hEUYaAE.png?ex=657d8b77&is=656b1677&hm=c9ba734d559e84b54d69d9096f93c69ba92829f7be07787b8c2b68c512d134e4&"
 }

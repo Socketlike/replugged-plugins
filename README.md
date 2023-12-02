@@ -39,6 +39,10 @@
   <img alt="install SpotifyModal" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Freplugged.dev%2Fapi%2Fv1%2Fstore%2Flib.evelyn.SpotifyModal&query=%24.version&prefix=v&label=install">
   </a>: shows a little modal on your user dock that lets you see & control what you're playing on
   Spotify.
+- [Translator](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/Translator)
+  <a href="https://replugged.dev/install?identifier=lib.evelyn.Translator">
+  <img alt="install Translator" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Freplugged.dev%2Fapi%2Fv1%2Fstore%2Flib.evelyn.Translator&query=%24.version&prefix=v&label=install">
+  </a>: allows you to translate messages in-app.
 
 ## Building
 
