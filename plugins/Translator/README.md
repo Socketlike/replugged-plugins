@@ -12,9 +12,9 @@
   a Replugged plugin that allows you to translate messages in-app.
 </p>
 
-![Preview](preview.png)
-
 ## Usage
+
+![Preview](preview.png)
 
 hover over a message and click on the "Translate" popover button. to untranslate, click the same
 popover button again.
