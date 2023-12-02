@@ -51,7 +51,7 @@ export class EventEmitter<EventMap extends Record<string, unknown>> {
     return this;
   }
 
-  public emit<T extends keyof EventMap>(event: T & string, data?: EventMap[T]): void {
+  public emit<T extends keyof EventMap>(event: T & string, data?: unknown): void {
     this._target.dispatchEvent(new CustomEvent(event, { detail: data }));
   }
 }

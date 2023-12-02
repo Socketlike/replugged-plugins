@@ -16,7 +16,11 @@ export const Settings = (): React.ReactElement => (
         { label: 'Restart Discord immediately', value: 'restart' },
         { label: 'Do nothing', value: 'ignore' },
       ]}
-      {...util.useSetting(config, 'pluginStopBehavior')}>
+      {...(util.useSetting(config, 'pluginStopBehavior') as {
+        value: 'ask' | 'restart' | 'ignore';
+        // oh my god, what the fuck is ValType? it is fucking up all of the useSetting calls!
+        onChange: (newValue: string) => void;
+      })}>
       Plugin Stop Behavior
     </SelectItem>
   </div>

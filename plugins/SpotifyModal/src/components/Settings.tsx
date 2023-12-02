@@ -22,6 +22,7 @@ const useSetting = <T extends keyof DefaultConfig>(
     value,
     onChange: (newValue) => {
       config.set(key, newValue as DefaultConfig[T]);
+
       globalEvents.emit('settingsUpdate', {
         key,
         value: newValue as DefaultConfig[T],

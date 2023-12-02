@@ -121,7 +121,12 @@ export const Settings = (): React.ReactElement => {
 
   return (
     <div className='quark-settings'>
-      <SwitchItem note='Enable verbose logs' {...util.useSetting(config, 'debugging')}>
+      <SwitchItem
+        note='Enable verbose logs'
+        {...(util.useSetting(config, 'debugging') as {
+          value: boolean;
+          onChange: (newValue: boolean) => void;
+        })}>
         Debugging
       </SwitchItem>
       <Button className='create-button' onClick={(): void => openCreateQuarkModal()}>

@@ -9,9 +9,9 @@ export type GlobalEventMap = {
   event: { accountId: string; data: SpotifyStore.PayloadEvents };
   showUpdate: boolean;
   settingsUpdate: Values<{
-    [Property in keyof DefaultConfig]: {
-      key: Property;
-      value: DefaultConfig[Property];
+    [key in keyof DefaultConfig]: {
+      key: key;
+      value: DefaultConfig[key];
     };
   }>;
 };

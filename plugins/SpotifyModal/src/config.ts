@@ -10,40 +10,27 @@ export type ControlButtonKind =
 
 export type VisibilityState = 'always' | 'hidden' | 'auto';
 
-export interface DefaultConfig {
-  controlsLayout: [
+export const defaultConfig = {
+  controlsLayout: ['shuffle', 'skip-prev', 'play-pause', 'skip-next', 'repeat'] as [
     ControlButtonKind,
     ControlButtonKind,
     ControlButtonKind,
     ControlButtonKind,
     ControlButtonKind,
-  ];
-  controlsVisibilityState: VisibilityState;
-  debugging: boolean;
-  hyperlinkURI: boolean;
-  pluginStopBehavior: 'ask' | 'restart' | 'ignore';
-  seekbarEnabled: boolean;
-  seekbarVisibilityState: VisibilityState;
-  spotifyAppClientId: string;
-  spotifyAppRedirectURI: string;
-  spotifyAppOauthTokens: Record<string, string>;
-  skipPreviousShouldResetProgress: boolean;
-  skipPreviousProgressResetThreshold: number;
-}
-
-export const defaultConfig: DefaultConfig = {
-  controlsLayout: ['shuffle', 'skip-prev', 'play-pause', 'skip-next', 'repeat'],
-  controlsVisibilityState: 'auto',
+  ],
+  controlsVisibilityState: 'auto' as VisibilityState,
   debugging: false,
   hyperlinkURI: true,
-  pluginStopBehavior: 'ask',
+  pluginStopBehavior: 'ask' as 'ask' | 'restart' | 'ignore',
   seekbarEnabled: true,
-  seekbarVisibilityState: 'always',
+  seekbarVisibilityState: 'always' as VisibilityState,
   spotifyAppClientId: '',
   spotifyAppRedirectURI: '',
-  spotifyAppOauthTokens: {},
+  spotifyAppOauthTokens: {} as Record<string, string>,
   skipPreviousShouldResetProgress: true,
   skipPreviousProgressResetThreshold: 0.15,
 };
+
+export type DefaultConfig = typeof defaultConfig;
 
 export const config = await settings.init('lib.evelyn.SpotifyModal', defaultConfig);
