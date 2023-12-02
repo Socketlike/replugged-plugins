@@ -16,8 +16,8 @@
 
 ## Usage
 
-hover over a message and click on the "Translate" popover button.
-to untranslate, click the same popover button again.
+hover over a message and click on the "Translate" popover button. to untranslate, click the same
+popover button again.
 
 ## Limitations
 
