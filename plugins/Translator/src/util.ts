@@ -4,11 +4,15 @@ import { Logger, settings } from 'replugged';
 export const logger = Logger.plugin('Translator');
 
 export const defaultConfig: {
-  language: string;
+  sendTranslateEnabled: boolean;
+  targetLanguage: string;
   url: string;
+  yourLanguage: string;
 } = {
-  language: '',
+  sendTranslateEnabled: false,
+  targetLanguage: '',
   url: 'https://lingva.ml',
+  yourLanguage: '',
 };
 
 export type DefaultConfig = typeof defaultConfig;

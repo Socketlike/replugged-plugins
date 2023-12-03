@@ -4,17 +4,18 @@ import { APIMessage } from 'discord-api-types/v9';
 
 import { Injector, webpack } from 'replugged';
 import { fluxDispatcher, i18n, toast } from 'replugged/common';
-import { Tooltip } from 'replugged/components';
 
-import { mergeClassNames } from '@shared/dom';
-
-import { TranslateIcon } from './components';
+import { TranslateButton, TranslateIcon, TranslateOffIcon, TranslatedTag } from './components';
 import { config, events, logger } from './util';
-import { originalCache, translate, untranslate, untranslateAll } from './translator';
+import { _translate, originalCache, translate, untranslate, untranslateAll } from './translator';
 
 import './style.css';
 
 const injector = new Injector();
+
+const messages = await webpack.waitForModule<{
+  sendMessage: (id: string, data: { content: string }, _: unknown, __: unknown) => Promise<unknown>;
+}>(webpack.filters.byProps('sendMessage'));
 
 interface MessageUpdateAction {
   type: 'MESSAGE_UPDATE';
@@ -46,10 +47,6 @@ export const untranslateMessage = (messageId: string): void =>
     message: untranslate(messageId),
   });
 
-export const onMessageUpdate = ({ message, translated }: MessageUpdateAction): void => {
-  if (!translated && originalCache.has(message.id)) void translateMessage(message);
-};
-
 export const untranslateAllMessages = (): void => {
   untranslateAll().forEach((message) =>
     fluxDispatcher.dispatch({ type: 'MESSAGE_UPDATE', message }),
@@ -58,41 +55,47 @@ export const untranslateAllMessages = (): void => {
   logger.log('cleared all translations');
 };
 
+export const onMessageUpdate = ({ message, translated }: MessageUpdateAction): void => {
+  if (!translated && originalCache.has(message.id)) void translateMessage(message);
+};
+
 export const onDiscordLocaleChange = (): void =>
-  !config.get('language') && untranslateAllMessages();
+  !config.get('yourLanguage') && untranslateAllMessages();
+
+export const renderTranslatedTag = (message: APIMessage): React.ReactNode =>
+  originalCache.has(message?.id) && <TranslatedTag />;
 
 export const start = async (): Promise<void> => {
-  const systemTagModule = await webpack.waitForModule<{
-    renderSystemTag: (props: { message: APIMessage; compact: boolean }) => React.ReactNode;
-  }>(webpack.filters.byProps('renderSystemTag'));
+  const chatBarButtons = await webpack.waitForModule<{
+    type: (props: { type: { analyticsName?: string } }) => React.ReactElement;
+  }>(webpack.filters.bySource('ChannelTextAreaButtons'));
 
-  if (systemTagModule?.renderSystemTag)
-    injector.after(systemTagModule, 'renderSystemTag', ([args], res): React.ReactNode => {
-      return [
-        res,
-        originalCache.has(args?.message?.id) && (
-          <Tooltip text='Translated'>
-            <TranslateIcon
-              className={mergeClassNames('translated-icon', args?.compact ? 'compact' : 'cozy')}
-            />
-          </Tooltip>
-        ),
-      ];
-    });
-  else
-    logger.warn(
-      '(start)',
-      "couldn't find <systemTagModule>.renderSystemTag. (you won't see the `translated` tag on translated messages)",
-    );
+  injector.after(chatBarButtons, 'type', ([args], res): React.ReactElement => {
+    if (res)
+      res.props.children.splice(
+        1,
+        0,
+        ['normal', 'sidebar'].includes(args?.type?.analyticsName) && <TranslateButton />,
+      );
+
+    return res;
+  });
 
   injector.utils.addPopoverButton((message) => ({
-    icon: TranslateIcon,
+    icon: originalCache.has(message.id) ? TranslateOffIcon : TranslateIcon,
     label: originalCache.has(message.id) ? 'Untranslate' : 'Translate',
     onClick: (_, message): void =>
       originalCache.has(message.id)
         ? untranslateMessage(message.id)
         : void translateMessage(message),
   }));
+
+  injector.instead(messages, 'sendMessage', async (args, orig) => {
+    if (config.get('sendTranslateEnabled'))
+      args[1].content = (await _translate(args[1].content)).text;
+
+    return orig(...args);
+  });
 
   fluxDispatcher.subscribe<MessageUpdateAction>('MESSAGE_UPDATE', onMessageUpdate);
   events.on('languageChanged', untranslateAllMessages);

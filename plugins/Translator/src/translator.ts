@@ -6,8 +6,13 @@ import { lodash as _, i18n } from 'replugged/common';
 
 import { config } from './util';
 
-export const _translate = async (text: string): Promise<{ text: string; error?: unknown }> => {
-  const to = config.get('language') || i18n.getLocale().split('-')[0];
+export const _translate = async (
+  text: string,
+  self?: boolean,
+): Promise<{ text: string; error?: unknown }> => {
+  const to = self
+    ? config.get('targetLanguage')
+    : config.get('yourLanguage') || i18n.getLocale().split('-')[0];
 
   let result: { text: string; error?: unknown } = { text };
 

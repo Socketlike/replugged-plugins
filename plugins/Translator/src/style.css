@@ -1,20 +1,17 @@
-.translated-icon {
-  position: relative;
-  top: 0.25rem;
+.translator-translated-tag {
+  color: var(--text-muted);
+}
 
-  width: 18px;
-  height: 18px;
+.translator-send-toggle .button {
+  background: none;
+  margin-top: 3px;
+}
 
-  &.compact {
-    top: 0.15rem;
+.translator-send-toggle .button .icon {
+  color: var(--interactive-normal);
+  overflow: visible;
+}
 
-    width: 16px;
-    height: 16px;
-
-    margin-right: 0.2rem;
-  }
-
-  &.cozy {
-    margin-left: 0.2rem;
-  }
+.translator-send-toggle:hover .button .icon {
+  color: var(--interactive-hover);
 }

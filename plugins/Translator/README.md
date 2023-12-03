@@ -16,16 +16,12 @@
 
 ![Preview](preview.png)
 
-hover over a message and click on the "Translate" popover button. to untranslate, click the same
-popover button again.
+- translating others messages: hover over a message and click on the "Translate" popover button. to
+  untranslate, click the same popover button again.
+
+- translating your sent messages: click on the
 
 ## Limitations
 
 - if you translate your own sent messages and try to edit them, the translated message would be in
   the edit field (avoid this by untranslating before you edit)
-- currently there is no way to translate your messages to other people when sending them as i have
-  yet to figure out how to patch in a toggle button in the chat bar (plaintext patching is no good
-  in this case - we might create conflicts with another plugin)
-- currently the only indicator to see if a message is translated is the translate button and the
-  translated "badge" as i have yet to figure out how to patch in a `(translated)` indicator similar
-  to the `(edited)` indicator
