@@ -12,10 +12,10 @@ devDependencies:
     specifier: ^6.9.3
     version: 6.9.3
   '@codemirror/state':
-    specifier: ^6.3.3
+    specifier: ^6.3.2
     version: 6.3.3
   '@codemirror/view':
-    specifier: ^6.22.2
+    specifier: ^6.22.1
     version: 6.22.2
   '@lezer/highlight':
     specifier: ^1.2.0
@@ -30,10 +30,10 @@ devDependencies:
     specifier: ^4.14.202
     version: 4.14.202
   '@types/node':
-    specifier: ^20.10.4
+    specifier: ^20.10.2
     version: 20.10.4
   '@types/react':
-    specifier: ^18.2.43
+    specifier: ^18.2.40
     version: 18.2.43
   '@types/react-dom':
     specifier: ^18.2.17
@@ -42,16 +42,16 @@ devDependencies:
     specifier: ^0.0.25
     version: 0.0.25
   '@typescript-eslint/eslint-plugin':
-    specifier: ^6.13.2
+    specifier: ^6.13.1
     version: 6.13.2(@typescript-eslint/parser@6.13.2)(eslint@8.55.0)(typescript@5.3.3)
   '@typescript-eslint/parser':
-    specifier: ^6.13.2
+    specifier: ^6.13.1
     version: 6.13.2(eslint@8.55.0)(typescript@5.3.3)
   codemirror:
     specifier: ^6.0.1
     version: 6.0.1(@lezer/common@1.1.2)
   discord-api-types:
-    specifier: ^0.37.66
+    specifier: ^0.37.65
     version: 0.37.66
   eslint:
     specifier: ^8.55.0
@@ -75,13 +75,13 @@ devDependencies:
     specifier: ^4.7.7
     version: 4.7.7(@codemirror/view@6.22.2)(@lezer/common@1.1.2)
   simple-icons:
-    specifier: ^10.1.0
+    specifier: ^10.0.0
     version: 10.1.0
   style-mod:
     specifier: ^4.1.0
     version: 4.1.0
   typescript:
-    specifier: ^5.3.3
+    specifier: ^5.3.2
     version: 5.3.3
 
 packages:
