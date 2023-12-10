@@ -19,11 +19,15 @@ export const _translate = async (
   if (!text) result.error = 'message content is empty';
   else {
     const res = await translator(text, {
+      engine: 'google_dict_chrome_ex',
       to,
       from: 'auto',
     })
       .then((text) => ({ text }))
-      .catch((error) => ({ text, error }));
+      .catch((error) => ({
+        error,
+        text,
+      }));
 
     if ('error' in res) result.error = res.error;
     else result.text = res.text;
