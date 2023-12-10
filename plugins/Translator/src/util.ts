@@ -6,12 +6,10 @@ export const logger = Logger.plugin('Translator');
 export const defaultConfig: {
   sendTranslateEnabled: boolean;
   targetLanguage: string;
-  url: string;
   yourLanguage: string;
 } = {
   sendTranslateEnabled: false,
   targetLanguage: '',
-  url: 'https://lingva.ml',
   yourLanguage: '',
 };
 

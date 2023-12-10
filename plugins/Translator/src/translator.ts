@@ -10,17 +10,15 @@ export const _translate = async (
   text: string,
   self?: boolean,
 ): Promise<{ text: string; error?: unknown }> => {
-  const to = self
-    ? config.get('targetLanguage')
-    : config.get('yourLanguage') || i18n.getLocale().split('-')[0];
+  const to =
+    (self ? config.get('targetLanguage') : config.get('yourLanguage')) ||
+    i18n.getLocale().split('-')[0];
 
   let result: { text: string; error?: unknown } = { text };
 
   if (!text) result.error = 'message content is empty';
   else {
     const res = await translator(text, {
-      engine: 'lingva',
-      url: config.get('url'),
       to,
       from: 'auto',
     })

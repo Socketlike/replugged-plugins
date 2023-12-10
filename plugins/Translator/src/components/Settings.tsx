@@ -2,7 +2,7 @@ import React from 'react';
 import { Languages } from '@sckt/translate';
 
 import { util } from 'replugged';
-import { FormItem, SelectItem, TextInput } from 'replugged/components';
+import { SelectItem } from 'replugged/components';
 
 import { DefaultConfig, config, events } from '../util';
 
@@ -33,22 +33,15 @@ export const Settings = (): React.ReactElement => (
   <div className='translator-settings'>
     <SelectItem
       options={[{ label: 'Discord Language', value: '' }, ...languages]}
-      note={
-        'The language you speak. Messages will be translated to this language. Changing this will reset all previously translated messages!'
-      }
+      note='The language you speak. Messages will be translated to this language. Changing this will reset all previously translated messages!'
       {...useSetting('yourLanguage')}>
       Your Language
     </SelectItem>
     <SelectItem
       options={[{ label: 'Discord Language', value: '' }, ...languages]}
-      note={
-        'The language you wish you could speak. Your messages will be translated to this language.'
-      }
+      note='The language you wish you could speak. Your messages will be translated to this language.'
       {...useSetting('targetLanguage')}>
       Target Language
     </SelectItem>
-    <FormItem className='form' title='Lingva Translate API Instance'>
-      <TextInput className='input' {...useSetting('url')} />
-    </FormItem>
   </div>
 );

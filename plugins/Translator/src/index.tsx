@@ -92,7 +92,7 @@ export const start = async (): Promise<void> => {
 
   injector.instead(messages, 'sendMessage', async (args, orig) => {
     if (config.get('sendTranslateEnabled'))
-      args[1].content = (await _translate(args[1].content)).text;
+      args[1].content = (await _translate(args[1].content, true)).text;
 
     return orig(...args);
   });
