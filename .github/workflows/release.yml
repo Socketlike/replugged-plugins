@@ -18,12 +18,12 @@ jobs:
         with:
           submodule: recursive
 
-      - name: Set up Node.js
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 18.18.2
 
-      - name: Set up PNPM
+      - name: Setup PNPM
         uses: pnpm/action-setup@master
         with:
           version: latest
@@ -34,7 +34,8 @@ jobs:
       - name: Bundle
         run: pnpm run build:prod:bundle --all
 
-      - uses: ncipollo/release-action@main
+      - name: Release
+        uses: ncipollo/release-action@main
         with:
           artifacts: 'bundle/*'
           makeLatest: true
