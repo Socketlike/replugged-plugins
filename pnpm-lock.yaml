@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@sckt/translate':
-    specifier: ^1.0.5
-    version: 1.0.5
+    specifier: ^1.0.6
+    version: 1.0.6
 
 devDependencies:
   '@codemirror/lang-javascript':
@@ -616,7 +616,7 @@ packages:
       ajv: 6.12.6
       debug: 4.3.4
       espree: 9.6.1
-      globals: 13.23.0
+      globals: 13.24.0
       ignore: 5.3.0
       import-fresh: 3.3.0
       js-yaml: 4.1.0
@@ -830,8 +830,8 @@ packages:
       config-chain: 1.1.13
     dev: true
 
-  /@sckt/translate@1.0.5:
-    resolution: {integrity: sha512-UJzjb3nKYnf1hZFyyySOtzQff9Kn9IDTj1D2sJuCd2xrZxk2RvRs/uqgTXtZdIYOcmF7qljQ8GZ2PdCKpxNfkA==}
+  /@sckt/translate@1.0.6:
+    resolution: {integrity: sha512-dKA56AZtVada7MVIXBfQKROONcJkh54c6Ki4V+uJnLQ3ohA4ToaWkCZg4o9Sl8IEyXaVAOPNKLYbD+WCUvJJQg==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@types/memory-cache': 0.2.5
@@ -1774,7 +1774,7 @@ packages:
       file-entry-cache: 6.0.1
       find-up: 5.0.0
       glob-parent: 6.0.2
-      globals: 13.23.0
+      globals: 13.24.0
       graphemer: 1.4.0
       ignore: 5.3.0
       imurmurhash: 0.1.4
@@ -2016,8 +2016,8 @@ packages:
       ini: 2.0.0
     dev: true
 
-  /globals@13.23.0:
-    resolution: {integrity: sha512-XAmF0RjlrjY23MA51q3HltdlGxUpXPvg0GioKiD9X6HD28iMjo2dKC8Vqwm7lne4GNr78+RHTfliktR6ZH09wA==}
+  /globals@13.24.0:
+    resolution: {integrity: sha512-AhO5QUcj8llrbG09iWhPU2B204J1xnPeL8kQmVorSsy+Sjj1sk8gIyh6cUocGmH4L0UuhAJy+hJMRA4mgA4mFQ==}
     engines: {node: '>=8'}
     dependencies:
       type-fest: 0.20.2
