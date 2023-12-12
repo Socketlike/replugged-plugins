@@ -2,7 +2,7 @@ import React from 'react';
 import { Languages } from '@sckt/translate';
 
 import { util } from 'replugged';
-import { SelectItem } from 'replugged/components';
+import { FormItem, SelectItem, TextInput } from 'replugged/components';
 
 import { DefaultConfig, config, events } from '../util';
 
@@ -43,5 +43,11 @@ export const Settings = (): React.ReactElement => (
       {...useSetting('targetLanguage')}>
       Target Language
     </SelectItem>
+    <FormItem
+      className='form'
+      title='Google Cloud Translate API Key'
+      note='Leave this blank to use the free Google Translate API.'>
+      <TextInput className='input' {...useSetting('apiKey')} />
+    </FormItem>
   </div>
 );

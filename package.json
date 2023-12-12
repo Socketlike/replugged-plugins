@@ -37,8 +37,8 @@
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@types/spotify-api": "^0.0.25",
-    "@typescript-eslint/eslint-plugin": "^6.13.2",
-    "@typescript-eslint/parser": "^6.13.2",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
     "codemirror": "^6.0.1",
     "discord-api-types": "^0.37.66",
     "eslint": "^8.55.0",
@@ -53,6 +53,6 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@sckt/translate": "^1.0.6"
+    "@sckt/translate": "^1.0.8"
   }
 }

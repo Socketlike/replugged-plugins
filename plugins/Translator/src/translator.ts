@@ -14,20 +14,32 @@ export const _translate = async (
     (self ? config.get('targetLanguage') : config.get('yourLanguage')) ||
     i18n.getLocale().split('-')[0];
 
+  const engine = config.get('apiKey') ? 'google_cloud' : 'google_dict_chrome_ex';
+
   let result: { text: string; error?: unknown } = { text };
 
   if (!text) result.error = 'message content is empty';
   else {
     const res = await translator(text, {
-      engine: 'google_dict_chrome_ex',
-      to,
+      engine,
       from: 'auto',
+      to,
+      key: config.get('apiKey'),
     })
       .then((text) => ({ text }))
-      .catch((error) => ({
-        error,
-        text,
-      }));
+      .catch((error) =>
+        engine === 'google_cloud'
+          ? translator(text, { engine, from: 'auto', to })
+              .then((text) => ({ text }))
+              .catch((error) => ({
+                error,
+                text,
+              }))
+          : {
+              error,
+              text,
+            },
+      );
 
     if ('error' in res) result.error = res.error;
     else result.text = res.text;

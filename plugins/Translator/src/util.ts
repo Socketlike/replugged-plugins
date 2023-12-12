@@ -7,10 +7,12 @@ export const defaultConfig: {
   sendTranslateEnabled: boolean;
   targetLanguage: string;
   yourLanguage: string;
+  apiKey: string;
 } = {
   sendTranslateEnabled: false,
   targetLanguage: '',
   yourLanguage: '',
+  apiKey: '',
 };
 
 export type DefaultConfig = typeof defaultConfig;
