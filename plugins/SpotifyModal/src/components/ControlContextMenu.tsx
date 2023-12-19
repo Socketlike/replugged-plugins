@@ -6,7 +6,7 @@ import { ContextMenu } from 'replugged/components';
 
 import { MenuSliderControl as MenuSliderControlType } from '@shared/types/discord';
 
-import * as Icon from './Icons';
+import { RepeatIcon, ShuffleIcon, SkipNextIcon, SkipPrevIcon, PlayPauseIcon } from './Icons';
 import { config } from '../config';
 import { useControls, usePlayerControlStates, useState } from '../util';
 
@@ -47,21 +47,21 @@ export const openControlsContextMenu = (
                 label='Off'
                 id='repeat-off'
                 disabled={repeat === 'off'}
-                icon={() => <Icon.Repeat state='off' />}
+                icon={() => <RepeatIcon state='off' />}
                 action={(): void => setRepeat('off')}
               />
               <ContextMenu.MenuItem
                 label='All'
                 id='repeat-all'
                 disabled={repeat === 'context' || disallows.toggling_repeat_context}
-                icon={() => <Icon.Repeat state='context' />}
+                icon={() => <RepeatIcon state='context' />}
                 action={(): void => setRepeat('context')}
               />
               <ContextMenu.MenuItem
                 label='Track'
                 id='repeat-track'
                 disabled={repeat === 'track' || disallows.toggling_repeat_track}
-                icon={() => <Icon.Repeat state='track' />}
+                icon={() => <RepeatIcon state='track' />}
                 action={(): void => setRepeat('track')}
               />
             </ContextMenu.MenuItem>
@@ -75,7 +75,7 @@ export const openControlsContextMenu = (
                   ? disallows.seeking
                   : disallows.skipping_prev
               }
-              icon={() => <Icon.SkipPrev />}
+              icon={() => <SkipPrevIcon />}
               action={(): void => {
                 if (
                   config.get('skipPreviousShouldResetProgress') &&
@@ -91,21 +91,21 @@ export const openControlsContextMenu = (
               label={`${playing ? 'Pause' : 'Resume'} playback`}
               id='play-pause'
               disabled={playing ? disallows.pausing : disallows.resuming}
-              icon={() => <Icon.PlayPause state={playing} />}
+              icon={() => <PlayPauseIcon state={playing} />}
               action={(): void => setPlaying(!playing)}
             />
             <ContextMenu.MenuItem
               label='Skip to next track'
               id='skip-next'
               disabled={disallows.skipping_next}
-              icon={() => <Icon.SkipNext />}
+              icon={() => <SkipNextIcon />}
               action={() => skip(true)}
             />
             <ContextMenu.MenuItem
               label={`Toggle shuffle ${shuffle ? 'off' : 'on'}`}
               id='shuffle'
               disabled={disallows.toggling_shuffle}
-              icon={() => <Icon.Shuffle state={!shuffle} />}
+              icon={() => <ShuffleIcon state={!shuffle} />}
               action={(): void => setShuffle(!shuffle)}
             />
             <ContextMenu.MenuControlItem
