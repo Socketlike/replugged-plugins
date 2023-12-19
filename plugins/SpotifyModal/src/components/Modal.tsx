@@ -7,7 +7,8 @@ import { useInterval } from '@shared/react';
 
 import { Seekbar } from './Seekbar';
 import { TrackDetails } from './TrackDetails';
-import { Controls, openControlsContextMenu } from './Controls';
+import { Controls } from './Controls';
+import { openControlsContextMenu } from './ControlContextMenu';
 import { SpotifyIcon } from './Icons';
 
 import { config } from '../config';
