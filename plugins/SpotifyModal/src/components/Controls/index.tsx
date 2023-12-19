@@ -4,7 +4,14 @@ import { lodash as _ } from 'replugged/common';
 
 import { mergeClassNames } from '@shared/dom';
 
-import Button from './Buttons';
+import {
+  NoButton,
+  RepeatButton,
+  ShuffleButton,
+  SkipNextButton,
+  SkipPrevButton,
+  PlayPauseButton,
+} from '../Buttons';
 
 import { config } from '../../config';
 import { globalEvents, logger, useControls, usePlayerControlStates } from '../../util';
@@ -33,66 +40,75 @@ export const ControlButtons = (props: { progress: number }): React.ReactElement 
 
   return (
     <>
-      {config.get('controlsLayout').map((kind): React.ReactElement => {
-        switch (kind) {
-          case 'play-pause':
-            return (
-              <Button.PlayPause
-                onClick={() => setPlaying(!playing)}
-                state={playing}
-                disabled={playing ? disallows.pausing : disallows.resuming}
-              />
-            );
-          case 'repeat':
-            return (
-              <Button.Repeat
-                onClick={() => {
-                  if (disallows.toggling_repeat_context)
-                    setRepeat(nextRepeatStates.noContext[repeat]);
-                  else if (disallows.toggling_repeat_track)
-                    setRepeat(nextRepeatStates.noTrack[repeat]);
-                  else setRepeat(nextRepeatStates.normal[repeat]);
-                }}
-                state={repeat}
-                disabled={disallows.toggling_repeat_context && disallows.toggling_repeat_track}
-              />
-            );
-          case 'shuffle':
-            return (
-              <Button.Shuffle
-                onClick={() => setShuffle(!shuffle)}
-                state={shuffle}
-                disabled={disallows.toggling_shuffle}
-              />
-            );
-          case 'skip-prev':
-            return (
-              <Button.SkipPrev
-                onClick={() => {
-                  if (
+      {config
+        .get('controlsLayout')
+        .slice(0, 5)
+        .map((kind): React.ReactElement => {
+          switch (kind) {
+            case 'play-pause':
+              return (
+                <PlayPauseButton
+                  onClick={() => setPlaying(!playing)}
+                  state={playing}
+                  disabled={playing ? disallows.pausing : disallows.resuming}
+                />
+              );
+
+            case 'repeat':
+              return (
+                <RepeatButton
+                  onClick={() => {
+                    if (disallows.toggling_repeat_context)
+                      setRepeat(nextRepeatStates.noContext[repeat]);
+                    else if (disallows.toggling_repeat_track)
+                      setRepeat(nextRepeatStates.noTrack[repeat]);
+                    else setRepeat(nextRepeatStates.normal[repeat]);
+                  }}
+                  state={repeat}
+                  disabled={disallows.toggling_repeat_context && disallows.toggling_repeat_track}
+                />
+              );
+
+            case 'shuffle':
+              return (
+                <ShuffleButton
+                  onClick={() => setShuffle(!shuffle)}
+                  state={shuffle}
+                  disabled={disallows.toggling_shuffle}
+                />
+              );
+
+            case 'skip-prev':
+              return (
+                <SkipPrevButton
+                  onClick={() => {
+                    if (
+                      config.get('skipPreviousShouldResetProgress') &&
+                      config.get('skipPreviousProgressResetThreshold') * duration <=
+                        props.progress &&
+                      !disallows.seeking
+                    )
+                      setProgress(0);
+                    else if (!disallows.skipping_prev) skip(false);
+                  }}
+                  disabled={
                     config.get('skipPreviousShouldResetProgress') &&
-                    config.get('skipPreviousProgressResetThreshold') * duration <= props.progress &&
-                    !disallows.seeking
-                  )
-                    setProgress(0);
-                  else if (!disallows.skipping_prev) skip(false);
-                }}
-                disabled={
-                  config.get('skipPreviousShouldResetProgress') &&
-                  config.get('skipPreviousProgressResetThreshold') * duration <= props.progress
-                    ? disallows.seeking
-                    : disallows.skipping_prev
-                }
-              />
-            );
-          case 'skip-next':
-            return (
-              <Button.SkipNext onClick={() => skip(true)} disabled={disallows.skipping_next} />
-            );
-          default:
-            return <Button.None />;
-        }
-      })}
+                    config.get('skipPreviousProgressResetThreshold') * duration <= props.progress
+                      ? disallows.seeking
+                      : disallows.skipping_prev
+                  }
+                />
+              );
+
+            case 'skip-next':
+              return (
+                <SkipNextButton onClick={() => skip(true)} disabled={disallows.skipping_next} />
+              );
+
+            default:
+              return <NoButton />;
+          }
+        })}
     </>
   );
 };
@@ -103,6 +119,4 @@ export const Controls = (props: { progress: number; shouldShow: boolean }): Reac
   </div>
 );
 
-export * from './Icons';
-export * from './Buttons';
 export * from './contextMenu';

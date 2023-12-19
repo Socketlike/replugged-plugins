@@ -6,8 +6,7 @@ import { ContextMenu } from 'replugged/components';
 
 import { MenuSliderControl as MenuSliderControlType } from '@shared/types/discord';
 
-import Icon from './Icons';
-
+import * as Icon from '../Icons';
 import { config } from '../../config';
 import { useControls, usePlayerControlStates, useState } from '../../util';
 

@@ -9,7 +9,7 @@ import { javascript } from '@codemirror/lang-javascript';
 import { mergeClassNames } from '@shared/dom';
 
 import { ThemeStore } from '../../types';
-import github from './theme';
+import * as github from './theme';
 
 const themeStore = webpack.getByStoreName<ThemeStore>('ThemeStore');
 

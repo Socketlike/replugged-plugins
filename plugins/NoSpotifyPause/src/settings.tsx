@@ -3,9 +3,13 @@ import React from 'react';
 import { SelectItem } from 'replugged/components';
 import { settings, util } from 'replugged';
 
-export const config = await settings.init('lib.evelyn.NoSpotifyPause', {
+const defaultConfig: {
+  pluginStopBehavior: 'ask' | 'restart' | 'ignore' | string;
+} = {
   pluginStopBehavior: 'ask',
-});
+};
+
+export const config = await settings.init('lib.evelyn.NoSpotifyPause', defaultConfig);
 
 export const Settings = (): React.ReactElement => (
   <div>
@@ -16,11 +20,7 @@ export const Settings = (): React.ReactElement => (
         { label: 'Restart Discord immediately', value: 'restart' },
         { label: 'Do nothing', value: 'ignore' },
       ]}
-      {...(util.useSetting(config, 'pluginStopBehavior') as {
-        value: 'ask' | 'restart' | 'ignore';
-        // oh my god, what the fuck is ValType? it is fucking up all of the useSetting calls!
-        onChange: (newValue: string) => void;
-      })}>
+      {...util.useSetting(config, 'pluginStopBehavior')}>
       Plugin Stop Behavior
     </SelectItem>
   </div>

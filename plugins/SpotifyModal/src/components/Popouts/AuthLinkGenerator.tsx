@@ -6,6 +6,8 @@ import type { ModalProps } from 'replugged/dist/renderer/modules/common/modal';
 
 import { mdiHelpCircle } from '@mdi/js';
 
+import { Icon } from '@shared/react';
+
 export const AuthLinkGuide = (props: ModalProps): React.ReactElement => {
   return (
     <Modal.ModalRoot {...props} className='spotify-modal-oauth2-guide'>
@@ -25,14 +27,13 @@ export const AuthLinkGenerator = (props: ModalProps): React.ReactElement => {
       <Modal.ModalHeader className='header'>
         <Text.H1 variant='heading-lg/bold'>Spotify OAuth2 Link Generator</Text.H1>
         <Tooltip text='Guide' className='guide-button-tooltip'>
-          <svg
+          <Icon
             onClick={(): void => {
               modal.openModal((props) => <AuthLinkGuide {...props} />);
             }}
-            viewBox='0 0 24 24'
-            className='guide-button'>
-            <path fill='currentColor' d={mdiHelpCircle} />
-          </svg>
+            className='guide-button'
+            path={mdiHelpCircle}
+          />
         </Tooltip>
       </Modal.ModalHeader>
       <Modal.ModalContent className='content'>

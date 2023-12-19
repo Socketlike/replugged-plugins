@@ -5,8 +5,8 @@ import { mergeClassNames } from '@shared/dom';
 export interface IconProps {
   className?: string;
   height?: string | number;
-  onClick?: (event: React.MouseEvent) => void;
-  onContextMenu?: (event: React.MouseEvent) => void;
+  onClick?: React.MouseEventHandler<SVGSVGElement> | boolean;
+  onContextMenu?: React.MouseEventHandler<SVGSVGElement> | boolean;
   path: string;
   viewBox?: string;
   width?: string | number;
@@ -19,8 +19,8 @@ export const Icon = (props: IconProps): React.ReactElement => (
     width={props.width}
     height={props.height}
     viewBox={props.viewBox || '0 0 24 24'}
-    onClick={props.onClick}
-    onContextMenu={props.onContextMenu}>
+    onClick={typeof props.onClick !== 'function' ? undefined : props.onClick}
+    onContextMenu={typeof props.onContextMenu !== 'function' ? undefined : props.onContextMenu}>
     <path fill='currentColor' d={props.path} />
     {props.children}
   </svg>

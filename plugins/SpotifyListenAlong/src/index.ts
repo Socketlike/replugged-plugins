@@ -19,4 +19,5 @@ export const start = async (): Promise<void> => {
     });
   else logger.error('SpotifyStore not found');
 };
+
 export const stop = (): void => injector.uninjectAll();
