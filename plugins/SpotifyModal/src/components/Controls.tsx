@@ -6,15 +6,15 @@ import { mergeClassNames } from '@shared/dom';
 
 import {
   NoButton,
+  PlayPauseButton,
   RepeatButton,
   ShuffleButton,
   SkipNextButton,
   SkipPrevButton,
-  PlayPauseButton,
-} from '../Buttons';
+} from './Buttons';
 
-import { config } from '../../config';
-import { globalEvents, logger, useControls, usePlayerControlStates } from '../../util';
+import { config } from '../config';
+import { globalEvents, logger, useControls, usePlayerControlStates } from '../util';
 
 const nextRepeatStates = {
   normal: { off: 'context', context: 'track', track: 'off' },
@@ -118,5 +118,3 @@ export const Controls = (props: { progress: number; shouldShow: boolean }): Reac
     <ControlButtons {...props} />
   </div>
 );
-
-export * from './contextMenu';

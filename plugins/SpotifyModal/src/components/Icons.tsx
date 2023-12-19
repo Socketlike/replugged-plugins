@@ -115,6 +115,6 @@ export const ShuffleIcon = ({
 export const NoIcon = ({
   onClick,
   onContextMenu,
-}: Pick<IconProps, 'onContextMenu' | 'onClick'>) => (
+}: Pick<IconProps, 'onContextMenu' | 'onClick'>): React.ReactElement => (
   <Icon className='no-icon' path='' onContextMenu={onContextMenu} onClick={onClick} />
 );

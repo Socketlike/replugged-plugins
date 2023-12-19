@@ -3,12 +3,12 @@ import React from 'react';
 import { IconProps } from '@shared/react';
 
 import {
-  RepeatIcon,
-  SkipPrevIcon,
-  PlayPauseIcon,
-  SkipNextIcon,
-  ShuffleIcon,
   NoIcon,
+  PlayPauseIcon,
+  RepeatIcon,
+  ShuffleIcon,
+  SkipNextIcon,
+  SkipPrevIcon,
 } from './Icons';
 
 export const RepeatButton = ({

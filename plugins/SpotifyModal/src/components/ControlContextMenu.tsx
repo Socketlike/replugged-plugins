@@ -6,9 +6,9 @@ import { ContextMenu } from 'replugged/components';
 
 import { MenuSliderControl as MenuSliderControlType } from '@shared/types/discord';
 
-import * as Icon from '../Icons';
-import { config } from '../../config';
-import { useControls, usePlayerControlStates, useState } from '../../util';
+import * as Icon from './Icons';
+import { config } from '../config';
+import { useControls, usePlayerControlStates, useState } from '../util';
 
 const { MenuSliderControl } = await webpack.waitForModule<{
   MenuSliderControl: MenuSliderControlType;
