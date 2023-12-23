@@ -29,7 +29,7 @@ export const _translate = async (
       .then((text) => ({ text }))
       .catch((error) =>
         engine === 'google_cloud'
-          ? translator(text, { engine, from: 'auto', to })
+          ? translator(text, { engine: 'google_dict_chrome_ex', from: 'auto', to })
               .then((text) => ({ text }))
               .catch((error) => ({
                 error,
