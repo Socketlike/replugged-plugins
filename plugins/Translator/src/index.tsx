@@ -71,12 +71,12 @@ export const start = async (): Promise<void> => {
   }>(webpack.filters.bySource('ChannelTextAreaButtons'));
 
   injector.after(chatBarButtons, 'type', ([args], res): React.ReactElement => {
-    if (res)
-      res.props.children.splice(
-        1,
-        0,
-        ['normal', 'sidebar'].includes(args?.type?.analyticsName) && <TranslateButton />,
-      );
+    const buttonElement = ['normal', 'sidebar'].includes(args?.type?.analyticsName) && (
+      <TranslateButton key='translate' />
+    );
+
+    if (res?.props?.children?.[0]?.key === 'gift') res.props.children.splice(1, 0, buttonElement);
+    else if (res) res.props.children.unshift(buttonElement);
 
     return res;
   });
