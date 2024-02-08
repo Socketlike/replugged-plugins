@@ -66,6 +66,8 @@ modal css map:
 
 ## Known issues
 
+- "smart" shuffle state doesn't show in the modal - we do not receive any info about this shuffle
+  state through the websocket connection at the moment.
 - leaving Spotify inactive for an hour or so will make the controls stop working until you manually
   update the player state in the Spotify app
   - fix: enable `Automatic Reauthentication` in `Settings`
