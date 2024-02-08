@@ -9,7 +9,7 @@ export default [
         match: /return?\s?(.{0,30}\(.{1,3},\{[^}]+?,showTaglessAccountPanel:.+?\}\))/s,
         replace:
           'return [(()=>{try{return window.replugged.plugins.getExports("lib.evelyn.SpotifyModal").renderModal()}catch{}})(),$1]',
-     },
+      },
     ],
   },
   {
