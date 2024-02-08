@@ -8,8 +8,8 @@ export default [
       {
         match: /return?\s?(.{0,30}\(.{1,3},\{[^}]+?,showTaglessAccountPanel:.+?\}\))/s,
         replace:
-          'return [(()=>{try{window.replugged.plugins.getExports("lib.evelyn.SpotifyModal").renderModal()}catch{}})(),$1]',
-      },
+          'return [(()=>{try{return window.replugged.plugins.getExports("lib.evelyn.SpotifyModal").renderModal()}catch{}})(),$1]',
+     },
     ],
   },
   {
@@ -18,7 +18,7 @@ export default [
       {
         match: /handleEvent\((.{1,3})\)\{/,
         replace:
-          '$&try{window.replugged.plugins.getExports.("lib.evelyn.SpotifyModal").emitEvent($1, this)}catch{}',
+          '$&try{window.replugged.plugins.getExports("lib.evelyn.SpotifyModal").emitEvent($1, this)}catch{}',
       },
     ],
   },
