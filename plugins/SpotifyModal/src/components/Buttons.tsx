@@ -3,6 +3,7 @@ import React from 'react';
 import { IconProps } from '@shared/react';
 
 import {
+  ExpandCollapseIcon,
   NoIcon,
   PlayPauseIcon,
   RepeatIcon,
@@ -76,6 +77,22 @@ export const ShuffleButton = ({
   disabled?: boolean;
 }): React.ReactElement => (
   <ShuffleIcon
+    onContextMenu={(e: React.MouseEvent): void => e.stopPropagation()}
+    onClick={!disabled && onClick}
+    state={state}
+    disabled={disabled}
+  />
+);
+
+export const ExpandCollapseButton = ({
+  state,
+  onClick,
+  disabled,
+}: Pick<IconProps, 'onClick'> & {
+  state: boolean;
+  disabled?: boolean;
+}): React.ReactElement => (
+  <ExpandCollapseIcon
     onContextMenu={(e: React.MouseEvent): void => e.stopPropagation()}
     onClick={!disabled && onClick}
     state={state}

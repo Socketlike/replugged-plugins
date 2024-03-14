@@ -1,6 +1,8 @@
 import React from 'react';
 
 import {
+  mdiArrowCollapse,
+  mdiArrowExpand,
   mdiPause,
   mdiPlay,
   mdiRepeat,
@@ -107,6 +109,23 @@ export const ShuffleIcon = ({
       disabled && 'disabled',
     )}
     path={state ? mdiShuffle : mdiShuffleDisabled}
+    onContextMenu={onContextMenu}
+    onClick={onClick}
+  />
+);
+
+export const ExpandCollapseIcon = ({
+  onClick,
+  onContextMenu,
+  state,
+  disabled,
+}: Pick<IconProps, 'onContextMenu' | 'onClick'> & {
+  state: boolean;
+  disabled?: boolean;
+}): React.ReactElement => (
+  <Icon
+    className={mergeClassNames(`${state ? 'collapse' : 'expand'}-icon`, disabled && 'disabled')}
+    path={state ? mdiArrowCollapse : mdiArrowExpand}
     onContextMenu={onContextMenu}
     onClick={onClick}
   />
