@@ -5,6 +5,8 @@ import { Tooltip } from 'replugged/components';
 
 import { mergeClassNames } from '@shared/dom';
 
+import { ExpandCollapseButton } from './Buttons';
+
 import { config } from '../config';
 import { handleOverflow } from '../util/misc';
 
@@ -67,25 +69,48 @@ export const Artists = (props: {
 
 export const CoverArt = (props: {
   track: SpotifyApi.TrackObjectFull | SpotifyApi.EpisodeObjectFull;
+  expanded: boolean;
+  setExpanded: React.Dispatch<React.SetStateAction<boolean>>;
 }): React.ReactElement => {
   const image =
     props.track.type === 'track'
       ? props.track.album.images[0]?.url
       : props.track.show.images[0]?.url;
-
   return (
-    <Tooltip
-      className={image ? '' : 'hidden'}
-      text={props.track.type === 'track' ? props.track.album.name : props.track.show.name}>
-      <img
-        className='cover-art'
-        src={image}
-        {...handleSpotifyURLInteraction(
-          props.track.type === 'track' ? 'album' : 'show',
-          (props.track.type === 'track' ? props.track.album : props.track.show)?.id,
+    <span key={`${props.expanded}`} className='cover-art-container'>
+      <Tooltip
+        tooltipClassName={mergeClassNames(
+          'spotify-modal-cover-art-tooltip',
+          props.expanded ? 'expanded' : '',
         )}
-      />
-    </Tooltip>
+        position={Tooltip.Positions.TOP}
+        align={Tooltip.Aligns.CENTER}
+        text={props.track.type === 'track' ? props.track.album.name : props.track.show.name}>
+        <img
+          className='cover-art'
+          src={image}
+          {...handleSpotifyURLInteraction(
+            props.track.type === 'track' ? 'album' : 'show',
+            (props.track.type === 'track' ? props.track.album : props.track.show)?.id,
+          )}
+        />
+      </Tooltip>
+      <Tooltip
+        tooltipClassName={mergeClassNames(
+          'spotify-modal-expand-collapse-button-tooltip',
+          props.expanded ? 'expanded' : '',
+        )}
+        className={image ? '' : 'hidden'}
+        text={props.expanded ? 'Collapse' : 'Expand'}
+        position={Tooltip.Positions.TOP}
+        align={Tooltip.Aligns.CENTER}>
+        <ExpandCollapseButton
+          onClick={() => props.setExpanded((prev) => !prev)}
+          state={props.expanded}
+          disabled={!image}
+        />
+      </Tooltip>
+    </span>
   );
 };
 
@@ -108,12 +133,20 @@ export const Title = (props: {
 
 export const TrackDetails = (props: {
   track: SpotifyApi.TrackObjectFull | SpotifyApi.EpisodeObjectFull;
-}): React.ReactElement => (
-  <div className='track-details'>
-    <CoverArt track={props.track} />
-    <div className='title-artists'>
-      <Title track={props.track} />
-      <Artists track={props.track} />
+}): React.ReactElement => {
+  const hasCover = Boolean(
+    props.track.type === 'track'
+      ? props.track.album.images[0]?.url
+      : props.track.show.images[0]?.url,
+  );
+  const [expanded, setExpanded] = React.useState(false);
+  return (
+    <div className={mergeClassNames('track-details', expanded && hasCover ? 'expanded' : '')}>
+      <CoverArt track={props.track} expanded={expanded} setExpanded={setExpanded} />
+      <div className='title-artists'>
+        <Title track={props.track} />
+        <Artists track={props.track} />
+      </div>
     </div>
-  </div>
-);
+  );
+};
