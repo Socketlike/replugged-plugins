@@ -68,7 +68,7 @@ export const renderTranslatedTag = (message: APIMessage): React.ReactNode =>
 export const start = async (): Promise<void> => {
   const chatBarButtons = await webpack.waitForModule<{
     type: (props: { type: { analyticsName?: string } }) => React.ReactElement;
-  }>(webpack.filters.bySource('ChannelTextAreaButtons'));
+  }>(webpack.filters.bySource('default.getSentUserIds()'));
 
   injector.after(chatBarButtons, 'type', ([args], res): React.ReactElement => {
     const buttonElement = ['normal', 'sidebar'].includes(args?.type?.analyticsName) && (
