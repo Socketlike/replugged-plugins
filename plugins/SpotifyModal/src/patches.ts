@@ -6,9 +6,9 @@ export default [
     find: 'showTaglessAccountPanel:',
     replacements: [
       {
-        match: /return?\s?(.{0,30}\(.{1,3},\{[^}]+?,showTaglessAccountPanel:.+?\}\))/s,
+        match: /return\s?(.+?,)?(\(0,.{1,3}\.jsx\)\(.{1,3},\{[^}]+?,showTaglessAccountPanel:.+?\}\))/s,
         replace:
-          'return [(()=>{try{return window.replugged.plugins.getExports("lib.evelyn.SpotifyModal").renderModal()}catch{}})(),$1]',
+          'return $1[(()=>{try{return window.replugged.plugins.getExports("lib.evelyn.SpotifyModal").renderModal()}catch{}})(),$2]',
       },
     ],
   },
