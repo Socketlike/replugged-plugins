@@ -1,39 +1,30 @@
-import { Injector, Logger, util, webpack } from 'replugged';
+import { Injector, Logger, webpack } from 'replugged';
 
 const injector = new Injector();
 const logger = Logger.plugin('Magnificent');
 
 interface ImageComponent {
-  (): void;
-  prototype: {
-    render: () => React.ReactElement;
+  default: {
+    new (): void;
+    prototype: {
+      render: () => React.ReactElement;
+    };
   };
 }
 
 export const start = async (): Promise<void> => {
   const imageComponent = await webpack.waitForModule<ImageComponent | undefined>(
-    webpack.filters.bySource('showThumbhashPlaceholder:'),
+    webpack.filters.byProps('IMAGE_GIF_RE'),
   );
 
-  if (imageComponent?.prototype)
+  if (imageComponent?.default?.prototype)
     injector.after(
-      imageComponent.prototype,
+      imageComponent.default.prototype,
       'render',
-      (_, res: React.ReactElement): React.ReactElement => {
-        // fail fast if image component is rendered as an embed
-        let isEmbed = false;
-
-        const image = util.findInReactTree(res as unknown as util.Tree, (_): boolean => {
-          const element = _ as unknown as React.ReactElement;
-
-          if (element?.props?.className?.match?.(/clickable_/)) isEmbed = true;
-
-          return (element?.type === 'img' && typeof element?.props?.src === 'string') || isEmbed;
-        }) as unknown as React.ReactElement;
-
-        if (image && !isEmbed)
-          image.props.src = image.props.src
-            .replace(/\?width=[0-9]+&height=[0-9]+$/, '')
+      (_, res: React.ReactElement<{ src: string; zoomable: boolean }>): React.ReactElement => {
+        if (res?.props?.src && !res?.props?.zoomable)
+          res.props.src = res.props.src
+            .replace(/[&?]width=[0-9]+&height=[0-9]+$/, '')
             .replace('media.discordapp.net', 'cdn.discordapp.com');
 
         return res;
