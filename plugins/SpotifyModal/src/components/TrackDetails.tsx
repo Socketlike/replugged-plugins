@@ -79,7 +79,7 @@ export const CoverArt = (props: {
   return (
     <span key={`${props.expanded}`} className='cover-art-container'>
       <Tooltip
-        tooltipClassName={mergeClassNames(
+        className={mergeClassNames(
           'spotify-modal-cover-art-tooltip',
           props.expanded ? 'expanded' : '',
         )}
@@ -96,11 +96,11 @@ export const CoverArt = (props: {
         />
       </Tooltip>
       <Tooltip
-        tooltipClassName={mergeClassNames(
+        className={mergeClassNames(
           'spotify-modal-expand-collapse-button-tooltip',
+          image ? '' : 'hidden',
           props.expanded ? 'expanded' : '',
         )}
-        className={image ? '' : 'hidden'}
         text={props.expanded ? 'Collapse' : 'Expand'}
         position={Tooltip.Positions.TOP}
         align={Tooltip.Aligns.CENTER}>

@@ -81,43 +81,48 @@
           position: relative;
           display: inline-block;
         }
-        .cover-art {
-          flex: 0 0 auto;
-          border-radius: 6px;
-          max-width: 38px;
-          object-fit: contain;
-          transition-duration: 400ms;
-          &:hover {
-            cursor: pointer;
+        .spotify-modal-cover-art-tooltip {
+          display: block;
+          height: max-content;
+          .cover-art {
+            flex: 0 0 auto;
+            border-radius: 6px;
+            max-width: 38px;
+            object-fit: contain;
+            transition-duration: 400ms;
+            &:hover {
+              cursor: pointer;
+            }
           }
         }
 
-        .icon {
+        .spotify-modal-expand-collapse-button-tooltip {
           opacity: 0;
           position: absolute;
           top: 0;
           right: 0;
-          padding: 2.5px;
           margin: 1px;
           cursor: pointer;
-          min-width: 16px;
-          height: 16px;
-          border-radius: 4px;
-          color: var(--text-normal);
-          background-color: var(--background-modifier-hover);
           transition-duration: 400ms;
 
-          &:hover {
-            color: var(--spotify);
-            background-color: var(--background-modifier-active);
-            cursor: pointer;
-          }
-
-          &.disabled,
-          &.disabled:hover {
-            color: var(--text-muted);
-            background-color: unset;
-            cursor: not-allowed;
+          .icon {
+            color: var(--text-normal);
+            background-color: var(--background-modifier-hover);
+            padding: 2.5px;
+            min-width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            &:hover {
+              color: var(--spotify);
+              background-color: var(--background-modifier-active);
+              cursor: pointer;
+            }
+            &.disabled,
+            &.disabled:hover {
+              color: var(--text-muted);
+              background-color: unset;
+              cursor: not-allowed;
+            }
           }
         }
 
@@ -181,7 +186,7 @@
           }
         }
         &:hover {
-          .icon {
+          .spotify-modal-expand-collapse-button-tooltip {
             opacity: 1;
           }
         }
@@ -195,12 +200,16 @@
             max-width: 100%;
             margin-bottom: 6px;
           }
-          .icon {
-            padding: 5px;
+          .spotify-modal-expand-collapse-button-tooltip {
             margin: 2.5px;
             cursor: pointer;
             min-width: 16px;
             height: 16px;
+            .icon {
+              min-width: 16px;
+              height: 16px;
+              padding: 5px;
+            }
           }
           .title-artists {
             align-items: center;
@@ -301,22 +310,6 @@
   }
 }
 
-.spotify-modal-cover-art-tooltip {
-  margin-bottom: 20px;
-  &.expanded {
-    margin-bottom: 215px;
-  }
-}
-.spotify-modal-expand-collapse-button-tooltip {
-  margin-bottom: 20px;
-  margin-left: -10px;
-  margin-right: 10px;
-  &.expanded {
-    margin-left: -14px;
-    margin-right: 14px;
-    margin-bottom: 210px;
-  }
-}
 .spotify-modal-settings {
   .skip-prev-percent-slider {
     margin-top: 20px;
