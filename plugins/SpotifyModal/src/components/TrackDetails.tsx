@@ -79,10 +79,7 @@ export const CoverArt = (props: {
   return (
     <span key={`${props.expanded}`} className='cover-art-container'>
       <Tooltip
-        className={mergeClassNames(
-          'spotify-modal-cover-art-tooltip',
-          props.expanded ? 'expanded' : '',
-        )}
+        className={mergeClassNames('spotify-modal-cover-art-tooltip', props.expanded && 'expanded')}
         position={Tooltip.Positions.TOP}
         align={Tooltip.Aligns.CENTER}
         text={props.track.type === 'track' ? props.track.album.name : props.track.show.name}>
@@ -98,8 +95,8 @@ export const CoverArt = (props: {
       <Tooltip
         className={mergeClassNames(
           'spotify-modal-expand-collapse-button-tooltip',
-          image ? '' : 'hidden',
-          props.expanded ? 'expanded' : '',
+          !image && 'hidden',
+          props.expanded && 'expanded',
         )}
         text={props.expanded ? 'Collapse' : 'Expand'}
         position={Tooltip.Positions.TOP}
@@ -141,7 +138,7 @@ export const TrackDetails = (props: {
   );
   const [expanded, setExpanded] = React.useState(false);
   return (
-    <div className={mergeClassNames('track-details', expanded && hasCover ? 'expanded' : '')}>
+    <div className={mergeClassNames('track-details', expanded && hasCover && 'expanded')}>
       <CoverArt track={props.track} expanded={expanded} setExpanded={setExpanded} />
       <div className='title-artists'>
         <Title track={props.track} />
