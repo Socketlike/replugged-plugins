@@ -76,10 +76,13 @@ export const CoverArt = (props: {
     props.track.type === 'track'
       ? props.track.album.images[0]?.url
       : props.track.show.images[0]?.url;
+
   return (
-    <span key={`${props.expanded}`} className='cover-art-container'>
+    <span
+      key={`${props.expanded}`}
+      className={mergeClassNames('cover-art-container', props.expanded && 'expanded')}>
       <Tooltip
-        className={mergeClassNames('spotify-modal-cover-art-tooltip', props.expanded && 'expanded')}
+        className='cover-art-tooltip'
         position={Tooltip.Positions.TOP}
         align={Tooltip.Aligns.CENTER}
         text={props.track.type === 'track' ? props.track.album.name : props.track.show.name}>
@@ -93,11 +96,7 @@ export const CoverArt = (props: {
         />
       </Tooltip>
       <Tooltip
-        className={mergeClassNames(
-          'spotify-modal-expand-collapse-button-tooltip',
-          !image && 'hidden',
-          props.expanded && 'expanded',
-        )}
+        className={mergeClassNames('expand-collapse-button-tooltip', !image && 'hidden')}
         text={props.expanded ? 'Collapse' : 'Expand'}
         position={Tooltip.Positions.TOP}
         align={Tooltip.Aligns.CENTER}>
@@ -120,7 +119,7 @@ export const Title = (props: {
 
   return (
     <a
-      className={mergeClassNames('title', typeof props.track.id === 'string' ? 'href' : '')}
+      className={mergeClassNames('title', typeof props.track.id === 'string' && 'href')}
       ref={elementRef}
       {...handleSpotifyURLInteraction('track', props.track.id)}>
       {props.track.name || 'Unknown'}
@@ -138,7 +137,7 @@ export const TrackDetails = (props: {
   );
   const [expanded, setExpanded] = React.useState(false);
   return (
-    <div className={mergeClassNames('track-details', expanded && hasCover && 'expanded')}>
+    <div className={mergeClassNames('track-details', expanded && hasCover && 'cover-art-expanded')}>
       <CoverArt track={props.track} expanded={expanded} setExpanded={setExpanded} />
       <div className='title-artists'>
         <Title track={props.track} />

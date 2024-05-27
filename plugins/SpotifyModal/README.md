@@ -53,14 +53,13 @@ element dom tree (use this to create css selectors):
 
   <div id="spotify-modal" class="spotify-modal">
     <div class="main">
-      <!-- .expanded here means the cover art is expanded -->
-      <div class="track-details (expanded)">
-        <span class="cover-art-container">
-          <span class="spotify-modal-cover-art-tooltip (expanded)">
+      <div class="track-details (cover-art-expanded)">
+        <span class="cover-art-container (expanded)">
+          <span class="cover-art-tooltip">
             <img class="cover-art" src="..." />
           </span>
 
-          <span class="spotify-modal-expand-collapse-button-tooltip (hidden) (expanded)">
+          <span class="expand-collapse-button-tooltip (hidden)">
             <!-- only one of these may exist at a time -->
 
             <svg class="icon expand-icon (disabled)">
