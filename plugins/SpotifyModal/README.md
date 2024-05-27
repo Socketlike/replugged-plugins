@@ -24,45 +24,112 @@ what you're playing on Spotify.
 
 ## Customization
 
-there exists a settings menu which allows for a certain degree of customization.  
-modal css map:
+there exists a settings menu which allows for a certain degree of customization.
 
-- root: `#spotify-modal-root`
-  - modal: `.spotify-modal` | `#spotify-modal`
-    - main view: `.main`
-      - error placeholder: `.placeholder`
-        - Spotify icon: `.spotify` | `.icon` | `.icon.spotify`
-        - message: `.text`
-          - main (header): `.main`
-          - sub: `.sub`
-      - header: `.header`
-        - cover art: `.cover-art`
-        - track info: `.track-info`
-          - song name: `.title`
-          - artists: `.artists`
-      - seekbar container: `.seekbar-container`
-        - seekbar timestamps: `.seekbar-timestamps`
-          - current: `.current`
-          - song duration: `.duration`
-        - seekbar: `.seekbar`
-          - inner: `.inner`
-          - grabber: `.grabber`
-      - controls: `.controls`
-        - repeat icons:
-          - all: `.repeat-all-icon`
-          - off: `.repeat-off-icon`
-          - track: `.repeat-track-icon`
-        - skip previous: `.skip-prev-icon`
-        - play: `.play-icon`
-        - pause: `.pause-icon`
-        - skip next: `.skip-next-icon`
-        - shuffle icons:
-          - off: `.shuffle-off-icon`
-          - on: `.shuffle-on-icon`
-        - no icon: `.no-icon`
-        - active (highlight): `.active`
-        - disabled: `.disabled`
-  - divider: `.divider`
+element dom tree (use this to create css selectors):
+
+- `(...)`: means `...` might be omitted.
+
+```html
+<div id="spotify-modal-root">
+  <!-- if modal is hidden / track is nullish -->
+
+  <div id="spotify-modal" class="spotify-modal (hidden)">
+    <div class="placeholder">
+      <svg class="icon spotify">
+        <path fill="currentColor" d="..." />
+      </svg>
+
+      <div class="text">
+        <!-- header -->
+        <span class="main">...</span>
+
+        <span class="sub">...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- else -->
+
+  <div id="spotify-modal" class="spotify-modal">
+    <div class="main">
+      <!-- .expanded here means the cover art is expanded -->
+      <div class="track-details (expanded)">
+        <span class="cover-art-container">
+          <span class="spotify-modal-cover-art-tooltip (expanded)">
+            <img class="cover-art" src="..." />
+          </span>
+
+          <span class="spotify-modal-expand-collapse-button-tooltip (hidden) (expanded)">
+            <!-- only one of these may exist at a time -->
+
+            <svg class="icon expand-icon (disabled)">
+              <path fill="currentColor" d="..." />
+            </svg>
+
+            <svg class="icon collapse-icon (disabled)">
+              <path fill="currentColor" d="..." />
+            </svg>
+          </span>
+        </span>
+
+        <div class="title-artists">
+          <a class="title (href)">...</a>
+
+          <span class="artists">
+            <a class="artist">...</a>
+          </span>
+        </div>
+      </div>
+
+      <div class="seekbar-container (hidden)">
+        <div class="seekbar-timestamps">
+          <span class="progress">...</span>
+
+          <span class="duration">...</span>
+        </div>
+
+        <div class="seekbar">
+          <div class="grabber">...</div>
+
+          <div class="inner">
+            <!-- seekbar progress -->
+            <div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls-container (hidden)">
+        <svg class="play-icon (disabled)">
+          <path fill="currentColor" d="..." />
+        </svg>
+
+        <svg class="pause-icon (disabled)">
+          <path fill="currentColor" d="..." />
+        </svg>
+
+        <svg class="skip-next-icon (disabled)">
+          <path fill="currentColor" d="..." />
+        </svg>
+
+        <svg class="shuffle-on-icon (active) (disabled)">
+          <path fill="currentColor" d="..." />
+        </svg>
+
+        <svg class="shuffle-off-icon (disabled)">
+          <path fill="currentColor" d="..." />
+        </svg>
+
+        <svg class="no-icon">
+          <path fill="currentColor" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</div>
+```
 
 ## Known issues
 
