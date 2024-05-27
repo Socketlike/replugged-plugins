@@ -77,14 +77,52 @@
         height: fit-content;
         gap: 6px;
         align-items: center;
+        .cover-art-container {
+          position: relative;
+          display: inline-block;
+        }
+        .spotify-modal-cover-art-tooltip {
+          display: block;
+          height: max-content;
+          .cover-art {
+            flex: 0 0 auto;
+            border-radius: 6px;
+            max-width: 38px;
+            object-fit: contain;
+            transition-duration: 400ms;
+            &:hover {
+              cursor: pointer;
+            }
+          }
+        }
 
-        .cover-art {
-          border-radius: 6px;
-          max-width: 38px;
-          object-fit: contain;
+        .spotify-modal-expand-collapse-button-tooltip {
+          opacity: 0;
+          position: absolute;
+          top: 0;
+          right: 0;
+          margin: 1px;
+          cursor: pointer;
+          transition-duration: 400ms;
 
-          &:hover {
-            cursor: pointer;
+          .icon {
+            color: var(--text-normal);
+            background-color: var(--background-modifier-hover);
+            padding: 2.5px;
+            min-width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            &:hover {
+              color: var(--spotify);
+              background-color: var(--background-modifier-active);
+              cursor: pointer;
+            }
+            &.disabled,
+            &.disabled:hover {
+              color: var(--text-muted);
+              background-color: unset;
+              cursor: not-allowed;
+            }
           }
         }
 
@@ -145,6 +183,36 @@
                 text-decoration: underline;
               }
             }
+          }
+        }
+        &:hover {
+          .spotify-modal-expand-collapse-button-tooltip {
+            opacity: 1;
+          }
+        }
+        &.expanded {
+          display: unset;
+          .cover-art-container {
+            position: relative;
+            display: inline-block;
+          }
+          .cover-art {
+            max-width: 100%;
+            margin-bottom: 6px;
+          }
+          .spotify-modal-expand-collapse-button-tooltip {
+            margin: 2.5px;
+            cursor: pointer;
+            min-width: 16px;
+            height: 16px;
+            .icon {
+              min-width: 16px;
+              height: 16px;
+              padding: 5px;
+            }
+          }
+          .title-artists {
+            align-items: center;
           }
         }
       }
