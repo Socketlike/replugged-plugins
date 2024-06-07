@@ -331,7 +331,7 @@ globalEvents
     }
   });
 
-export const init = async (): Promise<void> => {
+export const initSpotify = async (): Promise<void> => {
   spotifyUtils = await webpack.waitForModule<{
     getAccessToken: (accountId: string) => Promise<HTTPResponse<{ access_token: string }>>;
   }>(webpack.filters.byProps('SpotifyAPI'));
