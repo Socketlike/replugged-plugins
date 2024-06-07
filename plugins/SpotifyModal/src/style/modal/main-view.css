@@ -1,0 +1,58 @@
+#spotify-modal-root > #spotify-modal > .main {
+  display: flex;
+
+  flex-direction: column;
+  gap: 8px;
+
+  padding: 10px 8px;
+
+  > .placeholder {
+    display: flex;
+
+    max-width: 100%;
+    height: fit-content;
+
+    align-items: center;
+    gap: 6px;
+
+    .text {
+      display: flex;
+
+      flex-direction: column;
+      gap: 3px;
+
+      overflow: hidden;
+
+      .main,
+      .sub {
+        max-width: 100%;
+        width: fit-content;
+      }
+
+      .main {
+        color: var(--header-primary);
+
+        font-family: var(--font-primary);
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .sub {
+        color: var(--header-secondary);
+
+        font-size: 13px;
+      }
+    }
+
+    .icon {
+      color: var(--spotify);
+      background-color: unset;
+
+      max-width: 38px;
+      min-width: unset;
+      height: unset;
+
+      object-fit: contain;
+    }
+  }
+}

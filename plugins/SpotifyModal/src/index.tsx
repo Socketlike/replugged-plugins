@@ -8,10 +8,10 @@ import { restartDiscordDialog } from '@shared/misc';
 
 import { config } from './config';
 import { ErrorPlaceholder, Modal } from './components';
-import { containerClasses, globalEvents, logger } from './util';
+import { containerClasses, globalEvents, initMisc, initSpotify, logger } from './util';
 import { SpotifyStore } from './types';
 
-import './style.css';
+import './style/index.css';
 
 export const renderModal = (): React.ReactElement => (
   <div id='spotify-modal-root'>
@@ -59,7 +59,9 @@ const loginSuccessListener = (): void => {
   fluxDispatcher.subscribe('POST_CONNECTION_OPEN', postConnectionOpenListener);
 };
 
-export const start = (): void => {
+export const start = async (): Promise<void> => {
+  await Promise.allSettled([initMisc(), initSpotify()]);
+
   if (!document.getElementById('spotify-modal-root'))
     fluxDispatcher.subscribe('POST_CONNECTION_OPEN', postConnectionOpenListener);
 

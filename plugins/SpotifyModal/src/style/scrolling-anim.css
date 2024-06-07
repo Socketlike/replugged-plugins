@@ -1,0 +1,11 @@
+@keyframes spotify-modal-scrolling {
+  0%,
+  20% {
+    transform: translateX(var(--scroll-space));
+  }
+
+  80%,
+  100% {
+    transform: translateX(0);
+  }
+}

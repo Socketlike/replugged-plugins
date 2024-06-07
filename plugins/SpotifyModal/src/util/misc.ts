@@ -25,19 +25,16 @@ export const logger = {
 export const parseTime = (ms: number): string => {
   if (typeof ms !== 'number') return '';
 
-  const dateObject = new Date(ms);
-  const raw = {
-    month: dateObject.getUTCMonth(),
-    day: dateObject.getUTCDate(),
-    hours: dateObject.getUTCHours(),
-    minutes: dateObject.getUTCMinutes(),
-    seconds: dateObject.getUTCSeconds(),
-  };
-  const parsedHours = raw.hours + (raw.day - 1) * 24 + raw.month * 30 * 24;
+  let s = Math.floor(ms / 1000),
+    m = Math.floor(s / 60),
+    h = Math.floor(m / 60);
 
-  return `${parsedHours > 0 ? `${parsedHours}:` : ''}${
-    raw.minutes < 10 && parsedHours > 0 ? `0${raw.minutes}` : raw.minutes
-  }:${raw.seconds < 10 ? `0${raw.seconds}` : raw.seconds}`;
+  s -= m * 60;
+  m -= h * 60;
+
+  return [h > 0 && String(h), String(m).padStart(h > 0 ? 2 : 1, '0'), String(s).padStart(2, '0')]
+    .filter(Boolean)
+    .join(':');
 };
 
 export const handleOverflow = (element: HTMLElement): void => {
@@ -56,6 +53,10 @@ export const handleOverflow = (element: HTMLElement): void => {
   } else if (element.classList.contains('overflow')) element.classList.remove('overflow');
 };
 
-export const containerClasses = await webpack.waitForModule<{
+export let containerClasses: {
   container: string;
-}>(webpack.filters.byProps('container', 'godlike'));
+};
+
+export const initMisc = async (): Promise<void> => {
+  containerClasses = await webpack.waitForModule(webpack.filters.byProps('container', 'godlike'));
+};

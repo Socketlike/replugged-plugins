@@ -1,0 +1,29 @@
+.spotify-modal-settings {
+  .skip-prev-precent-slider {
+    margin-top: 20px;
+  }
+}
+
+.spotify-modal-oauth2-generator {
+  .header {
+    display: flex;
+
+    justify-content: space-between;
+  }
+
+  .guide-button {
+    width: 24px;
+    height: 24px;
+
+    color: var(--text-muted);
+
+    &:hover {
+      color: var(--text-normal);
+    }
+  }
+
+  .guide-button-tooltip {
+    width: 24px;
+    height: 24px;
+  }
+}

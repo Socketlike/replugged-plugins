@@ -1,0 +1,43 @@
+#spotify-modal-root {
+  --spotify-darker: #0a963c;
+
+  .icon {
+    color: var(--text-normal);
+    background-color: var(--background-modifier-base);
+
+    min-width: 26px;
+    height: 26px;
+
+    border-radius: 4px;
+
+    cursor: pointer;
+    transition-duration: 400ms;
+
+    &.no-icon,
+    &.no-icon:hover {
+      color: transparent;
+      background-color: transparent;
+
+      cursor: unset;
+    }
+
+    &.active,
+    &:hover {
+      color: var(--spotify);
+      background-color: var(--background-modifier-active);
+    }
+
+    &.active:hover {
+      color: var(--spotify-darker);
+      background-color: var(--background-modifier-selected);
+    }
+
+    &.disabled,
+    &.disabled:hover {
+      color: var(--text-muted);
+      background-color: unset;
+
+      cursor: not-allowed;
+    }
+  }
+}

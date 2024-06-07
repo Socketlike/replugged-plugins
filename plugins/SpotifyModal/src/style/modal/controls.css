@@ -1,0 +1,9 @@
+#spotify-modal-root > #spotify-modal > .main > .controls-container {
+  display: flex;
+
+  width: 100%;
+
+  flex-direction: row;
+  gap: 8px;
+  justify-content: space-between;
+}

@@ -1,0 +1,8 @@
+@import './modal/index.css';
+@import './icon.css';
+@import './misc.css';
+@import './scrolling-anim.css';
+
+#spotify-modal-root .hidden {
+  display: none !important;
+}

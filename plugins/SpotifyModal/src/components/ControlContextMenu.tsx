@@ -6,7 +6,7 @@ import { ContextMenu } from 'replugged/components';
 
 import { MenuSliderControl as MenuSliderControlType } from '@shared/types/discord';
 
-import { RepeatIcon, ShuffleIcon, SkipNextIcon, SkipPrevIcon, PlayPauseIcon } from './Icons';
+import { PlayPauseIcon, RepeatIcon, ShuffleIcon, SkipNextIcon, SkipPrevIcon } from './Icons';
 import { config } from '../config';
 import { useControls, usePlayerControlStates, useState } from '../util';
 

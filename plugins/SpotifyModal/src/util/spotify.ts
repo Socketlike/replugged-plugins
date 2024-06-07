@@ -24,9 +24,9 @@ export const store = webpack.getByStoreName<SpotifyStore>('SpotifyStore');
 export const connectedAccountsStore =
   webpack.getByStoreName<ConnectedAccountsStore>('ConnectedAccountsStore');
 
-export const spotifyUtils = await webpack.waitForModule<{
+export let spotifyUtils: {
   getAccessToken: (accountId: string) => Promise<HTTPResponse<{ access_token: string }>>;
-}>(webpack.filters.byProps('SpotifyAPI'));
+};
 
 export const sendSpotifyRequest = async (
   accountId: string,
@@ -330,3 +330,9 @@ globalEvents
       }
     }
   });
+
+export const init = async (): Promise<void> => {
+  spotifyUtils = await webpack.waitForModule<{
+    getAccessToken: (accountId: string) => Promise<HTTPResponse<{ access_token: string }>>;
+  }>(webpack.filters.byProps('SpotifyAPI'));
+};

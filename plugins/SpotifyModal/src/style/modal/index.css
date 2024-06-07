@@ -1,0 +1,23 @@
+@import './controls.css';
+@import './main-view.css';
+@import './seekbar.css';
+@import './track-details.css';
+
+#spotify-modal-root > #spotify-modal {
+  height: 100%;
+
+  align-items: unset;
+  -webkit-box-align: unset;
+  -ms-box-align: unset;
+
+  display: block;
+
+  margin-bottom: unset;
+  padding: 0;
+
+  .divider {
+    background-color: var(--background-modifier-accent);
+
+    height: 1px;
+  }
+}

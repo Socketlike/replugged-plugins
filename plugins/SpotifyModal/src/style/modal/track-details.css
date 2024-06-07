@@ -1,0 +1,158 @@
+#spotify-modal-root > #spotify-modal > .main > .track-details {
+  display: flex;
+
+  height: fit-content;
+
+  align-items: center;
+  gap: 6px;
+
+  .cover-art-container {
+    display: inline-block;
+
+    position: relative;
+
+    .cover-art-tooltip {
+      display: block;
+
+      height: max-content;
+
+      .cover-art {
+        max-width: 38px;
+
+        flex: 0 0 auto;
+
+        border-radius: 6px;
+
+        object-fit: contain;
+
+        transition-duration: 400ms;
+
+        cursor: pointer;
+      }
+    }
+
+    .expand-collapse-button-tooltip {
+      opacity: 0;
+
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      margin: 1px;
+
+      transition-duration: 400ms;
+
+      cursor: pointer;
+
+      .icon {
+        min-width: 16px;
+        height: 16px;
+
+        padding: 2.5px;
+      }
+    }
+
+    &:hover {
+      .expand-collapse-button-tooltip {
+        opacity: 1;
+      }
+    }
+  }
+
+  .title-artists {
+    display: flex;
+
+    width: 100%;
+
+    flex-direction: column;
+
+    overflow: hidden;
+    white-space: nowrap;
+
+    .title.overflow,
+    .artists.overflow {
+      animation: spotify-modal-scrolling var(--animation-duration) linear infinite;
+      animation-direction: alternate-reverse;
+
+      &:hover {
+        animation-play-state: paused;
+      }
+    }
+
+    .title {
+      color: var(--header-primary);
+
+      max-width: 100%;
+      width: fit-content;
+
+      font-family: var(--font-primary);
+      font-size: 14px;
+      font-weight: 600;
+
+      padding-bottom: 3px;
+
+      text-decoration: none;
+
+      &.href:hover {
+        text-decoration: none;
+
+        cursor: pointer;
+      }
+    }
+
+    .artists {
+      color: var(--header-secondary);
+
+      max-width: 100%;
+      width: fit-content;
+
+      font-size: 12px;
+
+      .artist {
+        color: var(--header-secondary);
+
+        text-decoration: none;
+
+        &:hover {
+          color: var(--text-normal);
+
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  &.cover-art-expanded {
+    display: unset;
+
+    .cover-art-container {
+      display: inline-block;
+
+      position: relative;
+
+      .cover-art {
+        max-width: 100%;
+
+        margin-bottom: 6px;
+      }
+
+      .expand-collapse-button-tooltip {
+        min-width: 16px;
+        height: 16px;
+
+        margin: 2.5px;
+
+        .icon {
+          min-width: 16px;
+          height: 16px;
+
+          padding: 5px;
+        }
+      }
+    }
+
+    .title-artists {
+      align-items: center;
+    }
+  }
+}

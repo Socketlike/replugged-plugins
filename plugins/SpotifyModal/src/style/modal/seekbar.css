@@ -1,0 +1,48 @@
+#spotify-modal-root > #spotify-modal > .main > .seekbar-container {
+  display: flex;
+
+  width: 100%;
+
+  flex-direction: column;
+  gap: 4.4px;
+
+  .seekbar-timestamps {
+    color: var(--text-normal);
+
+    display: flex;
+
+    font-size: 12px;
+
+    justify-content: space-between;
+  }
+
+  .seekbar {
+    height: 5px;
+
+    .grabber {
+      width: 8px;
+      height: 8px;
+
+      top: -2.4px;
+
+      margin-top: auto;
+      margin-left: -4px;
+    }
+
+    .inner {
+      background-color: var(--background-modifier-accent);
+
+      height: 5px;
+
+      top: 0;
+
+      border-radius: 2px;
+
+      div {
+        background-color: var(--spotify);
+
+        border-radius: 2px;
+      }
+    }
+  }
+}
