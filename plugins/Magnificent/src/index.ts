@@ -1,33 +1,37 @@
-import { Injector, Logger, webpack } from 'replugged';
+import { Injector, Logger, common } from 'replugged';
 
 const injector = new Injector();
 const logger = Logger.plugin('Magnificent');
 
-interface ImageComponent {
-  default: {
-    new (): void;
-    prototype: {
-      render: () => React.ReactElement;
-    };
+interface ImageDefaultChildrenProps {
+  mediaLayoutType: string;
+  src: string;
+}
+
+interface Image {
+  defaultProps: {
+    children: (props: ImageDefaultChildrenProps) => React.ReactElement;
   };
 }
 
-export const start = async (): Promise<void> => {
-  const imageComponent = await webpack.waitForModule<ImageComponent | undefined>(
-    webpack.filters.byProps('IMAGE_GIF_RE'),
-  );
+export const start = (): void => {
+  const imageComponent = (
+    common.components as typeof common.components & {
+      Image: Image;
+    }
+  ).Image;
 
-  if (imageComponent?.default?.prototype)
-    injector.after(
-      imageComponent.default.prototype,
-      'render',
-      (_, res: React.ReactElement<{ src: string; zoomable: boolean }>): React.ReactElement => {
-        if (res?.props?.src && !res?.props?.zoomable)
-          res.props.src = res.props.src
+  if (typeof imageComponent?.defaultProps?.children === 'function')
+    injector.before(
+      imageComponent.defaultProps,
+      'children',
+      (args: [ImageDefaultChildrenProps]): [ImageDefaultChildrenProps] => {
+        if (args?.[0]?.mediaLayoutType === 'STATIC')
+          args[0].src = args[0].src
             .replace(/[&?]width=[0-9]+&height=[0-9]+$/, '')
             .replace('media.discordapp.net', 'cdn.discordapp.com');
 
-        return res;
+        return args;
       },
     );
   else
