@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { webpack } from 'replugged';
-import { contextMenu, components } from 'replugged/common';
+import { components, contextMenu } from 'replugged/common';
 import { ContextMenu } from 'replugged/components';
 
 import { MenuSliderControl as MenuSliderControlType } from '@shared/types/discord';
@@ -10,9 +9,9 @@ import { PlayPauseIcon, RepeatIcon, ShuffleIcon, SkipNextIcon, SkipPrevIcon } fr
 import { config } from '../config';
 import { useControls, usePlayerControlStates, useState } from '../util';
 
-const { MenuSliderControl } = (
-  components as typeof components & { MenuSliderControl: MenuSliderControlType }
-).MenuSliderControl;
+const { MenuSliderControl } = components as typeof components & {
+  MenuSliderControl: MenuSliderControlType;
+};
 
 export const openControlsContextMenu = (
   ev: React.MouseEvent,

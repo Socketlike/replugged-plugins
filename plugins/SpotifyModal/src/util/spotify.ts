@@ -337,6 +337,6 @@ export const initSpotify = async (): Promise<void> => {
   >(webpack.filters.bySource(/\..{1,3}\.SPOTIFY,.{1,3}\)/));
 
   spotifyUtils = {
-    getAccessToken: webpack.getFunctionBySource(rawSpotifyUtils, /\..{1,3}\.SPOTIFY,.{1,3}\)/),
+    getAccessToken: webpack.getFunctionBySource(spotifyUtilsModule, /\..{1,3}\.SPOTIFY,.{1,3}\)/),
   };
 };
