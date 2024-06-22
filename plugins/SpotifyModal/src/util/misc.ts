@@ -58,5 +58,7 @@ export let containerClasses: {
 };
 
 export const initMisc = async (): Promise<void> => {
-  containerClasses = await webpack.waitForModule(webpack.filters.byProps('container', 'godlike'));
+  containerClasses = await webpack.waitForModule<{
+    container: string;
+  }>(webpack.filters.byProps('container', 'nameTag'));
 };
