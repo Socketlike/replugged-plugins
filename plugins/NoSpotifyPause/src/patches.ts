@@ -12,7 +12,7 @@ export default [
       {
         // vc watcher
         match:
-          /function (.{1,3})\(.{1,3}\)\{.{1,40}=.{1,3}\.default\.isCurrentClientInVoiceChannel\(\).+?return!1}/,
+          /function (.{1,3})\(.{1,3}\)\{.{1,40}=.{1,3}\.{1,3}\.isCurrentClientInVoiceChannel\(\).+?return!1}/,
         replace: 'function $1(){return!1}',
       },
       {
