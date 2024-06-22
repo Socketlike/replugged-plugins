@@ -3,7 +3,7 @@ import React from 'react';
 import { APIMessage } from 'discord-api-types/v9';
 
 import { Injector, webpack } from 'replugged';
-import { fluxDispatcher, i18n, toast } from 'replugged/common';
+import { fluxDispatcher, i18n, messages, toast } from 'replugged/common';
 
 import { TranslateButton, TranslateIcon, TranslateOffIcon, TranslatedTag } from './components';
 import { config, events, logger } from './util';
@@ -12,10 +12,6 @@ import { _translate, originalCache, translate, untranslate, untranslateAll } fro
 import './style.css';
 
 const injector = new Injector();
-
-const messages = await webpack.waitForModule<{
-  sendMessage: (id: string, data: { content: string }, _: unknown, __: unknown) => Promise<unknown>;
-}>(webpack.filters.byProps('sendMessage'));
 
 interface MessageUpdateAction {
   type: 'MESSAGE_UPDATE';
@@ -68,7 +64,7 @@ export const renderTranslatedTag = (message: APIMessage): React.ReactNode =>
 export const start = async (): Promise<void> => {
   const chatBarButtons = await webpack.waitForModule<{
     type: (props: { type: { analyticsName?: string } }) => React.ReactElement;
-  }>(webpack.filters.bySource('default.getSentUserIds()'));
+  }>(webpack.filters.bySource(/.{1,3}\.getSentUserIds\(\)/));
 
   injector.after(chatBarButtons, 'type', ([args], res): React.ReactElement => {
     const buttonElement = ['normal', 'sidebar'].includes(args?.type?.analyticsName) && (
