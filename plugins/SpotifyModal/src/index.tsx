@@ -4,7 +4,7 @@ import { fluxDispatcher } from 'replugged/common';
 import { ErrorBoundary } from 'replugged/components';
 
 import { mergeClassNames } from '@shared/dom';
-import { restartDiscordDialog } from '@shared/misc';
+import { hackyCSSFix, restartDiscordDialog } from '@shared/misc';
 
 import { config } from './config';
 import { ErrorPlaceholder, Modal } from './components';
@@ -12,6 +12,8 @@ import { containerClasses, globalEvents, initMisc, initSpotify, logger } from '.
 import { SpotifyStore } from './types';
 
 import './style/index.css';
+
+let styleElement: HTMLLinkElement;
 
 export const renderModal = (): React.ReactElement => (
   <div id='spotify-modal-root'>
@@ -51,6 +53,16 @@ const postConnectionOpenListener = (): void => {
 
   logger.log('(start)', 'waited for POST_CONNECTION_OPEN');
   globalEvents.emit('ready');
+
+  // hacky fix for loading css after timing out
+  if (!document.querySelector('link[href*="lib.evelyn.SpotifyModal"]')) {
+    logger._.log(
+      '(start)',
+      'manually loading CSS since Replugged timed us out (we still loaded successfully!)',
+    );
+
+    styleElement = hackyCSSFix('lib.evelyn.SpotifyModal')!;
+  }
 };
 
 // to detect account switches - we need to reset the modal
@@ -72,6 +84,9 @@ export const stop = async (): Promise<void> => {
   await restartDiscordDialog('SpotifyModal', config.get('pluginStopBehavior'));
 
   fluxDispatcher.unsubscribe('POST_CONNECTION_OPEN', postConnectionOpenListener);
+  fluxDispatcher.unsubscribe('LOGIN_SUCCESS', loginSuccessListener);
+
+  styleElement?.remove?.();
 };
 
 export { Settings } from './components';
