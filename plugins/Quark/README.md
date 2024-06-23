@@ -2,8 +2,10 @@
   <h1 align="center">Quark</h1>
 </p>
 
-> **Warning** This plugin is now discontinued. I will not provide any further updates to this
-> plugin. It will still remain on this repository, should anyone need to fork it.
+> **Warning**
+
+> This plugin is now discontinued. I will not provide any further updates to this plugin. It will
+> still remain on this repository, should anyone need to fork it.
 
 <p align="center">
   <a href="https://replugged.dev/install?identifier=Socketlike/replugged-plugins&id=lib.evelyn.Quark&source=github">
