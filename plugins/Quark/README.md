@@ -2,9 +2,12 @@
   <h1 align="center">Quark</h1>
 </p>
 
+> **Warning** This plugin is now discontinued. I will not provide any further updates to this
+> plugin. It will still remain on this repository, should anyone need to fork it.
+
 <p align="center">
   <a href="https://replugged.dev/install?identifier=Socketlike/replugged-plugins&id=lib.evelyn.Quark&source=github">
-    <img alt="install - this plugin is not approved by the Replugged team; use at your own risk!" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fgithub.com%2FSocketlike%2Freplugged-plugins%2Fraw%2Fmain%2Fplugins%2FQuark%2Fmanifest.json&query=%24.version&prefix=v&label=Install%20(!)&style=for-the-badge&color=yellow">
+    <img alt="install - this plugin is not approved by the Replugged team and is discontinued; use at your own risk!" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fgithub.com%2FSocketlike%2Freplugged-plugins%2Fraw%2Fmain%2Fplugins%2FQuark%2Fmanifest.json&query=%24.version&prefix=v&label=Install%20(!!)&style=for-the-badge&color=red">
   </a>
 </p>
 
@@ -15,8 +18,7 @@
 ## Why isn't this on the Replugged plugin store yet?
 
 This plugin is a gigantic security flaw. This plugin's existence is already a CVE for the client
-mod.  
-Still confused? Let me enlighten you:
+mod. Still confused? Let me enlighten you:
 
 - Because all snippets are stored using Replugged's settings system, and due to the nature of how
   Replugged's settings system works, basically _any_ plugins (including malicious plugins) can
@@ -42,5 +44,4 @@ that.
 
 ## Closure
 
-The scripts' closure is `window`.  
-There are no restrains on what can be accessed.
+The scripts' closure is `window`. There are no restrains on what can be accessed.

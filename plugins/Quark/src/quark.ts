@@ -19,6 +19,23 @@ export const loadedQuarks = new Map<string, Quark>(await idb.entries(store));
 export const _start = (name: string, quark: Quark): boolean => {
   if (!quark) return;
 
+  /*
+    note for future contributors / forkers:
+
+    - do not do the things i did below. (new Function(...))
+    -> it is better to just do:
+      ```js
+      const exports = await import(
+        URL.createObjectURL(
+          // script: string
+          new Blob([script], { type: 'text/javascript' }),
+        )
+      );
+      ```
+      then get the start and stop functions from the exports.
+      this also allows scripts to have top level await.
+  */
+
   /* eslint-disable @typescript-eslint/no-implied-eval, no-new-func */
   const start = new Function('quark', quark.start || '') as () => void;
   const stop = new Function('quark', quark.stop || '') as () => void;
@@ -162,6 +179,11 @@ export const restart = (name: string): boolean => {
   return ok;
 };
 
+/*
+  note for future contributors / forkers:
+
+  - this hook is absolutely horrendous. (please remake it)
+*/
 export const _useQuark = (
   name: string,
 ): {

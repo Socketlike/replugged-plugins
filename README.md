@@ -24,11 +24,8 @@
 - [NoSpotifyPause](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/NoSpotifyPause)
   <a href="https://replugged.dev/install?identifier=lib.evelyn.NoSpotifyPause">
   <img alt="install NoSpotifyPause" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Freplugged.dev%2Fapi%2Fv1%2Fstore%2Flib.evelyn.NoSpotifyPause&query=%24.version&prefix=v&label=install">
-  </a>: stops Discord from pausing your Spotify playback while in VC.
-- [Quark](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/Quark)
-  <a href="https://replugged.dev/install?identifier=Socketlike/replugged-plugins&id=lib.evelyn.Quark&source=github">
-  <img alt="install Quark - this plugin is not approved by the Replugged team; use at your own risk!" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fgithub.com%2FSocketlike%2Freplugged-plugins%2Fraw%2Fmain%2Fplugins%2FQuark%2Fmanifest.json&query=%24.version&prefix=v&label=install%20(!)&color=yellow">
-  </a>: allows you to create persistent (runs every startup) JavaScript snippets.
+  </a>: stops Discord from pausing your Spotify playback while in VC. </a>: allows you to create
+  persistent (runs every startup) JavaScript snippets.
 - [SpotifyListenAlong](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/SpotifyListenAlong)
   <a href="https://replugged.dev/install?identifier=lib.evelyn.SpotifyListenAlong">
   <img alt="install SpotifyListenAlong" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Freplugged.dev%2Fapi%2Fv1%2Fstore%2Flib.evelyn.SpotifyListenAlong&query=%24.version&prefix=v&label=install">
@@ -43,6 +40,12 @@
   <a href="https://replugged.dev/install?identifier=lib.evelyn.Translator">
   <img alt="install Translator" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Freplugged.dev%2Fapi%2Fv1%2Fstore%2Flib.evelyn.Translator&query=%24.version&prefix=v&label=install">
   </a>: allows you to translate messages in-app.
+
+## List of discontinued plugins
+
+- [Quark](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/Quark)
+  <a href="https://replugged.dev/install?identifier=Socketlike/replugged-plugins&id=lib.evelyn.Quark&source=github">
+  <img alt="install Quark - this plugin is not approved by the Replugged team and is discontinued; use at your own risk!" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fgithub.com%2FSocketlike%2Freplugged-plugins%2Fraw%2Fmain%2Fplugins%2FQuark%2Fmanifest.json&query=%24.version&prefix=v&label=install%20(!!)&color=red">
 
 ## Building
 
