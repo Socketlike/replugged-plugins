@@ -9,6 +9,9 @@
   <a href="https://github.com/Socketlike/replugged-plugins/actions/workflows/release.yml">
     <img alt="build status" src="https://img.shields.io/github/actions/workflow/status/Socketlike/replugged-plugins/release.yml?label=build">
   </a>
+  <a href="https://discord.gg/73QMG6fqhg">
+    <img alt="support server" src="https://img.shields.io/badge/support%20server-gray?logo=discord&logoColor=fff&labelColor=5865f2">
+  </a>
 </p>
 
 <p align="center">
