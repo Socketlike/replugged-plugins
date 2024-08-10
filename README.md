@@ -18,6 +18,12 @@
   a collection of plugins I made for <a href="https://replugged.dev">Replugged</a>, a Discord client mod.
 </p>
 
+> [!IMPORTANT]
+> Due to problems with my laptop (which is the only computer I possess),
+> I will no longer be able to maintain any of my projects for an indefinite period.
+> 
+> If you wish to maintain this project, you can do so in the form of PRs.
+
 ## List of plugins
 
 - [Magnificent](https://github.com/Socketlike/replugged-plugins/blob/main/plugins/Magnificent)
