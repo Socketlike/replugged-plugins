@@ -2,8 +2,7 @@
   <h1 align="center">Quark</h1>
 </p>
 
-> **Warning**
-
+>[!WARNING]
 > This plugin is now discontinued. I will not provide any further updates to this plugin. It will
 > still remain on this repository, should anyone need to fork it.
 
