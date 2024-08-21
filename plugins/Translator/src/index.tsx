@@ -80,7 +80,7 @@ export const start = async (): Promise<void> => {
   injector.utils.addPopoverButton((message) => ({
     icon: originalCache.has(message.id) ? TranslateOffIcon : TranslateIcon,
     label: originalCache.has(message.id) ? 'Untranslate' : 'Translate',
-    onClick: (_, message): void =>
+    onClick: (): void =>
       originalCache.has(message.id)
         ? untranslateMessage(message.id)
         : void translateMessage(message),
