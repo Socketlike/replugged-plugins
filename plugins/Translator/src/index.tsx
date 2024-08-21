@@ -4,6 +4,8 @@ import { APIMessage } from 'discord-api-types/v9';
 
 import { Injector, webpack } from 'replugged';
 import { fluxDispatcher, i18n, messages, toast } from 'replugged/common';
+import { ContextMenu } from 'replugged/components';
+import { ContextMenuTypes } from 'replugged/types';
 
 import { TranslateButton, TranslateIcon, TranslateOffIcon, TranslatedTag } from './components';
 import { config, events, logger } from './util';
@@ -85,6 +87,18 @@ export const start = async (): Promise<void> => {
         ? untranslateMessage(message.id)
         : void translateMessage(message),
   }));
+
+  injector.utils.addMenuItem(ContextMenuTypes.Message, ({ message }: { message: APIMessage }) => (
+    <ContextMenu.MenuItem
+      id='translate-message'
+      label={originalCache.has(message.id) ? 'Untranslate' : 'Translate'}
+      action={() =>
+        originalCache.has(message.id)
+          ? untranslateMessage(message.id)
+          : void translateMessage(message)
+      }
+    />
+  ));
 
   injector.instead(messages, 'sendMessage', async (args, orig) => {
     if (config.get('sendTranslateEnabled'))
