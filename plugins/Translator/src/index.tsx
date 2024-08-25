@@ -91,6 +91,7 @@ export const start = async (): Promise<void> => {
   injector.utils.addMenuItem(ContextMenuTypes.Message, ({ message }: { message: APIMessage }) => (
     <ContextMenu.MenuItem
       id='translate-message'
+      icon={() => (originalCache.has(message.id) ? <TranslateOffIcon /> : <TranslateIcon />)}
       label={originalCache.has(message.id) ? 'Untranslate' : 'Translate'}
       action={() =>
         originalCache.has(message.id)
