@@ -2,13 +2,12 @@ import { PlaintextPatch } from 'replugged/types';
 
 export default [
   {
-    /* https://github.com/Vendicated/Vencord/blob/main/src/plugins/spotifyControls/index.tsx#L49-L57 */
     find: 'hidePrivateData:',
     replacements: [
       {
-        match: /return\s?(.+?,)?(\(0,.{1,3}\.jsx\)\(.{1,3},\{[^}]+?,hidePrivateData:.+?\}\))/s,
+        match: /\(0,\w+\.\w+\)\("div",{.{90,120}this\.renderNameZone/,
         replace:
-          'return $1[(()=>{try{return window.replugged.plugins.getExports("lib.evelyn.SpotifyModal").renderModal()}catch{}})(),$2]',
+          '(()=>{try{return window.replugged.plugins.getExports("lib.evelyn.SpotifyModal").renderModal()}catch{}})(),$&',
       },
     ],
   },

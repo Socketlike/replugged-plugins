@@ -21,6 +21,8 @@ interface MessageUpdateAction {
   translated?: boolean;
 }
 
+let removeLocalListener: () => void;
+
 export const translateMessage = async (message: APIMessage): Promise<void> => {
   const translateResult = await translate(message);
 
@@ -110,13 +112,13 @@ export const start = async (): Promise<void> => {
 
   fluxDispatcher.subscribe<MessageUpdateAction>('MESSAGE_UPDATE', onMessageUpdate);
   events.on('languageChanged', untranslateAllMessages);
-  i18n.addListener('locale', onDiscordLocaleChange);
+  removeLocalListener = i18n.intl.onLocaleChange(onDiscordLocaleChange);
 };
 
 export const stop = (): void => {
   fluxDispatcher.unsubscribe<MessageUpdateAction>('MESSAGE_UPDATE', onMessageUpdate);
   events.off('languageChanged', untranslateAllMessages);
-  i18n.removeListener('locale', onDiscordLocaleChange);
+  removeLocalListener?.();
 
   injector.uninjectAll();
 
