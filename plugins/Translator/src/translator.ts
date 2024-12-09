@@ -12,7 +12,7 @@ export const _translate = async (
 ): Promise<{ text: string; error?: unknown }> => {
   const to =
     (self ? config.get('targetLanguage') : config.get('yourLanguage')) ||
-    i18n.getLocale().split('-')[0];
+    i18n.intl.currentLocale.split('-')[0];
 
   const engine = config.get('apiKey') ? 'google_cloud' : 'google_dict_chrome_ex';
 
