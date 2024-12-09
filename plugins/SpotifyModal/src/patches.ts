@@ -2,7 +2,6 @@ import { PlaintextPatch } from 'replugged/types';
 
 export default [
   {
-    /* https://github.com/Vendicated/Vencord/blob/main/src/plugins/spotifyControls/index.tsx#L49-L57 */
     find: 'hidePrivateData:',
     replacements: [
       {
