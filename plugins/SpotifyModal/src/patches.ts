@@ -5,9 +5,9 @@ export default [
     find: 'hidePrivateData:',
     replacements: [
       {
-        match: /children:(\(.{75,100}idePrivateData:.+?isEligibleForPomelo:\w+}\))/,
+        match: /\(0,\w+\.\w+\)\("div",{.{90,120}this\.renderNameZone/,
         replace:
-          'children:[(()=>{try{return window.replugged.plugins.getExports("lib.evelyn.SpotifyModal").renderModal()}catch{}})(),$1]',
+          '(()=>{try{return window.replugged.plugins.getExports("lib.evelyn.SpotifyModal").renderModal()}catch{}})(),$&',
       },
     ],
   },
