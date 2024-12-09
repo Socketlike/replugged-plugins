@@ -6,9 +6,9 @@ export default [
     find: 'hidePrivateData:',
     replacements: [
       {
-        match: /return\s?(.+?,)?(\(0,.{1,3}\.jsx\)\(.{1,3},\{[^}]+?,hidePrivateData:.+?\}\))/s,
+        match: /children:(\(.{75,100}idePrivateData:.+?isEligibleForPomelo:\w+}\))/,
         replace:
-          'return $1[(()=>{try{return window.replugged.plugins.getExports("lib.evelyn.SpotifyModal").renderModal()}catch{}})(),$2]',
+          'children:[(()=>{try{return window.replugged.plugins.getExports("lib.evelyn.SpotifyModal").renderModal()}catch{}})(),$1]',
       },
     ],
   },
