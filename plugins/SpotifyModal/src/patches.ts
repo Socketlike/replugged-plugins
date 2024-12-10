@@ -5,7 +5,7 @@ export default [
     find: 'hidePrivateData:',
     replacements: [
       {
-        match: /\(0,\w+\.\w+\)\("div",{.{90,120}this\.renderNameZone/,
+        match: /\(0,\w+\.\w+\)\("div",{className:\w+\.container/,
         replace:
           '(()=>{try{return window.replugged.plugins.getExports("lib.evelyn.SpotifyModal").renderModal()}catch{}})(),$&',
       },
