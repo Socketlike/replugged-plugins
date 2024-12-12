@@ -66,9 +66,13 @@ export const renderTranslatedTag = (message: APIMessage): React.ReactNode =>
   originalCache.has(message?.id) && <TranslatedTag />;
 
 export const start = async (): Promise<void> => {
-  const chatBarButtons = await webpack.waitForModule<{
+  const channelBarButtonsMod = await webpack.waitForModule(
+    webpack.filters.bySource(/.{1,3}\.getSentUserIds\(\)/),
+  );
+
+  const chatBarButtons = webpack.getExportsForProps<{
     type: (props: { type: { analyticsName?: string } }) => React.ReactElement;
-  }>(webpack.filters.bySource(/.{1,3}\.getSentUserIds\(\)/));
+  }>(channelBarButtonsMod, ['type']);
 
   injector.after(chatBarButtons, 'type', ([args], res): React.ReactElement => {
     const buttonElement = ['normal', 'sidebar'].includes(args?.type?.analyticsName) && (
