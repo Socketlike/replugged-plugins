@@ -2,6 +2,21 @@ import type { flux } from 'replugged/common';
 
 export declare class SpotifyStore extends flux.Store {
   public shouldShowActivity(): boolean;
+  public getPlayableComputerDevices(): Array<{
+    socket: {
+      accessToken: string;
+      accountId: string;
+      connectionId: string;
+      isPremium: boolean;
+      socket: WebSocket;
+      connected: boolean;
+    };
+    device: {
+      id: string;
+      name: string;
+      type: string;
+    };
+  }>;
 }
 
 export namespace SpotifyStore {
