@@ -12,17 +12,17 @@ export default [
       {
         // vc watcher
         match:
-          /function (.{1,3})\(.{1,3}\)\{.{1,40}=.{1,3}\.{1,3}\.isCurrentClientInVoiceChannel\(\).+?return!1}/,
+          /function (.{1,3})\(.{1,3}\)\{.{1,40}=\w+\.\w+\.isCurrentClientInVoiceChannel\(\).+?return!1}/,
         replace: 'function $1(){return!1}',
       },
       {
         // remove voice state detection
-        match: /VOICE_STATE_UPDATES:function\(.+?\)\{.+\},/,
+        match: /VOICE_STATE_UPDATES:\w+,/,
         replace: '',
       },
       {
         // remove speaking detection
-        match: /SPEAKING:function\(.+?\)\{.+?\},/,
+        match: /SPEAKING:\w+,/,
         replace: '',
       },
     ],

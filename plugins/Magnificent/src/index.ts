@@ -1,4 +1,4 @@
-import { Injector, Logger, common } from 'replugged';
+import { Injector, Logger, webpack } from 'replugged';
 
 const injector = new Injector();
 const logger = Logger.plugin('Magnificent');
@@ -14,12 +14,11 @@ interface Image {
   };
 }
 
-export const start = (): void => {
-  const imageComponent = (
-    common.components as typeof common.components & {
-      Image: Image;
-    }
-  ).Image;
+export const start = async (): Promise<void> => {
+  const imageMod = await webpack.waitForModule(
+    webpack.filters.bySource(/mediaLayoutType:\w+,limitResponsiveWidth/),
+  );
+  const imageComponent = webpack.getFunctionBySource<Image>(imageMod, 'maxWidth');
 
   if (typeof imageComponent?.defaultProps?.children === 'function')
     injector.before(
