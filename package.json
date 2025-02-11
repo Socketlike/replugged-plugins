@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "my Replugged plugins",
   "engines": {
-    "node": ">=22.0.0",
+    "node": ">=20.0.0",
     "pnpm": ">=10.0.0"
   },
   "scripts": {
@@ -35,6 +35,7 @@
     "@types/lodash": "^4.17.15",
     "@types/node": "^22.13.1",
     "@types/react": "^18.3.18",
+    "@types/spotify-api": "^0.0.25",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "codemirror": "^6.0.1",
