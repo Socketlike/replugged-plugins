@@ -51,7 +51,7 @@ export const Modal = (props: {
     if (element.scrollWidth > element.parentElement.clientWidth) {
       // 60px/s
       element.style.animationDuration = `${(element.scrollWidth / 45) * 1.1}s`;
-      element.style.animationDelay = `-${(element.scrollWidth / 45) * 1.1 * 0.349}s`;
+      element.style.animationDelay = `-${(element.scrollWidth / 45) * 1.1 * 0.449}s`;
       element.classList.add('overflow');
     } else element.classList.remove('overflow');
   }

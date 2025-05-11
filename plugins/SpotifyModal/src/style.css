@@ -1,13 +1,13 @@
-@keyframes marquee {
+@keyframes spotify-modal-marquee {
   0% {
-    transform: translateX(60%);
-  }
-
-  35% {
-    transform: translateX(0);
+    transform: translateX(100%);
   }
 
   45% {
+    transform: translateX(0);
+  }
+
+  55% {
     transform: translateX(0);
   }
 
@@ -57,11 +57,6 @@
   width: min-content;
 }
 
-html.reduce-motion #spotify-modal .details .track-name-container,
-html.reduce-motion #spotify-modal .details .artists-container {
-  text-overflow: ellipsis;
-}
-
 #spotify-modal .details .track-name-container,
 #spotify-modal .details .artists-container {
   overflow: hidden;
@@ -69,12 +64,17 @@ html.reduce-motion #spotify-modal .details .artists-container {
 
 #spotify-modal .details .track-name.overflow,
 #spotify-modal .details .artists.overflow {
-  animation: 0s linear infinite marquee;
+  animation: 0s linear infinite spotify-modal-marquee;
 }
 
 html.reduce-motion #spotify-modal .details .track-name,
 html.reduce-motion #spotify-modal .details .artists {
   animation: none;
+
+  text-overflow: ellipsis;
+
+  overflow: hidden;
+  width: unset;
 }
 
 #spotify-modal .details .track-name {
