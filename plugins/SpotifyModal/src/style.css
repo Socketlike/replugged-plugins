@@ -1,0 +1,107 @@
+@keyframes marquee {
+  0% {
+    transform: translateX(60%);
+  }
+
+  35% {
+    transform: translateX(0);
+  }
+
+  45% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+#spotify-modal {
+  font-size: 14px;
+
+  color: var(--text-normal);
+
+  border-bottom: 1px solid var(--background-modifier-accent);
+}
+
+#spotify-modal:empty {
+  border-bottom: none;
+}
+
+#spotify-modal > :not(.divider) {
+  margin: 8px;
+}
+
+#spotify-modal .details {
+  display: flex;
+
+  flex-direction: row;
+  gap: 8px;
+}
+
+#spotify-modal .details .container {
+  display: flex;
+
+  flex-direction: column;
+  gap: 4px;
+
+  min-width: 0;
+
+  justify-content: center;
+}
+
+#spotify-modal .details .track-name,
+#spotify-modal .details .artists {
+  text-wrap: nowrap;
+
+  width: min-content;
+}
+
+html.reduce-motion #spotify-modal .details .track-name-container,
+html.reduce-motion #spotify-modal .details .artists-container {
+  text-overflow: ellipsis;
+}
+
+#spotify-modal .details .track-name-container,
+#spotify-modal .details .artists-container {
+  overflow: hidden;
+}
+
+#spotify-modal .details .track-name.overflow,
+#spotify-modal .details .artists.overflow {
+  animation: 0s linear infinite marquee;
+}
+
+html.reduce-motion #spotify-modal .details .track-name,
+html.reduce-motion #spotify-modal .details .artists {
+  animation: none;
+}
+
+#spotify-modal .details .track-name {
+  display: block;
+
+  font-weight: 500;
+
+  color: var(--text-normal);
+}
+
+#spotify-modal .details .artists a {
+  color: var(--text-secondary);
+}
+
+#spotify-modal .details .track-name:hover,
+#spotify-modal .details .artists:hover {
+  animation-play-state: paused;
+}
+
+#spotify-modal .details .track-name:hover,
+#spotify-modal .details .artists a:hover {
+  text-decoration: underline;
+}
+
+#spotify-modal .details .cover-art {
+  border-radius: 8px;
+
+  aspect-ratio: 1 / 1;
+  width: 56px;
+}
