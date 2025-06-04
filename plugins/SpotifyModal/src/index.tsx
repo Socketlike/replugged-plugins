@@ -19,7 +19,7 @@ let modalInstance = <Main store={store} fluxHooks={fluxHooks} />;
 
 export function start(): void {
   void (async () => {
-    store = webpack.getByStoreName('SpotifyStore');
+    store ??= webpack.getByStoreName('SpotifyStore');
 
     userAreaElement = await waitFor('[class^=panels_] > [class^=container_]');
 

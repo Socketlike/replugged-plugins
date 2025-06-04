@@ -17,19 +17,21 @@
 }
 
 #spotify-modal {
+  display: flex;
+
+  flex-direction: column;
+  gap: 10px;
+
   font-size: 14px;
 
   color: var(--text-normal);
 
+  margin: 8px;
   border-bottom: 1px solid var(--background-modifier-accent);
 }
 
 #spotify-modal:empty {
   border-bottom: none;
-}
-
-#spotify-modal > :not(.divider) {
-  margin: 8px;
 }
 
 #spotify-modal .details {
@@ -43,6 +45,7 @@
   display: flex;
 
   flex-direction: column;
+  flex-grow: 1;
   gap: 4px;
 
   min-width: 0;
@@ -78,7 +81,7 @@ html.reduce-motion #spotify-modal .details .artists {
 }
 
 #spotify-modal .details .track-name {
-  display: block;
+  display: inline-block;
 
   font-weight: 500;
 
@@ -104,4 +107,24 @@ html.reduce-motion #spotify-modal .details .artists {
 
   aspect-ratio: 1 / 1;
   width: 56px;
+}
+
+#spotify-modal .seekbar-container .timestamps {
+  display: flex;
+  justify-content: space-between;
+
+  margin-bottom: -2px;
+}
+
+#spotify-modal .seekbar {
+  --grabber-size: 12px !important;
+  --bar-size: 6px !important;
+}
+
+#spotify-modal .seekbar + [class^='divider'] {
+  display: none;
+}
+
+#spotify-modal .seekbar .bar [class^='barFill'] {
+  background-color: var(--spotify);
 }
