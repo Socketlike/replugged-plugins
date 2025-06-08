@@ -32,6 +32,8 @@
 
 #spotify-modal:empty {
   border-bottom: none;
+
+  margin: 0;
 }
 
 #spotify-modal .details {
@@ -70,8 +72,10 @@
   animation: 0s linear infinite spotify-modal-marquee;
 }
 
-html.reduce-motion #spotify-modal .details .track-name,
-html.reduce-motion #spotify-modal .details .artists {
+html.reduce-motion #spotify-modal.use-discord-reduce-motion .details .track-name,
+html.reduce-motion #spotify-modal.use-discord-reduce-motion .details .artists,
+#spotify-modal.reduce-motion .details .track-name,
+#spotify-modal.reduce-motion .details .artists {
   animation: none;
 
   text-overflow: ellipsis;
@@ -107,6 +111,33 @@ html.reduce-motion #spotify-modal .details .artists {
 
   aspect-ratio: 1 / 1;
   width: 56px;
+}
+
+#spotify-modal .seekbar-container:not(.enabled) {
+  display: none;
+}
+
+#spotify-modal .seekbar-container.collapse-on-blur {
+  transition:
+    0.25s max-height 0.25s,
+    0.25s opacity;
+
+  opacity: 0;
+  max-height: 0;
+}
+
+#spotify-modal:hover .seekbar-container.collapse-on-blur {
+  transition:
+    0.25s max-height,
+    0.25s opacity 0.25s;
+
+  opacity: 1;
+  max-height: 200px;
+}
+
+html.reduce-motion #spotify-modal.use-discord-reduce-motion .seekbar-container.collapse-on-blur,
+#spotify-modal.reduce-motion .seekbar-container.collapse-on-blur {
+  transition: none;
 }
 
 #spotify-modal .seekbar-container .timestamps {

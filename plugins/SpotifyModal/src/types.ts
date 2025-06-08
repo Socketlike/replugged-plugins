@@ -23,6 +23,10 @@ export interface SpotifyStore extends FluxStore {
   } | null;
 }
 
+export interface ConnectedAccountsUtils {
+  refreshAccountToken(type: string, id: string): Promise<string>;
+}
+
 export interface ConnectedAccount {
   name: string;
   id: string;

@@ -1,8 +1,10 @@
 import React from 'react';
 import { Logger } from 'replugged';
+import { fluxHooks, toast } from 'replugged/common';
 import { ErrorBoundary, SliderItem, Tooltip } from 'replugged/components';
 
-import { ConnectedAccount, SpotifyStore } from './types';
+import { ConnectedAccount, ConnectedAccountsUtils, SpotifyStore } from './types';
+import { useConfig } from './config';
 import * as utils from './utils';
 
 const log = Logger.plugin('SpotifyModal', '#1DB954');
@@ -121,12 +123,16 @@ export const TrackDetails = (props: {
 
 export const Seekbar = (props: {
   account: ConnectedAccount;
+  connectedAccountsUtils: ConnectedAccountsUtils;
   start: number;
   end: number;
   paused: boolean;
   active: boolean;
 }): React.ReactNode => {
-  const { account, start, end, paused, active } = props;
+  const { account, connectedAccountsUtils, start, end, paused, active } = props;
+
+  const enabled = useConfig('seekbar.enabled', true);
+  const collapseOnBlur = useConfig('seekbar.collapseOnBlur', false);
 
   const [current, setCurrent] = React.useState(0);
   const ref = React.useRef<{ setState(props: { value: number }): void }>();
@@ -146,7 +152,12 @@ export const Seekbar = (props: {
   }, [current]);
 
   return (
-    <div className='seekbar-container'>
+    <div
+      className={utils.classNameFactory({
+        'seekbar-container': true,
+        enabled,
+        'collapse-on-blur': collapseOnBlur,
+      })}>
       <div className='timestamps'>
         <span>{formatTimestamp(current)}</span>
         <span>{formatTimestamp(end)}</span>
@@ -168,7 +179,55 @@ export const Seekbar = (props: {
           setCurrent(v);
         }}
         onChange={(v) => {
-          void utils.spotify.seekTo(account?.accessToken, v).then((res) => {
+          void utils.spotify.seekTo(account?.accessToken, v).then(async (res) => {
+            if (res === 0)
+              toast.toast(
+                '[SpotifyModal] Internal plugin error. Please check console.',
+                toast.Kind.FAILURE,
+              );
+            else if (res === 401) {
+              const newToken = await connectedAccountsUtils
+                .refreshAccountToken('spotify', account.id)
+                .catch(() => {});
+
+              if (!newToken)
+                toast.toast(
+                  '[SpotifyModal] Authentication error: Could not refresh expired token. Please perform this action in your Spotify player.',
+                  toast.Kind.FAILURE,
+                );
+              else {
+                res = await utils.spotify.seekTo(newToken, v);
+
+                if (res === 401)
+                  toast.toast(
+                    '[SpotifyModal] Authentication error: Could not refresh expired token. Please perform this action in your Spotify player.',
+                    toast.Kind.FAILURE,
+                  );
+                else if (res !== 200 && res !== 204) {
+                  log.error("couldn't resume action after refreshing token; code", res);
+
+                  toast.toast(
+                    '[SpotifyModal] Resuming action after reauthentication errored. Please check console.',
+                    toast.Kind.FAILURE,
+                  );
+                }
+              }
+            } else if (res === 404)
+              toast.toast(
+                '[SpotifyModal] Player is idle and cannot be accessed. Please perform this action in your Spotify player.',
+                toast.Kind.FAILURE,
+              );
+            else if (res === 403)
+              toast.toast(
+                '[SpotifyModal] Bad OAuth request. The Spotify account was probably unlinked from your Discord account.',
+                toast.Kind.FAILURE,
+              );
+            else if (res === 429)
+              toast.toast(
+                '[SpotifyModal] Too many requests. Please slow down.',
+                toast.Kind.FAILURE,
+              );
+
             isSeeking.current = false;
           });
         }}
@@ -179,9 +238,9 @@ export const Seekbar = (props: {
 
 export const Modal = (props: {
   store: SpotifyStore;
-  fluxHooks: typeof import('replugged/common').fluxHooks;
+  connectedAccountsUtils: ConnectedAccountsUtils;
 }): React.ReactElement => {
-  const { store, fluxHooks } = props;
+  const { connectedAccountsUtils, store } = props;
 
   const [state, setState] = React.useState<ReturnType<typeof store.getPlayerState>>();
   const [activity, setActivity] = React.useState<ReturnType<typeof store.getActivity>>();
@@ -221,6 +280,7 @@ export const Modal = (props: {
       <TrackDetails state={state} />
       <Seekbar
         account={state.account}
+        connectedAccountsUtils={connectedAccountsUtils}
         start={activity?.timestamps?.start || 0}
         end={state?.track?.duration || 1}
         paused={paused}
@@ -234,13 +294,21 @@ export const Modal = (props: {
 
 export default (props: {
   store: SpotifyStore;
-  fluxHooks: typeof import('replugged/common').fluxHooks;
+  connectedAccountsUtils: ConnectedAccountsUtils;
 }): React.ReactElement => {
   const [error, setError] = React.useState<unknown>();
   const [info, setInfo] = React.useState<unknown>();
 
+  const reduceMotion = useConfig('general.reduceMotion', 'discord');
+
   return (
-    <div id='spotify-modal' className={`${error && info ? 'fallback' : ''}`}>
+    <div
+      id='spotify-modal'
+      className={utils.classNameFactory({
+        fallback: Boolean(error && info),
+        'use-discord-reduce-motion': reduceMotion === 'discord',
+        'reduce-motion': reduceMotion !== 'discord' && reduceMotion,
+      })}>
       <ErrorBoundary
         onError={(e: unknown, i: unknown) => {
           setError(e);

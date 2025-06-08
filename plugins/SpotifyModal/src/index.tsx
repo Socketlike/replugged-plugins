@@ -1,9 +1,8 @@
 import { Injector, Logger } from 'replugged';
 import { getOwnerInstance, waitFor } from 'replugged/util';
-import { fluxHooks } from 'replugged/common';
 import webpack from 'replugged/webpack';
 
-import { SpotifyStore } from './types';
+import { ConnectedAccountsUtils, SpotifyStore } from './types';
 import { default as Main } from './Modal';
 
 import './style.css';
@@ -12,14 +11,16 @@ const log = Logger.plugin('SpotifyModal', '#1DB954');
 const injector = new Injector();
 
 let store = webpack.getByStoreName<SpotifyStore>('SpotifyStore');
+let connectedAccountsUtils: ConnectedAccountsUtils = webpack.getByProps('refreshAccessToken');
 let userAreaElement: Element;
 let forceUpdateUserArea: () => void;
 
-let modalInstance = <Main store={store} fluxHooks={fluxHooks} />;
+let modalInstance: React.ReactElement;
 
 export function start(): void {
   void (async () => {
     store ??= webpack.getByStoreName('SpotifyStore');
+    connectedAccountsUtils ??= await webpack.waitForProps(['refreshAccountToken']);
 
     userAreaElement = await waitFor('[class^=panels_] > [class^=container_]');
 
@@ -35,6 +36,8 @@ export function start(): void {
       return;
     }
 
+    modalInstance = <Main store={store} connectedAccountsUtils={connectedAccountsUtils} />;
+
     injector.after(owner, 'render', (_, res) => {
       return [modalInstance, res];
     });
@@ -49,3 +52,5 @@ export function stop(): void {
   injector.uninjectAll();
   forceUpdateUserArea?.();
 }
+
+export { default as Settings } from './Settings';
