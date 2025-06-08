@@ -1,95 +1,56 @@
-import React from 'react';
+import { Injector, Logger } from 'replugged';
+import { getOwnerInstance, waitFor } from 'replugged/util';
+import webpack from 'replugged/webpack';
 
-import { fluxDispatcher } from 'replugged/common';
-import { ErrorBoundary } from 'replugged/components';
+import { ConnectedAccountsUtils, SpotifyStore } from './types';
+import { default as Main } from './Modal';
 
-import { mergeClassNames } from '@shared/dom';
-import { hackyCSSFix, restartDiscordDialog } from '@shared/misc';
+import './style.css';
 
-import { config } from './config';
-import { ErrorPlaceholder, Modal } from './components';
-import { containerClasses, globalEvents, initMisc, initSpotify, logger } from './util';
-import { SpotifyStore } from './types';
+const log = Logger.plugin('SpotifyModal', '#1DB954');
+const injector = new Injector();
 
-import './style/index.css';
+let store = webpack.getByStoreName<SpotifyStore>('SpotifyStore');
+let connectedAccountsUtils: ConnectedAccountsUtils = webpack.getByProps('refreshAccessToken');
+let userAreaElement: Element;
+let forceUpdateUserArea: () => void;
 
-let styleElement: HTMLLinkElement;
+let modalInstance: React.ReactElement;
 
-export const renderModal = (): React.ReactElement => (
-  <div id='spotify-modal-root'>
-    <ErrorBoundary
-      fallback={
-        <div
-          id='spotify-modal'
-          className={mergeClassNames('spotify-modal', containerClasses?.container)}>
-          <div className='main'>
-            <ErrorPlaceholder
-              text='Something went wrong while rendering the modal :('
-              subtext='See Console output for more details.'
-            />
-          </div>
-        </div>
-      }
-      onError={(error: Error, message: React.ErrorInfo) =>
-        logger._.error('(modal)', `rendering failed\n`, error, '\n', message)
-      }>
-      <Modal />
-    </ErrorBoundary>
-  </div>
-);
+export function start(): void {
+  void (async () => {
+    store ??= webpack.getByStoreName('SpotifyStore');
+    connectedAccountsUtils ??= await webpack.waitForProps(['refreshAccountToken']);
 
-export const emitEvent = (
-  data: SpotifyStore.PayloadEvents,
-  account: SpotifyStore.Account,
-): void => {
-  if (data.type === 'PLAYER_STATE_CHANGED' && typeof data.event.state?.timestamp === 'number')
-    data.event.state.timestamp = Date.now();
+    userAreaElement = await waitFor('[class^=panels_] > [class^=container_]');
 
-  globalEvents.emit('event', { accountId: account.accountId, data });
-};
+    if (!userAreaElement) {
+      log.error('unable to get user area element. maybe the selector broke?');
+      return;
+    }
 
-const postConnectionOpenListener = (): void => {
-  fluxDispatcher.unsubscribe('POST_CONNECTION_OPEN', postConnectionOpenListener);
+    const owner = getOwnerInstance(userAreaElement);
 
-  logger.log('(start)', 'waited for POST_CONNECTION_OPEN');
-  globalEvents.emit('ready');
+    if (!owner) {
+      log.error('unable to get user area React owner instance.');
+      return;
+    }
 
-  // hacky fix for loading css after timing out
-  if (!document.querySelector('link[href*="lib.evelyn.SpotifyModal"]')) {
-    logger._.log(
-      '(start)',
-      'manually loading CSS since Replugged timed us out (we still loaded successfully!)',
-    );
+    modalInstance = <Main store={store} connectedAccountsUtils={connectedAccountsUtils} />;
 
-    styleElement = hackyCSSFix('lib.evelyn.SpotifyModal')!;
-  }
-};
+    injector.after(owner, 'render', (_, res) => {
+      return [modalInstance, res];
+    });
 
-// to detect account switches - we need to reset the modal
-const loginSuccessListener = (): void => {
-  globalEvents.emit('accountSwitch');
-  fluxDispatcher.subscribe('POST_CONNECTION_OPEN', postConnectionOpenListener);
-};
+    forceUpdateUserArea = () => owner.forceUpdate();
 
-export const start = async (): Promise<void> => {
-  await Promise.allSettled([initMisc(), initSpotify()]);
+    forceUpdateUserArea();
+  })();
+}
 
-  if (!document.getElementById('spotify-modal-root'))
-    fluxDispatcher.subscribe('POST_CONNECTION_OPEN', postConnectionOpenListener);
+export function stop(): void {
+  injector.uninjectAll();
+  forceUpdateUserArea?.();
+}
 
-  fluxDispatcher.subscribe('LOGIN_SUCCESS', loginSuccessListener);
-};
-
-export const stop = async (): Promise<void> => {
-  await restartDiscordDialog('SpotifyModal', config.get('pluginStopBehavior'));
-
-  fluxDispatcher.unsubscribe('POST_CONNECTION_OPEN', postConnectionOpenListener);
-  fluxDispatcher.unsubscribe('LOGIN_SUCCESS', loginSuccessListener);
-
-  styleElement?.remove?.();
-};
-
-export { Settings } from './components';
-
-export * as util from './util';
-export * as components from './components';
+export { default as Settings } from './Settings';

@@ -1,36 +1,100 @@
-import { settings } from 'replugged';
+import { React } from 'replugged/common';
 
-export type ControlButtonKind =
-  | 'shuffle'
-  | 'skip-prev'
-  | 'play-pause'
-  | 'skip-next'
-  | 'repeat'
-  | 'blank';
+import { init } from 'replugged/settings';
 
-export type VisibilityState = 'always' | 'hidden' | 'auto';
+// can't use an interface for this
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+export type Config = {
+  v: number;
 
-export const defaultConfig = {
-  controlsLayout: ['shuffle', 'skip-prev', 'play-pause', 'skip-next', 'repeat'] as [
-    ControlButtonKind,
-    ControlButtonKind,
-    ControlButtonKind,
-    ControlButtonKind,
-    ControlButtonKind,
-  ],
-  controlsVisibilityState: 'auto' as VisibilityState,
-  debugging: false,
-  hyperlinkURI: true,
-  pluginStopBehavior: 'ask' as 'ask' | 'restart' | 'ignore',
-  seekbarEnabled: true,
-  seekbarVisibilityState: 'always' as VisibilityState,
-  spotifyAppClientId: '',
-  spotifyAppRedirectURI: '',
-  spotifyAppOauthTokens: {} as Record<string, string>,
-  skipPreviousShouldResetProgress: true,
-  skipPreviousProgressResetThreshold: 0.15,
+  'general.reduceMotion': 'discord' | boolean;
+
+  'controls.enabled': boolean;
+  'controls.collapseOnBlur': boolean;
+
+  'seekbar.enabled': boolean;
+  'seekbar.collapseOnBlur': boolean;
 };
 
-export type DefaultConfig = typeof defaultConfig;
+const config = await init<Config, keyof Config>('lib.evelyn.SpotifyModal', {
+  v: 0,
 
-export const config = await settings.init('lib.evelyn.SpotifyModal', defaultConfig);
+  'controls.enabled': true,
+  'controls.collapseOnBlur': false,
+
+  'seekbar.enabled': true,
+  'seekbar.collapseOnBlur': false,
+});
+
+const currentConfigVersion = config.get('v');
+
+if (currentConfigVersion === 0) {
+  const controlsVisibilityState =
+    // @ts-expect-error - can't fix this
+    config.get('controlsVisibilityState') as 'always' | 'hidden' | 'auto';
+
+  // @ts-expect-error - can't fix this
+  const seekbarEnabled: boolean = config.get('seekbarEnabled');
+  const seekbarVisibilityState =
+    // @ts-expect-error - can't fix this
+    config.get('controlsVisibilityState') as 'always' | 'hidden' | 'auto';
+
+  config.set('controls.enabled', controlsVisibilityState !== 'hidden');
+  config.set('controls.collapseOnBlur', controlsVisibilityState === 'auto');
+
+  config.set('seekbar.enabled', seekbarEnabled);
+  config.set('seekbar.collapseOnBlur', seekbarVisibilityState === 'auto');
+
+  config.set('v', 1);
+}
+
+const events = new EventTarget();
+
+const origSet = config.set;
+const origDelete = config.delete;
+
+config.set = function <T extends keyof Config, D extends Config[T]>(key: T, value: D) {
+  origSet.call(this, key, value);
+
+  events.dispatchEvent(new CustomEvent('set', { detail: { key } }));
+};
+
+config.delete = function <T extends keyof Config>(key: T): boolean {
+  const res = origDelete.call(this, key);
+
+  if (res) events.dispatchEvent(new CustomEvent('delete', { detail: { key } }));
+
+  return res;
+};
+
+/*
+  this uses the 2 monkey patches above to work
+
+  due to this, config modifications that does not use this settings instance specifically
+  will not update any React UI that is using this hook.
+*/
+export const useConfig = <T extends keyof Config, D extends Config[T]>(key: T, fallback?: D): D => {
+  const [state, setState] = React.useState(config.get(key, fallback));
+
+  React.useEffect(() => {
+    const listener = (e: Event): void => {
+      const {
+        detail: { key: k },
+      } = e as CustomEvent<{ key: T }>;
+
+      if (k === key) setState(config.get(k));
+    };
+
+    events.addEventListener('set', listener);
+    events.addEventListener('delete', listener);
+
+    return () => {
+      events.removeEventListener('set', listener);
+      events.removeEventListener('delete', listener);
+    };
+  }, []);
+
+  return state as D;
+};
+
+export default config;

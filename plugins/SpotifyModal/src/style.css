@@ -1,0 +1,161 @@
+@keyframes spotify-modal-marquee {
+  0% {
+    transform: translateX(100%);
+  }
+
+  45% {
+    transform: translateX(0);
+  }
+
+  55% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+#spotify-modal {
+  display: flex;
+
+  flex-direction: column;
+  gap: 10px;
+
+  font-size: 14px;
+
+  color: var(--text-normal);
+
+  margin: 8px;
+  border-bottom: 1px solid var(--background-modifier-accent);
+}
+
+#spotify-modal:empty {
+  border-bottom: none;
+
+  margin: 0;
+}
+
+#spotify-modal .details {
+  display: flex;
+
+  flex-direction: row;
+  gap: 8px;
+}
+
+#spotify-modal .details .container {
+  display: flex;
+
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 4px;
+
+  min-width: 0;
+
+  justify-content: center;
+}
+
+#spotify-modal .details .track-name,
+#spotify-modal .details .artists {
+  text-wrap: nowrap;
+
+  width: min-content;
+}
+
+#spotify-modal .details .track-name-container,
+#spotify-modal .details .artists-container {
+  overflow: hidden;
+}
+
+#spotify-modal .details .track-name.overflow,
+#spotify-modal .details .artists.overflow {
+  animation: 0s linear infinite spotify-modal-marquee;
+}
+
+html.reduce-motion #spotify-modal.use-discord-reduce-motion .details .track-name,
+html.reduce-motion #spotify-modal.use-discord-reduce-motion .details .artists,
+#spotify-modal.reduce-motion .details .track-name,
+#spotify-modal.reduce-motion .details .artists {
+  animation: none;
+
+  text-overflow: ellipsis;
+
+  overflow: hidden;
+  width: unset;
+}
+
+#spotify-modal .details .track-name {
+  display: inline-block;
+
+  font-weight: 500;
+
+  color: var(--text-normal);
+}
+
+#spotify-modal .details .artists a {
+  color: var(--text-secondary);
+}
+
+#spotify-modal .details .track-name:hover,
+#spotify-modal .details .artists:hover {
+  animation-play-state: paused;
+}
+
+#spotify-modal .details .track-name:hover,
+#spotify-modal .details .artists a:hover {
+  text-decoration: underline;
+}
+
+#spotify-modal .details .cover-art {
+  border-radius: 8px;
+
+  aspect-ratio: 1 / 1;
+  width: 56px;
+}
+
+#spotify-modal .seekbar-container:not(.enabled) {
+  display: none;
+}
+
+#spotify-modal .seekbar-container.collapse-on-blur {
+  transition:
+    0.25s max-height 0.25s,
+    0.25s opacity;
+
+  opacity: 0;
+  max-height: 0;
+}
+
+#spotify-modal:hover .seekbar-container.collapse-on-blur {
+  transition:
+    0.25s max-height,
+    0.25s opacity 0.25s;
+
+  opacity: 1;
+  max-height: 200px;
+}
+
+html.reduce-motion #spotify-modal.use-discord-reduce-motion .seekbar-container.collapse-on-blur,
+#spotify-modal.reduce-motion .seekbar-container.collapse-on-blur {
+  transition: none;
+}
+
+#spotify-modal .seekbar-container .timestamps {
+  display: flex;
+  justify-content: space-between;
+
+  margin-bottom: -2px;
+}
+
+#spotify-modal .seekbar {
+  --grabber-size: 12px !important;
+  --bar-size: 6px !important;
+}
+
+#spotify-modal .seekbar + [class^='divider'] {
+  display: none;
+}
+
+#spotify-modal .seekbar .bar [class^='barFill'] {
+  background-color: var(--spotify);
+}
